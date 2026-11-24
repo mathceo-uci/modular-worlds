@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="book.css">
+<style>
+.piece .wrap{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(18px,3vw,40px);align-items:start}
+@media(max-width:860px){.piece .wrap{grid-template-columns:minmax(0,1fr)}}
+.easel{position:relative;width:100%;aspect-ratio:1;border-radius:14px;overflow:hidden;background:var(--panel);box-shadow:0 1px 0 var(--line)}
+.easel canvas{position:absolute;inset:0;width:100%;height:100%}
+.panel{display:flex;flex-direction:column;gap:14px}
+.field{display:flex;flex-direction:column;gap:4px}
+.field .lbl{display:flex;justify-content:space-between;gap:8px;font-size:15px;color:var(--mute)}
+.field .lbl output{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--sea);height:32px}
+.swatches{display:flex;flex-wrap:wrap;gap:6px}
+.swatches label{display:flex;flex-direction:column;align-items:center;font-size:12px;color:var(--mute);gap:2px}
+input[type=color]{width:40px;height:40px;border:1px solid var(--line);border-radius:8px;padding:2px;background:var(--bg);cursor:pointer}
+.still{margin-top:14px}
+.still img{display:block;width:100%;max-width:520px;border-radius:10px;border:1px solid var(--line)}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{min-height:40px}
+.seg button[aria-pressed=true]{background:var(--sea);color:var(--bg);border-color:var(--sea)}
+.note{font-size:15px;color:var(--mute)}
+.ideas{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:16px}
+.ideas div{border-top:4px solid var(--brass);padding-top:10px}
+</style>
+</head>
+<body>
+
+<nav class="toc" aria-label="Studio sections"><div class="wrap">
+<a class="brand" href="index.html">Modular Worlds</a><a href="#weave">Residue weave</a><a href="#pascal">Pascal's carpet</a><a href="#circle">Times-table circle</a><a href="#quilt">Euclid's quilt</a><a href="#spiral">Number spiral</a><a href="#next">Coming next</a>
+</div></nav>
+
+<header class="band hero"><div class="wrap two">
+<div>
+<div class="kicker">Modular Worlds · The Studio</div>
+<h1>The Studio</h1>
+<p class="lede">On the ship's lower deck, Lucía turned an empty cargo hold into a painting studio. Every canvas here is painted by a rule from the voyage. You choose the colours and turn the dials; the arithmetic does the brushwork.</p>
+<p>There are no right answers in the Studio. Play until something surprises you, then ask the crew's favourite question: <i>why</i> does it look like that?</p>
+</div>
+<aside class="box thm">
+<h3>How to keep a painting</h3>
+<p style="margin:0">Press <b>Make a still</b> under any canvas. The picture appears below the controls: right-click it (or press and hold on a phone) to save it. Share your best ones with your crew, along with the settings that made them.</p>
+</aside>
+</div></header>
+
+<section class="band piece" id="weave"><div class="wrap">
+<div><div class="easel"><canvas id="cv-weave" role="img"></canvas></div></div>
+<div class="panel">
+<div><div class="kicker">Chapter 0 and the Clockwork Isles</div><h2>Residue weave</h2>
+<p class="note">Each tile (row <i class="v">i</i>, column <i class="v">j</i>) gets the colour of its leftover when a rule is divided by <i class="v">m</i>. Start with <i class="v">i</i> + <i class="v">j</i> and <i class="v">m</i> = 2: even and odd, a checkerboard. Then try <i class="v">m</i> = 3, Doña Trina's three families.</p></div>
+<div class="field"><span class="lbl">Rule</span><div class="seg" id="weave-rule"></div></div>
+<div class="field"><label class="lbl" for="weave-m">Modulus m <output id="weave-m-o"></output></label><input type="range" id="weave-m" min="2" max="12" value="2"></div>
+<div class="field"><label class="lbl" for="weave-n">Tiles per side <output id="weave-n-o"></output></label><input type="range" id="weave-n" min="6" max="96" value="24"></div>
+<div class="field"><span class="lbl">Tile shape</span><div class="seg" id="weave-shape"></div></div>
+<div class="field"><span class="lbl">Colours, one per leftover</span><div class="swatches" id="weave-sw"></div></div>
+<div class="field"><label class="lbl" for="weave-pal">Palette</label><select id="weave-pal"></select></div>
+<div class="row"><button id="weave-rand">Surprise me</button><button class="primary" id="weave-still">Make a still</button></div>
+<div class="still" id="weave-out"></div>
+</div>
+</div></section>
+
+<section class="band alt piece" id="pascal"><div class="wrap">
+<div><div class="easel"><canvas id="cv-pascal" role="img"></canvas></div></div>
+<div class="panel">
+<div><div class="kicker">Primes, ahead in Chapter 5</div><h2>Pascal's carpet</h2>
+<p class="note">Pascal's triangle, each number replaced by its leftover mod <i class="v">m</i>. With <i class="v">m</i> = 2 a famous fractal appears: Sierpiński's triangle. Compare a prime modulus (3, 5, 7) with a non-prime one (4, 6, 9). What changes?</p></div>
+<div class="field"><label class="lbl" for="pascal-m">Modulus m <output id="pascal-m-o"></output></label><input type="range" id="pascal-m" min="2" max="12" value="2"></div>
+<div class="field"><label class="lbl" for="pascal-r">Rows <output id="pascal-r-o"></output></label><input type="range" id="pascal-r" min="8" max="256" value="64"></div>
+<div class="field"><span class="lbl">Multiples of m</span><div class="seg" id="pascal-zero"></div></div>
+<div class="field"><span class="lbl">Colours, one per leftover</span><div class="swatches" id="pascal-sw"></div></div>
+<div class="field"><label class="lbl" for="pascal-pal">Palette</label><select id="pascal-pal"></select></div>
+<div class="row"><button id="pascal-rand">Surprise me</button><button class="primary" id="pascal-still">Make a still</button></div>
+<div class="still" id="pascal-out"></div>
+</div>
+</div></section>
+
+<section class="band piece" id="circle"><div class="wrap">
+<div><div class="easel"><canvas id="cv-circle" role="img"></canvas></div></div>
+<div class="panel">
+<div><div class="kicker">The Clockwork Isles</div><h2>Times-table circle</h2>
+<p class="note">Put <i class="v">n</i> points around a clock. Join each point <i class="v">k</i> to point <i class="v">a</i>·<i class="v">k</i> mod <i class="v">n</i>. Times 2 draws a heart-shaped cardioid; times 3 a three-petal curve. Try 21, 34, 51 and 99 with 200 points.</p></div>
+<div class="field"><label class="lbl" for="circle-n">Points n <output id="circle-n-o"></output></label><input type="range" id="circle-n" min="6" max="400" value="200"></div>
+<div class="field"><label class="lbl" for="circle-a">Multiplier a <output id="circle-a-o"></output></label><input type="range" id="circle-a" min="1" max="100" step="0.01" value="2"></div>
+<div class="field"><label class="lbl" for="circle-w">Line weight <output id="circle-w-o"></output></label><input type="range" id="circle-w" min="0.3" max="3" step="0.1" value="0.8"></div>
+<div class="field"><span class="lbl">Colours: first line, last line, background</span><div class="swatches" id="circle-sw"></div></div>
+<div class="field"><label class="lbl" for="circle-pal">Palette</label><select id="circle-pal"></select></div>
+<div class="row"><button id="circle-play" aria-pressed="false">Drift the multiplier</button><button class="primary" id="circle-still">Make a still</button></div>
+<div class="still" id="circle-out"></div>
+</div>
+</div></section>
+
+<section class="band alt piece" id="quilt"><div class="wrap">
+<div><div class="easel"><canvas id="cv-quilt" role="img"></canvas></div></div>
+<div class="panel">
+<div><div class="kicker">Chapter 3, Euclid's Forge</div><h2>Euclid's quilt</h2>
+<p class="note">Cut the biggest squares you can from an <i class="v">a</i> × <i class="v">b</i> cloth, then repeat on what is left. That is Euclid's algorithm, sewn: each colour is one step, the number of squares in a colour is a quotient, and the smallest square is the gcd. Try neighbouring Fibonacci numbers (89 × 55).</p></div>
+<div class="field"><label class="lbl" for="quilt-a">Width a <output id="quilt-a-o"></output></label><input type="range" id="quilt-a" min="1" max="400" value="89"></div>
+<div class="field"><label class="lbl" for="quilt-b">Height b <output id="quilt-b-o"></output></label><input type="range" id="quilt-b" min="1" max="400" value="55"></div>
+<div class="field"><span class="lbl">Stitching</span><div class="seg" id="quilt-arc"></div></div>
+<div class="field"><span class="lbl">Colours, one per step</span><div class="swatches" id="quilt-sw"></div></div>
+<div class="field"><label class="lbl" for="quilt-pal">Palette</label><select id="quilt-pal"></select></div>
+<p class="note" id="quilt-info" aria-live="polite"></p>
+<div class="row"><button id="quilt-rand">Surprise me</button><button class="primary" id="quilt-still">Make a still</button></div>
+<div class="still" id="quilt-out"></div>
+</div>
+</div></section>
+
+<section class="band piece" id="spiral"><div class="wrap">
+<div><div class="easel"><canvas id="cv-spiral" role="img"></canvas></div></div>
+<div class="panel">
+<div><div class="kicker">Books, families and primes</div><h2>Number spiral</h2>
+<p class="note">Write 1, 2, 3, … in a square spiral, and colour each number by its leftover mod <i class="v">m</i>. Stripes and diagonals appear. Then light up a Book from the voyage, or the primes, and look for the lines they like.</p></div>
+<div class="field"><label class="lbl" for="spiral-m">Modulus m <output id="spiral-m-o"></output></label><input type="range" id="spiral-m" min="2" max="12" value="4"></div>
+<div class="field"><label class="lbl" for="spiral-s">Spiral size <output id="spiral-s-o"></output></label><input type="range" id="spiral-s" min="9" max="151" step="2" value="61"></div>
+<div class="field"><span class="lbl">Light up</span><div class="seg" id="spiral-hi"></div></div>
+<div class="field"><span class="lbl">Colours, one per leftover</span><div class="swatches" id="spiral-sw"></div></div>
+<div class="field"><label class="lbl" for="spiral-pal">Palette</label><select id="spiral-pal"></select></div>
+<div class="row"><button id="spiral-rand">Surprise me</button><button class="primary" id="spiral-still">Make a still</button></div>
+<div class="still" id="spiral-out"></div>
+</div>
+</div></section>
+
+<section class="band alt" id="next"><div class="wrap">
+<h2>Coming to the Studio</h2>
+<p>The Studio will grow with the voyage. Ideas waiting their turn:</p>
+<div class="ideas">
+<div><h3>The Sound Room</h3><p>The 12 notes of a piano octave are the integers mod 12. Multiplying by 7 walks the circle of fifths through all 12 notes, because gcd(7, 12) = 1. Euclid's algorithm also spreads beats evenly in a bar, and produces rhythms heard across Latin America and Africa, like the tresillo (3 beats in 8).</p></div>
+<div><h3>The Poets' Corner</h3><p>Poems with modular skeletons: the sestina shuffles six end-words by a fixed rule, and Fibonacci poems grow line by line. Students write within the rule, then ask how long until the pattern repeats.</p></div>
+<div><h3>Weaving and beadwork</h3><p>Loom patterns, friendship bracelets and beadwork repeat with a period. A bracelet of 12 beads with a 5-bead pattern: where does it close up? A gentle doorway to lcm and to the Chinese Remainder Theorem.</p></div>
+</div>
+</div></section>
+
+<section class="band"><div class="wrap pager"><a href="index.html">Contents</a><a href="ch0.html">Chapter 0: The Entrance Exam →</a></div></section>
+<footer class="band"><div class="wrap">Modular Worlds · The Studio · draft · UCI Math CEO</div></footer>
+
+<script src="book.js"></script>
+<script>
+{
+const {$}=MW;
+const PAL={
+ 'Mojadito':['#0c5f73','#e5484d','#f6b8d6','#e0b154','#4fb3c8','#1d3b45','#c8401a','#9cd3c6','#7a4f9a','#f2e8cf','#2f7d4f','#151a1d'],
+ 'Marigold':['#f28c28','#7b2d8b','#f9d342','#e94f64','#3c1642','#ffb7c5','#2a9d8f','#fefae0','#c1121f','#6a4c93','#ffd6a5','#264653'],
+ 'Papel picado':['#e63946','#ffbe0b','#3a86ff','#8338ec','#06d6a0','#ff006e','#fb5607','#118ab2','#ffd166','#073b4c','#ef476f','#f1faee'],
+ 'Night sea':['#0b132b','#1c2541','#3a506b','#5bc0be','#6fffe9','#c5e1e5','#fca311','#e5e5e5','#14213d','#7b9e89','#f4d35e','#ee964b'],
+ 'Ink':['#111111','#f5f5f5','#777777','#bbbbbb','#333333','#dddddd','#555555','#999999','#222222','#eeeeee','#444444','#aaaaaa'],
+ 'Coral reef':['#ff6f59','#254441','#43aa8b','#b2b09b','#ef3054','#f6f1d1','#ffbc42','#0496ff','#d81159','#8f2d56','#218380','#73d2de']};
+const pieces={};
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+
+function setup(id,opt){
+  const P={id,cv:$('#cv-'+id),colors:PAL[opt.pal].slice(),pal:opt.pal,draw:opt.draw,count:opt.count,vals:{}};
+  pieces[id]=P;
+  const sel=$('#'+id+'-pal');sel.innerHTML=Object.keys(PAL).map(k=>`<option ${k===opt.pal?'selected':''}>${k}</option>`).join('');
+  sel.addEventListener('change',()=>{P.colors=PAL[sel.value].slice();if(opt.palHook)opt.palHook(P);swatches(P);render(P)});
+  (opt.ranges||[]).forEach(r=>{const el=$('#'+id+'-'+r),o=$('#'+id+'-'+r+'-o');const up=()=>{P.vals[r]=+el.value;o.textContent=el.value;swatches(P);render(P)};el.addEventListener('input',up);P.vals[r]=+el.value;o.textContent=el.value});
+  (opt.segs||[]).forEach(([name,items,init])=>{const box=$('#'+id+'-'+name);P.vals[name]=init;
+    box.innerHTML=items.map(([v,l])=>`<button data-v="${v}" aria-pressed="${v===init}">${l}</button>`).join('');
+    box.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;P.vals[name]=b.dataset.v;box.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));render(P)})});
+  $('#'+id+'-still').addEventListener('click',()=>{const url=P.cv.toDataURL('image/png');$('#'+id+'-out').innerHTML=`<img alt="A still of the ${P.cv.getAttribute('aria-label')||id}" src="${url}"><p class="note">Right-click or press and hold the picture to save it.</p>`});
+  const rb=$('#'+id+'-rand');if(rb&&opt.rand)rb.addEventListener('click',()=>{opt.rand(P);swatches(P);render(P)});
+  const ro=new ResizeObserver(()=>render(P));ro.observe(P.cv);
+  swatches(P);
+}
+function swatches(P){
+  const n=P.count(P),box=$('#'+P.id+'-sw');
+  box.innerHTML=Array.from({length:n},(_,i)=>`<label>${P.labels?P.labels[i]:i}<input type="color" data-i="${i}" value="${P.colors[i%P.colors.length]}" aria-label="Colour for ${P.labels?P.labels[i]:'leftover '+i}"></label>`).join('');
+  box.oninput=e=>{const i=+e.target.dataset.i;P.colors[i]=e.target.value;render(P)};
+}
+function ctx(P){const c=P.cv,d=window.devicePixelRatio||1,W=c.clientWidth||500,H=c.clientHeight||500;c.width=Math.round(W*d);c.height=Math.round(H*d);const g=c.getContext('2d');g.setTransform(d,0,0,d,0,0);return[g,W,H]}
+function render(P){P.draw(P)}
+const mod=(a,m)=>((a%m)+m)%m;
+
+/* 1 residue weave */
+const RULES={sum:(i,j)=>i+j,prod:(i,j)=>i*j,sq:(i,j)=>i*i+j*j,sqj:(i,j)=>i*i+j,cube:(i,j)=>i*i*i+j*j*j};
+setup('weave',{pal:'Mojadito',ranges:['m','n'],
+ segs:[['rule',[['sum','i + j'],['prod','i × j'],['sq','i² + j²'],['sqj','i² + j'],['cube','i³ + j³']],'sum'],['shape',[['sq','Squares'],['dot','Dots'],['dia','Diamonds']],'sq']],
+ count:P=>P.vals.m,
+ rand:P=>{const m=rnd(2,12),n=rnd(12,72);$('#weave-m').value=m;$('#weave-n').value=n;P.vals.m=m;P.vals.n=n;$('#weave-m-o').textContent=m;$('#weave-n-o').textContent=n;P.colors=PAL[Object.keys(PAL)[rnd(0,5)]].slice();
+   const rs=Object.keys(RULES),r=rs[rnd(0,rs.length-1)];P.vals.rule=r;$('#weave-rule').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===r))},
+ draw:P=>{const[g,W]=ctx(P),{m,n,rule,shape}=P.vals,s=W/n,f=RULES[rule];g.fillStyle=P.colors[0];g.fillRect(0,0,W,W);
+   if(shape!=='sq'){g.fillStyle=getComputedStyle(document.body).backgroundColor;g.fillRect(0,0,W,W)}
+   for(let i=0;i<n;i++)for(let j=0;j<n;j++){g.fillStyle=P.colors[mod(f(i,j),m)];
+     if(shape==='sq')g.fillRect(j*s,i*s,s+0.5,s+0.5);
+     else if(shape==='dot'){g.beginPath();g.arc(j*s+s/2,i*s+s/2,s*0.42,0,7);g.fill()}
+     else{g.beginPath();g.moveTo(j*s+s/2,i*s+1);g.lineTo(j*s+s-1,i*s+s/2);g.lineTo(j*s+s/2,i*s+s-1);g.lineTo(j*s+1,i*s+s/2);g.fill()}}
+   P.cv.setAttribute('aria-label',`Residue weave: ${n} by ${n} tiles coloured by (${$('#weave-rule [aria-pressed=true]').textContent}) mod ${m}`)}});
+
+/* 2 Pascal */
+setup('pascal',{pal:'Marigold',ranges:['m','r'],segs:[['zero',[['show','Paint them'],['blank','Leave blank']],'blank']],
+ count:P=>P.vals.m,
+ rand:P=>{const m=rnd(2,12),r=[32,64,81,128,243,256][rnd(0,5)];$('#pascal-m').value=m;$('#pascal-r').value=r;P.vals.m=m;P.vals.r=r;$('#pascal-m-o').textContent=m;$('#pascal-r-o').textContent=r;P.colors=PAL[Object.keys(PAL)[rnd(0,5)]].slice()},
+ draw:P=>{const[g,W,H]=ctx(P),{m,r,zero}=P.vals;g.clearRect(0,0,W,H);
+   const s=Math.min(W/r,H/(r*0.866)),top=(H-s*r*0.866)/2;let row=[1];
+   for(let i=0;i<r;i++){const x0=W/2-(i+1)*s/2,y=top+i*s*0.866;
+     for(let k=0;k<=i;k++){const v=row[k];if(v===0&&zero==='blank')continue;g.fillStyle=P.colors[v];g.fillRect(x0+k*s,y,s+0.4,s*0.866+0.4)}
+     const nx=[1];for(let k=1;k<=i;k++)nx.push((row[k-1]+row[k])%m);nx.push(1);row=nx}
+   P.cv.setAttribute('aria-label',`Pascal's triangle with ${r} rows, coloured by leftovers mod ${m}`)}});
+
+/* 3 times-table circle */
+let playing=false,raf=0;
+setup('circle',{pal:'Night sea',ranges:['n','a','w'],count:()=>3,
+ palHook:P=>{P.colors=[P.colors[4],P.colors[10],P.colors[0]]},
+ draw:P=>{const[g,W,H]=ctx(P),{n,a,w}=P.vals,c=P.colors;g.fillStyle=c[2];g.fillRect(0,0,W,H);
+   const R=Math.min(W,H)*0.46,cx=W/2,cy=H/2,pt=k=>{const t=2*Math.PI*k/n-Math.PI/2;return[cx+R*Math.cos(t),cy+R*Math.sin(t)]};
+   const hx=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)),A=hx(c[0]),B=hx(c[1]);g.lineWidth=w;
+   for(let k=0;k<n;k++){const t=k/n,col=A.map((v,i)=>Math.round(v+(B[i]-v)*t));g.strokeStyle=`rgba(${col.join(',')},0.85)`;
+     const[x1,y1]=pt(k),[x2,y2]=pt(a*k);g.beginPath();g.moveTo(x1,y1);g.lineTo(x2,y2);g.stroke()}
+   g.strokeStyle=`rgba(${A.join(',')},0.5)`;g.lineWidth=1;g.beginPath();g.arc(cx,cy,R,0,7);g.stroke();
+   P.cv.setAttribute('aria-label',`Times-table circle: ${n} points, each joined to ${a} times itself mod ${n}`)}});
+pieces.circle.colors=[PAL['Night sea'][4],PAL['Night sea'][10],PAL['Night sea'][0]];pieces.circle.labels=['first','last','paper'];swatches(pieces.circle);
+$('#circle-play').addEventListener('click',e=>{playing=!playing;e.target.setAttribute('aria-pressed',playing);e.target.textContent=playing?'Stop drifting':'Drift the multiplier';
+  const P=pieces.circle,el=$('#circle-a');cancelAnimationFrame(raf);
+  const tick=()=>{if(!playing)return;let v=+el.value+0.01;if(v>100)v=1;el.value=v.toFixed(2);P.vals.a=+el.value;$('#circle-a-o').textContent=el.value;render(P);raf=requestAnimationFrame(tick)};
+  if(playing)raf=requestAnimationFrame(tick)});
+
+/* 4 Euclid's quilt */
+setup('quilt',{pal:'Papel picado',ranges:['a','b'],segs:[['arc',[['plain','Plain squares'],['arc','Quarter-circle stitches']],'arc']],
+ count:P=>{let a=P.vals.a,b=P.vals.b,k=0;while(a&&b){if(a>=b)a%=b;else b%=a;k++}return Math.min(Math.max(k,1),12)},
+ rand:P=>{const a=rnd(20,400),b=rnd(20,400);$('#quilt-a').value=a;$('#quilt-b').value=b;P.vals.a=a;P.vals.b=b;$('#quilt-a-o').textContent=a;$('#quilt-b-o').textContent=b;P.colors=PAL[Object.keys(PAL)[rnd(0,5)]].slice()},
+ draw:P=>{const[g,W,H]=ctx(P),{a,b,arc}=P.vals;g.clearRect(0,0,W,H);
+   const sc=Math.min((W-16)/a,(H-16)/b),ox=(W-a*sc)/2,oy=(H-b*sc)/2;let x=0,y=0,w=a,h=b,step=0;const qs=[];
+   while(w>0&&h>0){const col=P.colors[step%P.colors.length];let q=0;
+     if(w>=h){while(w>=h){draw1(x,y,h,col,step);x+=h;w-=h;q++}}else{while(h>=w){draw1(x,y,w,col,step);y+=w;h-=w;q++}}
+     qs.push(q);step++}
+   function draw1(x,y,s,col,st){const X=ox+x*sc,Y=oy+y*sc,S=s*sc;g.fillStyle=col;g.fillRect(X,Y,S,S);g.strokeStyle='rgba(255,255,255,.6)';g.lineWidth=Math.max(0.5,Math.min(2,S/40));g.strokeRect(X,Y,S,S);
+     if(arc==='arc'&&S>3){g.strokeStyle='rgba(255,255,255,.85)';g.lineWidth=Math.max(0.8,Math.min(3,S/30));g.beginPath();const c=[[X+S,Y+S,Math.PI,1.5*Math.PI],[X,Y+S,1.5*Math.PI,2*Math.PI],[X,Y,0,0.5*Math.PI],[X+S,Y,0.5*Math.PI,Math.PI]][st%4];g.arc(c[0],c[1],S,c[2],c[3]);g.stroke()}}
+   const gg=MW.gcd(a,b);$('#quilt-info').textContent=`${a} × ${b}: ${qs.length} step${qs.length>1?'s':''}, squares per step ${qs.join(', ')}. The smallest square is ${gg} × ${gg}, so gcd(${a}, ${b}) = ${gg}.`;
+   P.cv.setAttribute('aria-label',`Euclid's quilt for ${a} by ${b}: ${qs.length} colours of squares, smallest square ${gg}`)}});
+
+/* 5 number spiral */
+const isP=n=>{if(n<2)return false;for(let d=2;d*d<=n;d++)if(n%d===0)return false;return true};
+setup('spiral',{pal:'Coral reef',ranges:['m','s'],segs:[['hi',[['none','Nothing'],['water','Water’s Book (4k + 1)'],['amm','Ammonia’s Book (6k + 7)'],['prime','Primes']],'none']],
+ count:P=>P.vals.m,
+ rand:P=>{const m=rnd(2,12);$('#spiral-m').value=m;P.vals.m=m;$('#spiral-m-o').textContent=m;P.colors=PAL[Object.keys(PAL)[rnd(0,5)]].slice()},
+ draw:P=>{const[g,W]=ctx(P),{m,s,hi}=P.vals,c=W/s;g.clearRect(0,0,W,W);
+   let x=(s-1)/2,y=(s-1)/2,dx=1,dy=0,len=1,n=1;const test={none:()=>true,water:k=>k>=9&&k%4===1,amm:k=>k>=13&&(k-13)%6===0,prime:isP}[hi];
+   const put=()=>{if(x>=0&&y>=0&&x<s&&y<s){const lit=test(n);g.globalAlpha=hi==='none'||lit?1:0.18;g.fillStyle=P.colors[n%m];g.fillRect(x*c,y*c,c+0.4,c+0.4)}n++};
+   put();
+   while(n<=s*s){for(let t=0;t<2;t++){for(let i=0;i<len;i++){x+=dx;y+=dy;put()}[dx,dy]=[dy,-dx]}len++}
+   g.globalAlpha=1;
+   P.cv.setAttribute('aria-label',`Number spiral of ${s*s} numbers coloured mod ${m}${hi==='none'?'':', highlighting '+$('#spiral-hi [aria-pressed=true]').textContent}`)}});
+MW.onTheme(()=>Object.values(pieces).forEach(render));
+}
+</script>
+</body>
+</html>

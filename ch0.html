@@ -42,7 +42,7 @@
 <body>
 
 <nav class="toc" aria-label="Chapter sections"><div class="wrap">
-<a class="brand" href="index.html">Modular Worlds</a><a href="#landing">Landing</a><a href="#prophecies">Prophecies</a><a href="#t1">Pairs</a><a href="#t2">Broken floor</a><a href="#t3">Diagonal</a><a href="#t4">Crates</a><a href="#t5">Hundred doors</a><a href="#mod3">Trios (mod 3)</a><a href="#culture">Culture</a><a href="#problems">Problems</a><a href="#code">Code quest</a><a href="#logbook">Logbook</a>
+<a class="brand" href="index.html">Modular Worlds</a><a href="#landing">Landing</a><a href="#prophecies">Prophecies</a><a href="#t1">Pairs</a><a href="#t2">Broken floor</a><a href="#t3">Diagonal</a><a href="#t4">Crates</a><a href="#t5">Hundred doors</a><a href="#mod3">Trios (mod 3)</a><a href="#culture">Culture</a><a href="#problems">Problems</a><a href="#studio">Studio</a><a href="#code">Code quest</a><a href="#logbook">Logbook</a>
 </div></nav>
 
 <header class="band hero" id="landing"><div class="wrap">
@@ -88,6 +88,7 @@
 <p><span class="who">El Gran Pesado:</span> Two groups walk into the plaza. Both have someone left over when they pair up. Will the plaza?</p>
 <p><span class="who">Mateo:</span> Odd plus odd… is odd? Obviously.</p>
 <p><span class="who">Lucía</span> <span class="stage">(pointing at the two lonely dancers finding each other)</span>: Look again.</p>
+<p><span class="who">Diego</span> <span class="stage">(watching the harbor sign, a water molecule drawn in lights)</span>: Same thing as the atoms. In Mojadito every hand has to hold exactly one other hand.</p>
 </div>
 <p>A number is <b>even</b> if its dancers all pair up: <i class="v">n</i> = 2<i class="v">k</i> for some integer <i class="v">k</i>. It is <b>odd</b> if exactly one is left over: <i class="v">n</i> = 2<i class="v">k</i> + 1. Every integer is one or the other, never both (Chapter 1's division algorithm proves it).</p>
 <div class="box thm"><h3>Theorem 0.1 (the plaza rules)</h3>
@@ -102,6 +103,17 @@
 <div class="box thm"><h3>Try it</h3>
 <p style="margin:0">Is the sum of three odd numbers odd or even? Of 25 odd numbers? Of 100? Find the rule, then prove it.</p></div>
 </aside>
+</div>
+<div class="wrap two" style="margin-top:8px">
+<div>
+<h3>Atoms that hold hands</h3>
+<p>In Mojadito's chemistry, hydrogen has 1 hand, oxygen 2, nitrogen 3 and carbon 4. A molecule is finished when every hand holds exactly one other hand. Each bond is one handshake and uses two hands, so:</p>
+<div class="box thm"><h3>Theorem 0.1′ (the handshake rule)</h3>
+<p style="margin:0">In a finished molecule, the total number of hands is even. So the atoms with an odd number of hands (H and N) always come in an even number.</p></div>
+<p>Water: 1 + 2 + 1 = 4. Ammonia: 3 + 1 + 1 + 1 = 6. One nitrogen with two hydrogens: 3 + 1 + 1 = 5, odd, so that molecule can never be finished, however you try. An even total is necessary but not enough: one nitrogen and one hydrogen give 4, and still cannot be finished. Why not?</p>
+</div>
+<aside class="box lab"><h3>Lab note: real chemistry</h3>
+<p style="margin:0">Real atoms bond by sharing electrons in pairs. A molecule with an odd number of electrons cannot pair them all: one electron is left alone. Chemists call such molecules <b>radicals</b>, and they are restless and reactive. Nitric oxide, NO, has 7 + 8 = 15 electrons, and it is a radical. It forms in car engines and lightning, and helps make smog.</p></aside>
 </div></section>
 
 <section class="band trial alt" id="t2"><div class="wrap two">
@@ -113,6 +125,7 @@
 <p><span class="who">El Gran Pesado:</span> Cover every tile. No overlaps, no rugs hanging over the edge.</p>
 <p><span class="who">Diego</span> <span class="stage">(after twenty minutes)</span>: I've tried every way I can think of. It's always two tiles short.</p>
 <p><span class="who">Kevin:</span> "Every way you can think of" isn't every way. Prove it can't be done, or keep trying.</p>
+<p><span class="who">Lucía:</span> Chemists play this game for real: two-atom molecules settling on a crystal, each one sitting on two neighbouring spots.</p>
 </div>
 <p>Trying more rugs will never prove the job impossible. You need something that every possible arrangement has in common: an <b>invariant</b>.</p>
 <p>Colour the floor like a chessboard. Every rug covers one dark tile and one light tile, wherever it goes. The two smashed corners are the same colour, so the floor has 32 tiles of one colour and 30 of the other. Thirty-one rugs would cover 31 of each. Impossible.</p>
@@ -186,6 +199,9 @@
 <p class="verdict" id="cout" aria-live="polite" style="margin-top:10px"></p>
 <p class="small" id="clist" style="text-align:center;margin:0"></p>
 </div>
+<div class="box lab" style="margin-top:16px"><h3>Lab note: the sugar crate</h3>
+<p>The last crate in the market is stamped C<sub>6</sub>H<sub>12</sub>O<sub>6</sub>: glucose, real sugar, with 6 carbons, 12 hydrogens and 6 oxygens. Into how many identical packets can you split one molecule's atoms? The packet count must divide 6, 12 and 6, so it is 1, 2, 3 or 6.</p>
+<p style="margin:0">Splitting into 6 gives CH<sub>2</sub>O, the simplest formula chemists write for glucose. Into 3 gives C<sub>2</sub>H<sub>4</sub>O<sub>2</sub>, the formula of acetic acid (vinegar). Into 2 gives C<sub>3</sub>H<sub>6</sub>O<sub>3</sub>, the formula of lactic acid. Different substances, one shared simplest formula: the common divisors decide it. In Chapter 2 this becomes the gcd.</p></div>
 <div class="box tool" style="margin-top:16px"><h3>Market legends to break</h3>
 <p style="margin:0">"If <i class="v">a</i> | <i class="v">bc</i>, then <i class="v">a</i> | <i class="v">b</i> or <i class="v">a</i> | <i class="v">c</i>." Try <i class="v">a</i> = 6, <i class="v">b</i> = 4, <i class="v">c</i> = 3.<br>"If <i class="v">a</i> | <i class="v">c</i> and <i class="v">b</i> | <i class="v">c</i>, then <i class="v">ab</i> | <i class="v">c</i>." Try 4, 6 and 12.<br>Both legends can be repaired. The first repair needs primes (Chapter 5); the second needs gcd (Chapters 2 and 3).</p></div>
 </div>
@@ -225,14 +241,14 @@
 <div class="kicker">Side quest · before the ship leaves</div>
 <h2>Doña Trina's Trios: two ways to miss</h2>
 <div class="scene">
-<p class="stage">The festival is ending. At the last stall, an old lantern-maker packs lanterns in threes, never in pairs. Her sign reads: "Trina. Trios only."</p>
-<p><span class="who">Doña Trina:</span> You young people think there are two kinds of numbers: the ones that pair up and the ones that don't. Pack in threes, and a number can miss in two different ways.</p>
+<p class="stage">The festival is ending. At the last stall, an old bottler fills glass flasks that crackle with blue light. Her sign reads: "Trina. Ozone. Trios only."</p>
+<p><span class="who">Doña Trina:</span> Everyone in this town bottles oxygen in pairs. O<sub>2</sub>, O<sub>2</sub>, O<sub>2</sub>. I bottle it in threes. And when you pack in threes, a pile of atoms can miss in two different ways.</p>
 <p><span class="who">Kevin:</span> Missing is missing.</p>
-<p><span class="who">Doña Trina</span> <span class="stage">(holding up one lantern, then two)</span>: Is one extra the same as one short?</p>
+<p><span class="who">Doña Trina</span> <span class="stage">(holding up one loose atom, then two)</span>: Is one extra the same as one short?</p>
 </div>
-<p>Pack <i class="v">n</i> lanterns in trios. The leftover is 0, 1 or 2, so every integer belongs to exactly one of three families:</p>
+<p>Pack <i class="v">n</i> oxygen atoms in trios. The leftover is 0, 1 or 2, so every integer belongs to exactly one of three families:</p>
 <div class="math">3k        a multiple of 3       (no leftover)
-3k + 1    one extra             (one lantern left over)
+3k + 1    one extra             (one atom left over)
 3k + 2    two extra, which is   one short of a trio: 3k − 1</div>
 <p>Two numbers are <b>congruent mod 3</b>, written <i class="v">a</i> ≡ <i class="v">b</i> (mod 3), when 3 | <i class="v">a</i> − <i class="v">b</i>: they leave the same leftover. So 7 ≡ 1, 8 ≡ 2 ≡ −1 and 2027 ≡ 2 (mod 3). This is a first look at the idea that runs the whole Clockwork Isles chapter.</p>
 <div class="box thm"><h3>Theorem 0.7 (squares in trios)</h3>
@@ -240,18 +256,20 @@
 <div class="pf"><p><b>Proof (by cases).</b> If <i class="v">n</i> = 3<i class="v">k</i>, then <i class="v">n</i>² = 3(3<i class="v">k</i>²). If <i class="v">n</i> = 3<i class="v">k</i> + 1, then <i class="v">n</i>² = 9<i class="v">k</i>² + 6<i class="v">k</i> + 1 = 3(3<i class="v">k</i>² + 2<i class="v">k</i>) + 1. If <i class="v">n</i> = 3<i class="v">k</i> + 2, then <i class="v">n</i>² = 9<i class="v">k</i>² + 12<i class="v">k</i> + 4 = 3(3<i class="v">k</i>² + 4<i class="v">k</i> + 1) + 1. Both ways of missing a multiple of 3 give leftover 1 after squaring, so a square with leftover 0 must come from <i class="v">n</i> = 3<i class="v">k</i>.</p></div>
 <div class="box tool"><h3>Proof toolkit: proof by cases</h3>
 <p style="margin:0">When every number falls into a few families, prove the claim for each family separately. The cases must cover everything: for mod 3, that means <b>three</b> cases, not two. The most common mistake in this quest is to check "multiple of 3" and "not a multiple of 3" and forget that "not" hides two different shapes.</p></div>
+<div class="box lab"><h3>Lab note: oxygen in threes</h3>
+<p style="margin:0">Ozone, O<sub>3</sub>, is real: sunlight and lightning break O<sub>2</sub> apart, and loose atoms join pairs to make trios. High in the sky, the ozone layer blocks harmful ultraviolet light. Near the ground it is a pollutant that makes breathing harder, and Southern California's air basin has some of the highest ground-level ozone in the United States.</p></div>
 </div>
 <div>
 <div class="forge">
-<h3 style="margin:0 0 4px">Trina's packing table</h3>
-<div class="ctrl" style="margin-top:0"><div><label for="tn">Lanterns</label><input id="tn" type="number" min="0" max="60" value="14"></div>
-<button id="tdown" aria-label="One lantern fewer">− 1</button><button id="tup" aria-label="One lantern more">+ 1</button></div>
-<div class="dance" id="trios" role="img" aria-label="Lanterns in trios" style="margin-top:12px"></div>
+<h3 style="margin:0 0 4px">Trina's bottling table</h3>
+<div class="ctrl" style="margin-top:0"><div><label for="tn">Oxygen atoms</label><input id="tn" type="number" min="0" max="60" value="14"></div>
+<button id="tdown" aria-label="One atom fewer">− 1</button><button id="tup" aria-label="One atom more">+ 1</button></div>
+<div class="dance" id="trios" role="img" aria-label="Oxygen atoms in trios" style="margin-top:12px"></div>
 <p class="verdict" id="tout" aria-live="polite" style="margin-top:10px"></p>
 </div>
 <div class="forge" style="margin-top:16px">
-<h3 style="margin:0 0 4px">Game: the Last Lantern</h3>
-<p class="small" style="margin:0 0 8px">Take 1 or 2 lanterns from the pile. Whoever takes the last lantern wins. You move first against Doña Trina, who knows exactly what she is doing.</p>
+<h3 style="margin:0 0 4px">Game: the Last Atom</h3>
+<p class="small" style="margin:0 0 8px">Take 1 or 2 oxygen atoms from the tray. Whoever takes the last atom wins. You move first against Doña Trina, who knows exactly what she is doing.</p>
 <div class="big" id="lpile"></div>
 <div class="moves" style="justify-content:center"><button class="o" id="l1">Take 1</button><button class="o" id="l2">Take 2</button></div>
 <p class="verdict" id="lout" aria-live="polite"></p>
@@ -315,6 +333,9 @@
 </div>
 </div></section>
 
+<section class="band alt" id="studio"><div class="wrap">
+<div class="box tool"><h3>Studio corner</h3><p style="margin:0">Paint this chapter: in the Residue weave, the rule i + j with m = 2 is the Broken Floor's checkerboard. Switch to m = 3 and Doña Trina's three families weave their own cloth. <a class="btn" href="studio.html#weave">Open the Studio</a></p></div>
+</div></section>
 <section class="band" id="code"><div class="wrap">
 <h2>Code quest: the exam in Python</h2>
 <p>These cells run real Python in your browser. The first run loads Python (about 10 MB, once).</p>
@@ -434,14 +455,14 @@ drawDoors(0);
 
 /* Side quest: trios and the Last Lantern */
 function drawTrios(){
-  let n=parseInt($('#tn').value,10);if(!(n>=0&&n<=60)){$('#tout').textContent='Use 0 to 60 lanterns.';return}
+  let n=parseInt($('#tn').value,10);if(!(n>=0&&n<=60)){$('#tout').textContent='Use 0 to 60 atoms.';return}
   const q=Math.floor(n/3),r=n%3;
   let h='';for(let i=0;i<q;i++)h+='<div class="pair" style="flex-direction:row;gap:4px;padding:4px;border:2px solid var(--brass);border-radius:8px">'+'<span class="dot"></span>'.repeat(3)+'</div>';
   if(r)h+='<div class="pair" style="flex-direction:row;gap:4px;padding:4px;border:2px dashed var(--ember);border-radius:8px">'+'<span class="dot odd"></span>'.repeat(r)+(r===2?'<span class="dot" style="background:transparent;border:2px dashed var(--ember)"></span>':'')+'</div>';
-  $('#trios').innerHTML=h||'<span class="small">No lanterns.</span>';
+  $('#trios').innerHTML=h||'<span class="small">No atoms.</span>';
   const fam=['a multiple of 3: '+n+' = 3\u00b7'+q,'one extra: '+n+' = 3\u00b7'+q+' + 1','one short: '+n+' = 3\u00b7'+q+' + 2 = 3\u00b7'+(q+1)+' \u2212 1'][r];
   $('#tout').textContent=`${n} \u2261 ${r} (mod 3), ${fam}`;$('#tout').className='verdict '+(r?'no':'ok');
-  $('#trios').setAttribute('aria-label',`${q} trios of lanterns${r?(r===1?' and one extra lantern':' and two lanterns, one short of a trio'):''}`);
+  $('#trios').setAttribute('aria-label',`${q} ozone trios${r?(r===1?' and one extra atom':' and two atoms, one short of a trio'):''}`);
 }
 $('#tn').addEventListener('input',drawTrios);
 $('#tup').addEventListener('click',()=>{$('#tn').value=Math.min(60,(+$('#tn').value||0)+1);drawTrios()});
@@ -450,9 +471,9 @@ drawTrios();
 const L={n:10,over:false};
 function drawL(){$('#lpile').textContent=L.n;$('#l1').disabled=L.over||L.n<1;$('#l2').disabled=L.over||L.n<2}
 function take(t){if(L.over||t>L.n)return;L.n-=t;
-  if(L.n===0){L.over=true;$('#lout').textContent='You took the last lantern. You beat Doña Trina!';$('#lout').className='verdict ok';drawL();return}
+  if(L.n===0){L.over=true;$('#lout').textContent='You took the last atom. You beat Doña Trina!';$('#lout').className='verdict ok';drawL();return}
   const r=L.n%3,m=r||1;L.n-=m;
-  if(L.n===0){L.over=true;$('#lout').textContent=`Trina takes ${m} and the last lantern. She wins.`;$('#lout').className='verdict no'}
+  if(L.n===0){L.over=true;$('#lout').textContent=`Trina takes ${m} and the last atom. She wins.`;$('#lout').className='verdict no'}
   else{$('#lout').textContent=`Trina takes ${m}. ${r?`She left you ${L.n}: a multiple of 3.`:'She shrugs: you left her a multiple of 3.'}`;$('#lout').className='verdict'}
   drawL()}
 $('#l1').addEventListener('click',()=>take(1));$('#l2').addEventListener('click',()=>take(2));
@@ -495,7 +516,7 @@ for a in range(3):
 print("squares mod 3:", sorted({(n * n) % 3 for n in range(1000)}))
 print("n^3 - n mod 6:", sorted({(n**3 - n) % 6 for n in range(1000)}))
 
-# The Last Lantern: which piles lose for the player to move?
+# The Last Atom: which piles lose for the player to move?
 lose = [0]
 for n in range(1, 31):
     win = any((n - t) in lose for t in (1, 2) if t <= n)

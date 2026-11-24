@@ -141,3 +141,5 @@ a.chap:hover{border-color:var(--sea)}
 a.btn{display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--ink);text-decoration:none;font-weight:500}
 a.btn.primary{background:var(--sea);border-color:var(--sea);color:var(--bg);font-weight:700}
 a.btn:hover{border-color:var(--sea)}
+.lab{background:var(--ember-soft)}
+.lab h3{color:var(--ember)}
