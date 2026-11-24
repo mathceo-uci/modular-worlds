@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 3 Instructor Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="book.css">
+<style>
+.sched{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media(max-width:900px){.sched{grid-template-columns:minmax(0,1fr)}}
+.sess{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:16px}
+.sess h3{color:var(--sea)}
+.sess ol{padding-left:0;list-style:none;margin:0}
+.sess li{display:grid;grid-template-columns:4.2em minmax(0,1fr);gap:8px;padding:8px 0;border-top:1px solid var(--line)}
+.sess li b.t{font-family:"Roboto Flex",sans-serif;font-size:18px;color:var(--brass);white-space:nowrap}
+.mist td{white-space:normal;text-align:left;vertical-align:top}
+.key li{margin-bottom:.9em}
+</style>
+</head>
+<body>
+
+<nav class="toc" aria-label="Guide sections"><div class="wrap">
+<a class="brand" href="index.html">Modular Worlds</a><a href="#glance">At a glance</a><a href="#plan">Session plans</a><a href="#mistakes">Common mistakes</a><a href="#keys">Answer keys</a><a href="#time">If you run short</a>
+</div></nav>
+
+<header class="band hero" id="glance"><div class="wrap two">
+<div>
+<div class="kicker">Instructor guide · Week 3</div>
+<h1>Euclid's Forge</h1>
+<p class="lede">By the end of the week students can run Euclid's algorithm forwards and backwards, prove Lemma 3.1 and Bézout's identity, and explain exactly which weights two kinds of weights can balance.</p>
+<p>Students read <a href="ch3.html">Chapter 3</a> across the week. Session A uses Explore and the balance, Session B the Theory, Session C the Arena and the Boss Problem. Problems and the code quest are due the next week.</p>
+</div>
+<aside class="box instr">
+<h3>Materials</h3>
+<ul style="margin:0;padding-left:1.2em">
+<li><b>Weight set</b> (one per crew of 4): 10 red chips marked 5 (oxygen), 10 blue chips marked 7 (nitrogen), 1 black bead marked with the target. Magnetic chips on a whiteboard balance work well; paper squares work too.</li>
+<li><b>Laptops</b>: one per crew, with Chapter 3 open (the balance, the Euclid table, the game).</li>
+<li><b>Whiteboards and markers</b>: one per crew, for proof wrestling and the Boss Problem.</li>
+<li><b>Prophecy Journals</b>: crews log Prophecies 3.1–3.4 before Session B.</li>
+</ul>
+</aside>
+</div></header>
+
+<section class="band" id="plan"><div class="wrap">
+<h2>Session plans (3 × 50 minutes)</h2>
+<div class="sched">
+<div class="sess"><h3>A · Expedition</h3><ol>
+<li><b class="t">5 min</b><span><b>Episode.</b> Read the opening scene aloud in parts (or play the episode video when it exists). Stop on Lucía's line.</span></li>
+<li><b class="t">15 min</b><span><b>Balance 1 to 12.</b> Crews use chips. Push for weights on both pans. Collect recipes on the board: 1 = 3·5 − 2·7.</span></li>
+<li><b class="t">12 min</b><span><b>New weights.</b> 6 and 9, then 12 and 18. Ask: "Which beads can you never balance? Prove never." Crews seal Prophecies 3.1–3.4.</span></li>
+<li><b class="t">18 min</b><span><b>Euclid by hand.</b> Slow version (keep subtracting) on 252 and 198, then the remainder version. Ask why both give 18.</span></li>
+</ol></div>
+<div class="sess"><h3>B · The Forge</h3><ol>
+<li><b class="t">12 min</b><span><b>Lemma 3.1.</b> Crews try to prove it first; then write the proof together. Stress "same set of common divisors".</span></li>
+<li><b class="t">18 min</b><span><b>Euclid backwards.</b> Back-substitute 252 and 198 on the board, then crews do 391 and 299 using the page's table to check. State and prove Bézout.</span></li>
+<li><b class="t">15 min</b><span><b>Proof wrestling.</b> Claims: "If d divides ax + by then d = gcd(a, b)"; "gcd(a + b, b) = gcd(a, b)"; "the Bézout x and y are unique".</span></li>
+<li><b class="t">5 min</b><span><b>Open Prophecies 3.1 and 3.2.</b> Celebrate correct "will break" calls as loudly as correct "true" calls.</span></li>
+</ol></div>
+<div class="sess"><h3>C · The Arena</h3><ol>
+<li><b class="t">20 min</b><span><b>Euclid's Game.</b> Crews play each other on whiteboards, then against El Gran Pesado on the page. Collect winning and losing starting pairs on the board.</span></li>
+<li><b class="t">22 min</b><span><b>Boss Problem.</b> El Gran Pesado brings weights 391 and 299: balance their gcd and give the recipe. Every crew must finish to unlock Chapter 4 on the class map.</span></li>
+<li><b class="t">8 min</b><span><b>Culture.</b> Euclid, the Nine Chapters, Āryabhaṭa, Lamé. Discuss: who gets credit for an idea many cultures found?</span></li>
+</ol></div>
+</div>
+</div></section>
+
+<section class="band alt" id="mistakes"><div class="wrap">
+<h2>Common mistakes and what to ask</h2>
+<div class="scroll"><table class="mist">
+<thead><tr><th class="l">What students do</th><th class="l">What to ask</th></tr></thead>
+<tbody>
+<tr><td>Report the last remainder, 0, as the gcd.</td><td>"What does every number divide? So is 0 a useful answer?" The gcd is the last <b>nonzero</b> remainder.</td></tr>
+<tr><td>Swap quotient and remainder, or let the remainder be larger than the divisor.</td><td>"Could you take one more copy of 198 out of 252?" Check 0 ≤ r &lt; b on every line.</td></tr>
+<tr><td>Lose a sign when running Euclid backwards.</td><td>"Check your recipe: compute 252x + 198y. Do you get 18?" Always verify at the end.</td></tr>
+<tr><td>Think the Bézout coefficients are unique.</td><td>"Add 7 oxygen weights and take away 5 nitrogen weights. Still balanced?" (x + 7k, y − 5k works for every k.)</td></tr>
+<tr><td>Think "d divides ax + by" means d is the gcd.</td><td>"Take x = y = 0. What divides 0?"</td></tr>
+<tr><td>Prove "never" with examples: "I tried 30 recipes for 1 with 6 and 9."</td><td>"What do all totals 6x + 9y have in common?" (They are multiples of 3.)</td></tr>
+<tr><td>In Euclid's Game, always take the biggest multiple.</td><td>"Is there a position where taking one fewer copy wins instead?"</td></tr>
+</tbody></table></div>
+</div></section>
+
+<section class="band" id="keys"><div class="wrap two">
+<div>
+<h2>Answer keys</h2>
+<h3>Boss Problem</h3>
+<div class="math">391 = 1·299 + 92
+299 = 3·92  + 23
+ 92 = 4·23  + 0       gcd = 23
+23 = 299 − 3·92 = 299 − 3·(391 − 299) = 4·299 − 3·391</div>
+<p>Balance: four 299-weights on one pan, three 391-weights and the bead of 23 on the other.</p>
+<h3>Prophecies</h3>
+<ul class="key">
+<li><b>3.1</b> Fulfilled: gcd(5, 7) = 1 (Corollary 3.3).</li>
+<li><b>3.2</b> Fulfilled: every 6x + 9y is a multiple of 3, and 3 = −1·6 + 1·9.</li>
+<li><b>3.3</b> Fulfilled: the maximum for numbers up to 1000 is 14 steps, at 987 and 610 (consecutive Fibonacci numbers).</li>
+<li><b>3.4</b> Fulfilled: a + b = 1·b + a, so gcd(a + b, b) = gcd(b, a) = 1 by Lemma 3.1.</li>
+</ul>
+<h3>Deckhand</h3>
+<ol class="key">
+<li>gcd(1071, 462) = 21 = −3·1071 + 7·462 (steps: 1071 = 2·462 + 147, 462 = 3·147 + 21, 147 = 7·21).</li>
+<li>x = 12, y = −8, or the shorter x = −2, y = 2.</li>
+<li>Write a = gk and b = gl with g = gcd(a, b). Then a − b = g(k − l).</li>
+<li>No: gcd(12, 18) = 6 does not divide 50.</li>
+</ol>
+</div>
+<div>
+<h3>Navigator</h3>
+<ol class="key">
+<li>If gcd = 1, Bézout gives ax + by = 1. Conversely, if ax + by = 1, every common divisor divides 1, so the gcd is 1.</li>
+<li>F<sub>n+1</sub> = 1·F<sub>n</sub> + F<sub>n−1</sub>, so gcd(F<sub>n+1</sub>, F<sub>n</sub>) = gcd(F<sub>n</sub>, F<sub>n−1</sub>) by Lemma 3.1. By induction this equals gcd(F<sub>2</sub>, F<sub>1</sub>) = gcd(1, 1) = 1.</li>
+<li>By Bézout, gcd(a, b) = ax + by, and d divides both terms.</li>
+<li>Broken: with x = y = 0, every d divides ax + by = 0. A correct version: the positive values of ax + by are exactly the multiples of gcd(a, b).</li>
+</ol>
+<h3>Cartographer</h3>
+<ol class="key">
+<li><b>Slowest pairs.</b> Consecutive Fibonacci numbers (Lamé, 1844). Proof idea: if Euclid takes n steps on a &gt; b, then b ≥ F<sub>n+1</sub> and a ≥ F<sub>n+2</sub>, by induction on n.</li>
+<li><b>Euclid's Game.</b> With a ≥ b, the player to move wins exactly when a = b or a/b &gt; φ = (1 + √5)/2 ≈ 1.618. If a ≥ 2b the mover can choose between leaving (a mod b + b, b) and (b, a mod b), and one of them is a losing position for the opponent. If b &lt; a &lt; 2b there is one forced move to (b, a − b), and a/b &lt; φ exactly when b/(a − b) &gt; φ.</li>
+<li><b>Three weights.</b> gcd(6, 10, 15) = 1 and 1 = 6 + 10 − 15, so every bead balances, even though no two of the weights are coprime. In general the balanceable beads are the multiples of gcd(a, b, c).</li>
+</ol>
+</div>
+</div></section>
+
+<section class="band alt" id="time"><div class="wrap two">
+<div>
+<h2>If you run short</h2>
+<ul class="log2">
+<li><b>Session A behind:</b> do "New weights" as a 3-minute whole-class demo on the projected balance, then seal the prophecies.</li>
+<li><b>Session B behind:</b> do one proof-wrestling claim instead of three; keep the prophecy opening.</li>
+<li><b>Session C behind:</b> Euclid's Game becomes homework (it is on the page). Never cut the Boss Problem: it unlocks the next land for the whole class.</li>
+</ul>
+</div>
+<div>
+<h2>If a crew finishes early</h2>
+<ul class="log2">
+<li>Cartographer problem 2 (Euclid's Game rule).</li>
+<li>Code quest cell 3: change recipe() to return the recipe with the fewest weights.</li>
+<li>Preview Chapter 4: with only nonnegative weights on one pan, which beads of 5s and 7s can be built?</li>
+</ul>
+</div>
+</div></section>
+
+<section class="band"><div class="wrap pager"><a href="ch3.html">← Chapter 3: Euclid's Forge</a><a href="index.html">Contents</a></div></section>
+<footer class="band"><div class="wrap">Modular Worlds · Instructor guide, Week 3 · draft · UCI Math CEO</div></footer>
+</body>
+</html>

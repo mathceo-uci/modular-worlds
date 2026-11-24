@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ammonia Bay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="book.css">
+<style>
+.bk{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.bk .pan{display:flex;flex-direction:column;gap:6px}
+.bk .row label{min-width:3.2em}
+.strip span{min-width:40px}
+</style>
+</head>
+<body>
+
+<nav class="toc" aria-label="Chapter sections"><div class="wrap">
+<a class="brand" href="index.html">Modular Worlds</a><a href="#landing">Landing</a><a href="#explore">Explore</a><a href="#prophecies">Prophecies</a><a href="#theory">Theory</a><a href="#arena">Arena</a><a href="#culture">Culture</a><a href="#problems">Problems</a><a href="#code">Code quest</a><a href="#logbook">Logbook</a>
+</div></nav>
+
+<header class="band hero" id="landing"><div class="wrap">
+<div>
+<div class="kicker">Modular Worlds · Chapter 2</div>
+<h1>Ammonia Bay</h1>
+<p class="lede">A harbor that stings the eyes, a second Book, and two Book-keepers who have not spoken in forty years.</p>
+<div class="episode" aria-label="Episode 2 opening scene">
+<p class="stage">The ship noses into a yellow fog. The air smells like a cleaning closet. Two towers face each other across the harbor, each with a lit window.</p>
+<p><span class="who">Lucía:</span> Ammonia. One nitrogen, weight seven, and three hydrogens. Same rule as home: all three equal, all even.</p>
+<p><span class="who">Mateo:</span> So their Book is 7 + 2 + 2 + 2 = 13, then 19, then 25… every six.</p>
+<p class="stage">A lantern swings down from the left tower on a rope. A note is tied to it.</p>
+<p><span class="who">Sofía</span> <span class="stage">(reading)</span>: "The Keeper of Water and I once shared a page. Since then, nothing. Tell me: will our Books ever meet again?"</p>
+<p><span class="who">Kevin:</span> Forty years of silence over arithmetic.</p>
+<p><span class="who">Ana:</span> Then let's give them an answer they can't argue with.</p>
+</div>
+</div>
+
+<section class="forge" aria-labelledby="col-h">
+<h3 id="col-h" style="margin:0 0 4px">Book collision</h3>
+<p class="small" style="margin:0 0 10px">Each Book starts at a weight and climbs by a step. Shared weights light up.</p>
+<div class="bk">
+<div class="pan"><h3>Book A</h3>
+<div class="row"><label for="sa">start</label><input id="sa" type="number" value="9" min="1" max="500"></div>
+<div class="row"><label for="da">step</label><input id="da" type="number" value="4" min="1" max="60"></div></div>
+<div class="pan"><h3>Book B</h3>
+<div class="row"><label for="sb">start</label><input id="sb" type="number" value="13" min="1" max="500"></div>
+<div class="row"><label for="db">step</label><input id="db" type="number" value="6" min="1" max="60"></div></div>
+</div>
+<div class="ctrl"><div><label for="pre">Presets</label><select id="pre">
+<option value="9,4,13,6">Water and ammonia</option>
+<option value="9,4,11,4">4n + 1 and 4n + 3</option>
+<option value="5,6,8,9">Steps 6 and 9</option>
+<option value="9,4,11,8">Water and methane (carbon 3)</option>
+</select></div></div>
+<div class="legend"><span><i style="background:var(--sea)"></i>Book A</span><span><i style="background:var(--brass)"></i>Book B</span><span><i style="background:var(--ember)"></i>both</span></div>
+<div class="strip" id="cstrip" aria-label="Weights from Book A and Book B"></div>
+<p class="verdict" id="cout" aria-live="polite" style="margin-top:12px"></p>
+</section>
+</div></header>
+
+<section class="band" id="explore"><div class="wrap two">
+<div>
+<h2>Explore: when do two Books meet?</h2>
+<p>Water's Book is 9, 13, 17, … (start 9, step 4). Ammonia's Book is 13, 19, 25, … (start 13, step 6), because 7 + 3<i class="v">h</i> grows by 6 when each hydrogen grows by 2.</p>
+<ol>
+<li>Find the first five weights in both Books. How far apart are they?</li>
+<li>Try 4<i class="v">n</i> + 1 against 4<i class="v">n</i> + 3. Can you explain what you see in one sentence?</li>
+<li>Try steps 6 and 9, with several different starts. When do they meet? How often?</li>
+<li>Guess a rule: given two starts and two steps, how can you tell whether the Books meet, and how far apart the shared weights are?</li>
+</ol>
+</div>
+<aside class="box tool">
+<h3>Proof toolkit: "if and only if"</h3>
+<p>"<i class="v">P</i> if and only if <i class="v">Q</i>" is two claims in one: <i class="v">P</i> ⇒ <i class="v">Q</i> and <i class="v">Q</i> ⇒ <i class="v">P</i>. Prove each direction separately, and label them.</p>
+<p style="margin:0">In this chapter you will prove one direction of the meeting rule. The other direction needs a tool from Chapter 3, so it goes into the Vault as a prophecy.</p>
+</aside>
+</div></section>
+
+<section class="band alt" id="prophecies"><div class="wrap">
+<h2>Prophecies to seal</h2>
+<p>Mark how sure your crew is before reading the theory. Vault card V2 from Chapter 1 is opened in this chapter too.</p>
+<div class="cards" id="cards"></div>
+</div></section>
+
+<section class="band" id="theory"><div class="wrap">
+<h2>Theory: progressions, gcd and lcm</h2>
+<div class="two">
+<div>
+<p>A <b>Book</b> with start <i class="v">s</i> and step <i class="v">d</i> &gt; 0 is the arithmetic progression <i class="v">s</i>, <i class="v">s</i> + <i class="v">d</i>, <i class="v">s</i> + 2<i class="v">d</i>, …. A number <i class="v">x</i> is in it exactly when <i class="v">x</i> ≥ <i class="v">s</i> and <i class="v">d</i> | <i class="v">x</i> − <i class="v">s</i>.</p>
+<p>For positive integers <i class="v">a</i>, <i class="v">b</i>: gcd(<i class="v">a</i>, <i class="v">b</i>) is the largest integer dividing both, and lcm(<i class="v">a</i>, <i class="v">b</i>) is the smallest positive integer that both divide. For example gcd(4, 6) = 2 and lcm(4, 6) = 12.</p>
+<div class="box thm"><h3>Theorem 2.1 (common multiples)</h3>
+<p style="margin:0">Every common multiple of <i class="v">a</i> and <i class="v">b</i> is a multiple of lcm(<i class="v">a</i>, <i class="v">b</i>).</p></div>
+<div class="pf"><p><b>Proof.</b> Let <i class="v">L</i> = lcm(<i class="v">a</i>, <i class="v">b</i>) and let <i class="v">M</i> be a common multiple. Divide: <i class="v">M</i> = <i class="v">qL</i> + <i class="v">r</i> with 0 ≤ <i class="v">r</i> &lt; <i class="v">L</i> (Theorem 1.1). Both <i class="v">a</i> and <i class="v">b</i> divide <i class="v">M</i> and <i class="v">qL</i>, so they divide <i class="v">r</i>. If <i class="v">r</i> &gt; 0 it would be a positive common multiple smaller than <i class="v">L</i>. So <i class="v">r</i> = 0.</p></div>
+<div class="box thm"><h3>Theorem 2.2 (once met, always met)</h3>
+<p style="margin:0">If <i class="v">x</i> is in two Books with steps <i class="v">d</i> and <i class="v">e</i>, then the shared weights from <i class="v">x</i> on are exactly <i class="v">x</i>, <i class="v">x</i> + <i class="v">L</i>, <i class="v">x</i> + 2<i class="v">L</i>, …, where <i class="v">L</i> = lcm(<i class="v">d</i>, <i class="v">e</i>).</p></div>
+<div class="pf"><p><b>Proof.</b> A number <i class="v">y</i> ≥ <i class="v">x</i> is in both Books exactly when <i class="v">d</i> | <i class="v">y</i> − <i class="v">x</i> and <i class="v">e</i> | <i class="v">y</i> − <i class="v">x</i> (it is already past both starts). By Theorem 2.1 that happens exactly when <i class="v">L</i> | <i class="v">y</i> − <i class="v">x</i>.</p></div>
+</div>
+<div>
+<div class="box thm"><h3>Theorem 2.3 (a test for never)</h3>
+<p style="margin:0">If the Books with starts <i class="v">s</i>, <i class="v">t</i> and steps <i class="v">d</i>, <i class="v">e</i> share a weight, then gcd(<i class="v">d</i>, <i class="v">e</i>) divides <i class="v">s</i> − <i class="v">t</i>.</p></div>
+<div class="pf"><p><b>Proof.</b> If <i class="v">s</i> + <i class="v">id</i> = <i class="v">t</i> + <i class="v">je</i>, then <i class="v">s</i> − <i class="v">t</i> = <i class="v">je</i> − <i class="v">id</i>. Let <i class="v">g</i> = gcd(<i class="v">d</i>, <i class="v">e</i>). It divides <i class="v">d</i> and <i class="v">e</i>, so it divides <i class="v">je</i> − <i class="v">id</i>.</p></div>
+<p><b>Using it backwards (the contrapositive):</b> if gcd(<i class="v">d</i>, <i class="v">e</i>) does not divide <i class="v">s</i> − <i class="v">t</i>, the Books never meet. For 4<i class="v">n</i> + 1 and 4<i class="v">n</i> + 3: gcd(4, 4) = 4 does not divide 2. Vault card V2 is <b>broken</b>.</p>
+<div class="box thm"><h3>Water meets ammonia</h3>
+<p style="margin:0">gcd(4, 6) = 2 divides 13 − 9 = 4, and 13 is in both Books. By Theorem 2.2 the shared weights are 13, 25, 37, 49, …: every 12, the weights that leave remainder 1 when divided by 12.</p></div>
+<p>The Keepers' question has an answer: their Books meet again every 12 pages of weight, forever. The converse of Theorem 2.3 (if the gcd divides the difference, the Books do meet) waits in the Vault for Chapter 3.</p>
+</div>
+</div>
+</div></section>
+
+<section class="band alt" id="arena"><div class="wrap game">
+<div>
+<h2>Arena: Collision race</h2>
+<p>Two Books appear. Find the first weight they share, or call "never". In class, crews race on whiteboards and must justify "never" with Theorem 2.3 before it counts.</p>
+<div class="box tool" style="margin-top:18px">
+<h3>Strategy question</h3>
+<p style="margin:0">Listing both Books works, but it is slow when the steps are large. Once you know the Books meet, how can you find the first shared weight faster? (You will have a fast method in Chapter 7.)</p>
+</div>
+</div>
+<div class="forge">
+<p class="small" style="margin:0;text-align:center">Where do these Books first meet?</p>
+<p class="big" id="rq" style="font-size:clamp(22px,3.4vw,30px)"></p>
+<div class="ctrl" style="justify-content:center;margin-top:0">
+<div><label for="ra">First shared weight</label><input id="ra" type="number" min="1"></div>
+<button class="primary" id="rcheck">Check</button>
+<button class="o" id="rnever">Never</button>
+</div>
+<p class="verdict" id="rout" aria-live="polite"></p>
+<p class="small" style="text-align:center" id="rstreak">Streak: 0</p>
+<div style="text-align:center"><button id="rnext">Next pair</button></div>
+</div>
+</div></section>
+
+<section class="band" id="culture"><div class="wrap two">
+<div>
+<h2>Culture: cycles that meet, and what ammonia costs</h2>
+<p><b>Calendars are Books.</b> A week repeats every 7 days and a month pattern repeats on its own cycle; asking when a date falls on the same weekday again is a collision question. The Maya Tzolk'in pairs 13 day numbers with 20 day names. Because 13 and 20 share no factor, every number meets every name, and the cycle closes after 13 × 20 = 260 days. In Chapter 7 you will meet its partner, the 365-day Haab', and a much harder collision.</p>
+<p><b>Ammonia feeds the world.</b> Since Fritz Haber and Carl Bosch learned to make ammonia from the air in the early 1900s, it has become the base of most nitrogen fertilizer, and by common estimates close to half of the world's people are fed by crops grown with it.</p>
+<p><b>And it travels.</b> Rain washes extra fertilizer into storm drains and rivers, such as the Santa Ana River, where it feeds algae that use up the water's oxygen.</p>
+</div>
+<aside class="box thm">
+<h3>Discuss with your crew</h3>
+<p>The Book-keepers live upstream and downstream of each other. Who pays when ammonia runs off a field: the farmer, the town downstream, or the fish?</p>
+<p style="margin:0">What would you need to measure to know whether your own neighborhood's water is affected?</p>
+</aside>
+</div></section>
+
+<section class="band alt" id="problems"><div class="wrap">
+<h2>Problems</h2>
+<div class="tiers">
+<div class="tier"><h3>Deckhand</h3><ol>
+<li>List every weight below 100 in both the water and ammonia Books.
+<details><summary>Answer</summary>13, 25, 37, 49, 61, 73, 85, 97.</details></li>
+<li>Find gcd and lcm of 6 and 9, of 12 and 18, and of 7 and 13.
+<details><summary>Answer</summary>3 and 18; 6 and 36; 1 and 91.</details></li>
+<li>Do the Books (start 5, step 6) and (start 8, step 9) meet? If so, where first?
+<details><summary>Answer</summary>Yes: gcd(6, 9) = 3 divides 3. First shared weight 17, then every 18.</details></li>
+<li>Carbon weighs 3 in a far land, so methane (one carbon, four equal even hydrogens) weighs 3 + 4<i class="v">h</i>. Show that methane never shares a weight with water.</li>
+</ol></div>
+<div class="tier"><h3>Navigator</h3><ol>
+<li>Prove that if <i class="v">a</i> | <i class="v">b</i>, then lcm(<i class="v">a</i>, <i class="v">b</i>) = <i class="v">b</i> and gcd(<i class="v">a</i>, <i class="v">b</i>) = <i class="v">a</i>.</li>
+<li>Prove that a number is in both the water and ammonia Books if and only if it is at least 13 and leaves remainder 1 when divided by 12.</li>
+<li>Three Books: water (step 4), ammonia (step 6) and a Book with start 13 and step 10. Find all their shared weights and prove your answer.
+<details><summary>Answer</summary>13, 73, 133, …: every 60 = lcm(4, 6, 10), starting at 13.</details></li>
+</ol></div>
+<div class="tier"><h3>Cartographer</h3><ol>
+<li>Conjecture a formula linking gcd(<i class="v">a</i>, <i class="v">b</i>), lcm(<i class="v">a</i>, <i class="v">b</i>) and <i class="v">ab</i>. Test it on twenty pairs. (You will prove it in Chapter 5.)</li>
+<li>Prove the converse of Theorem 2.3 for the special case gcd(<i class="v">d</i>, <i class="v">e</i>) = 1 and <i class="v">e</i> ≤ 5, by checking remainders.</li>
+<li>Which pairs of Books meet at their very first pages? Describe all of them.</li>
+</ol></div>
+</div>
+</div></section>
+
+<section class="band" id="code"><div class="wrap">
+<h2>Code quest: collide Books in Python</h2>
+<p>These cells run real Python in your browser. The first run loads Python (about 10 MB, once).</p>
+<div id="cells"></div>
+<p class="small" id="pystat" aria-live="polite"></p>
+</div></section>
+
+<section class="band alt" id="logbook"><div class="wrap two">
+<div>
+<h2>Logbook</h2>
+<ul class="log2">
+<li><b>Books</b> are arithmetic progressions: <i class="v">x</i> is in Book(<i class="v">s</i>, <i class="v">d</i>) when <i class="v">x</i> ≥ <i class="v">s</i> and <i class="v">d</i> | <i class="v">x</i> − <i class="v">s</i>.</li>
+<li><b>Theorem 2.1:</b> common multiples are multiples of the lcm.</li>
+<li><b>Theorem 2.2:</b> once two Books meet, they meet every lcm(<i class="v">d</i>, <i class="v">e</i>).</li>
+<li><b>Theorem 2.3:</b> if they meet, gcd(<i class="v">d</i>, <i class="v">e</i>) divides the difference of the starts.</li>
+</ul>
+</div>
+<div>
+<h3>Prophecies opened in this chapter</h3>
+<ul class="log2">
+<li>Vault card V2, "any two Books meet": <b>broken</b> (4<i class="v">n</i> + 1 and 4<i class="v">n</i> + 3).</li>
+<li>2.1, "water and ammonia meet every 24": <b>broken</b> (every 12).</li>
+<li>2.2, "once met, always met": <b>fulfilled</b> (Theorem 2.2).</li>
+<li>2.3 waits for Chapter 3.</li>
+</ul>
+<p class="stage" style="margin-top:16px">Two lanterns swing out over the harbor at the same moment. Somewhere in the fog a door opens. The crew is already gone, following a column of sparks on the horizon: an island where, they say, the smiths can balance anything.</p>
+</div>
+</div></section>
+
+<section class="band"><div class="wrap pager"><a href="ch1.html">← Chapter 1: Mojadito</a><a href="index.html">Contents</a><a href="ch3.html">Chapter 3: Euclid's Forge →</a></div></section>
+<footer class="band"><div class="wrap">Modular Worlds, Chapter 2 · draft · UCI Math CEO</div></footer>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js" defer></script>
+<script src="book.js"></script>
+<script>
+{
+const {$,gcd,lcm}=MW;
+const inB=(x,s,d)=>x>=s&&(x-s)%d===0;
+function firstMeet(s,d,t,e){if((s-t)%gcd(d,e)!==0)return null;for(let x=Math.max(s,t);x<=Math.max(s,t)+lcm(d,e);x++)if(inB(x,s,d)&&inB(x,t,e))return x;return null}
+
+/* hero */
+function drawC(){
+  const s=+$('#sa').value,d=+$('#da').value,t=+$('#sb').value,e=+$('#db').value;
+  if(!(s>0&&d>0&&t>0&&e>0&&d<=60&&e<=60&&s<=500&&t<=500)){$('#cout').textContent='Use starts up to 500 and steps from 1 to 60.';return}
+  const lo=Math.min(s,t),hi=Math.max(s,t)+Math.max(3*lcm(d,e),40),nums=[];
+  for(let x=lo;x<=hi&&nums.length<56;x++){const a=inB(x,s,d),b=inB(x,t,e);if(a||b)nums.push(`<span class="${a&&b?'both':a?'w':'a'}">${x}</span>`)}
+  $('#cstrip').innerHTML=nums.join('');
+  const m=firstMeet(s,d,t,e),g=gcd(d,e),o=$('#cout');
+  if(m===null){o.textContent=`Never: gcd(${d}, ${e}) = ${g} does not divide ${s} − ${t} = ${s-t}.`;o.className='verdict no'}
+  else{o.textContent=`First shared weight ${m}, then every lcm(${d}, ${e}) = ${lcm(d,e)}.`;o.className='verdict ok'}
+}
+['sa','da','sb','db'].forEach(id=>$('#'+id).addEventListener('input',drawC));
+$('#pre').addEventListener('change',e=>{const[a,b,c,d]=e.target.value.split(',');$('#sa').value=a;$('#da').value=b;$('#sb').value=c;$('#db').value=d;drawC()});
+drawC();
+
+/* prophecies */
+MW.cards($('#cards'),[
+ {id:'p21',t:'The Books of water and ammonia meet every 24.',s:'Settled by Theorem 2.2'},
+ {id:'p22',t:'If two Books meet once, they meet infinitely often, at evenly spaced weights.',s:'Settled by Theorem 2.2'},
+ {id:'p23',t:'If gcd(d, e) divides the difference of the starts, the two Books do meet.',s:'Settled in Chapter 3 (Bézout)'}],'mw-ch2',i=>'Prophecy 2.'+(i+1));
+
+/* arena */
+const R={q:null,streak:0,done:false};
+const rnd=n=>Math.floor(Math.random()*n);
+function nextR(){const d=2+rnd(9),e=2+rnd(9),s=1+rnd(25),t=1+rnd(25);R.q=[s,d,t,e];R.ans=firstMeet(s,d,t,e);R.done=false;
+  $('#rq').textContent=`start ${s}, step ${d}   and   start ${t}, step ${e}`;$('#ra').value='';$('#rout').textContent='';$('#rout').className='verdict'}
+function say(ok,msg){if(R.done)return;R.done=true;R.streak=ok?R.streak+1:0;$('#rout').textContent=msg;$('#rout').className='verdict '+(ok?'ok':'no');$('#rstreak').textContent='Streak: '+R.streak}
+const why=()=>{const[s,d,t,e]=R.q;return `gcd(${d}, ${e}) = ${gcd(d,e)} and ${s} − ${t} = ${s-t}`};
+$('#rcheck').addEventListener('click',()=>{const v=parseInt($('#ra').value,10);if(!(v>0)){$('#rout').textContent='Type a weight first.';return}
+  if(R.ans===null)say(false,`They never meet: ${why()}.`);else say(v===R.ans,v===R.ans?`Yes! ${v}, then every ${lcm(R.q[1],R.q[3])}.`:`Not quite: the first shared weight is ${R.ans}.`)});
+$('#rnever').addEventListener('click',()=>{if(R.ans===null)say(true,`Never, proved: ${why()}, and the gcd does not divide the difference.`);else say(false,`They do meet, first at ${R.ans}.`)});
+$('#rnext').addEventListener('click',nextR);nextR();
+
+/* code */
+MW.cells($('#cells'),[
+{t:'Cell 1 · Books and their collisions',c:`def book(start, step, n=50):
+    return [start + step * i for i in range(n)]
+
+water = book(9, 4)
+ammonia = book(13, 6)
+shared = sorted(set(water) & set(ammonia))
+print("shared:", shared[:8])
+print("gaps:", [b - a for a, b in zip(shared, shared[1:])][:7])`},
+{t:'Cell 2 · the gcd test',c:`from math import gcd
+
+def meet(s, d, t, e):
+    """First shared weight of Book(s, d) and Book(t, e), or None."""
+    if (s - t) % gcd(d, e):
+        return None          # Theorem 2.3
+    x = max(s, t)
+    while not ((x - s) % d == 0 and (x - t) % e == 0):
+        x += 1
+    return x
+
+for q in [(9, 4, 13, 6), (9, 4, 11, 4), (5, 6, 8, 9), (9, 4, 11, 8)]:
+    print(q, meet(*q))
+# Quest: is the while loop guaranteed to stop whenever the gcd test passes? That is Prophecy 2.3.`},
+{t:'Cell 3 · hunting a formula (Cartographer 1)',c:`from math import gcd
+for a, b in [(4, 6), (6, 9), (12, 18), (7, 13), (20, 30), (21, 6)]:
+    l = a * b // gcd(a, b)     # is this really the lcm? check it by brute force too
+    brute = next(m for m in range(1, a * b + 1) if m % a == 0 and m % b == 0)
+    print(a, b, "gcd", gcd(a, b), "lcm", brute, "gcd*lcm", gcd(a, b) * brute, "a*b", a * b)`}],
+{status:$('#pystat')});
+}
+</script>
+</body>
+</html>

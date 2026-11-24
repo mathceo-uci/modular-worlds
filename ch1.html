@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mojadito, Home Port</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="book.css">
+<style>
+.mol{display:flex;justify-content:center;align-items:center;gap:0;margin:8px 0 4px}
+.atom{width:84px;height:84px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;line-height:1.1;font-size:22px;border:3px solid rgba(0,0,0,.15)}
+.atom small{font-size:16px;font-weight:500}
+.atom.h{background:#f6b8d6;color:#3b1028}
+.atom.o{background:#e5484d;color:#fff}
+.bond{width:34px;height:8px;background:var(--mute);border-radius:4px}
+.hstep{display:flex;gap:10px;justify-content:center;align-items:center;margin:8px 0}
+.hstep output{font-family:"Roboto Flex",sans-serif;font-size:22px;font-weight:700;min-width:6.5em;text-align:center}
+@media(max-width:420px){.atom{width:68px;height:68px;font-size:18px}.bond{width:20px}}
+</style>
+</head>
+<body>
+
+<nav class="toc" aria-label="Chapter sections"><div class="wrap">
+<a class="brand" href="index.html">Modular Worlds</a><a href="#landing">Landing</a><a href="#explore">Explore</a><a href="#vault">Prophecy Vault</a><a href="#theory">Theory</a><a href="#arena">Arena</a><a href="#culture">Culture</a><a href="#problems">Problems</a><a href="#code">Code quest</a><a href="#logbook">Logbook</a>
+</div></nav>
+
+<header class="band hero" id="landing"><div class="wrap">
+<div>
+<div class="kicker">Modular Worlds · Chapter 1</div>
+<h1>Mojadito, Home Port</h1>
+<p class="lede">A world where water follows its own rules, a Book that never ends, and six students handed a ship they did not ask for.</p>
+<div class="episode" aria-label="Episode 1 opening scene">
+<p class="stage">Rain on a tin roof. A harbor office in Mojadito, lit by one lamp. Six students who barely know each other stand around a table.</p>
+<p><span class="who">Ana:</span> The harbor master said the ship leaves at dawn, with us or without us.</p>
+<p><span class="who">Diego</span> <span class="stage">(laptop open)</span>: Without us sounds fine. I have a midterm.</p>
+<p class="stage">The door slams open. A masked luchador fills the frame, dripping, carrying a book thicker than his arm.</p>
+<p><span class="who">El Gran Pesado:</span> The Infinite Book of Water. Every molecule of water this world can make, its weight written here. Oxygen weighs five. Each hydrogen weighs an even number, the two always equal. The Book never ends, and the islands out there each keep a Book of their own.</p>
+<p><span class="who">Kevin:</span> And we care because?</p>
+<p><span class="who">El Gran Pesado:</span> Because the islands trade in prophecies. Claims about their Books. Most are lies. Seal your own, sail, and come back with proof, or don't come back at all.</p>
+<p><span class="who">Sofía</span> <span class="stage">(quietly, already writing)</span>: Then we start with this Book.</p>
+</div>
+</div>
+
+<section class="forge" aria-labelledby="book-h">
+<h3 id="book-h" style="margin:0 0 4px">The Infinite Book of Water</h3>
+<p class="small" style="margin:0">Change the hydrogen weight. Watch the molecule's weight and its place in the Book.</p>
+<div class="mol" id="mol" role="img" aria-label="Water molecule"></div>
+<div class="hstep">
+<button id="hdown" aria-label="Lower each hydrogen weight by 2">H − 2</button>
+<output id="hout" aria-live="polite"></output>
+<button id="hup" aria-label="Raise each hydrogen weight by 2">H + 2</button>
+</div>
+<div class="big" id="wbig"></div>
+<p class="small" style="text-align:center;margin:0 0 10px" id="wsum"></p>
+<div class="strip" id="bookstrip" aria-label="The first pages of the Book"></div>
+</section>
+</div></header>
+
+<section class="band" id="explore"><div class="wrap two">
+<div>
+<h2>Explore: reading the Book</h2>
+<p>In Mojadito, a water molecule is H–O–H. Oxygen weighs 5. Each hydrogen weighs the same positive even number <i class="v">h</i>, so a molecule weighs <i class="v">h</i> + 5 + <i class="v">h</i>.</p>
+<ol>
+<li>List the first ten weights in the Book. What do they have in common? Find two different patterns.</li>
+<li>Is 2025 in the Book? Is 2026? How do you know without listing everything up to 2025?</li>
+<li>The islanders tell legends about the Book. Test each one below on thousands of cases. A legend that survives every test is still not proved; a legend that fails once is broken.</li>
+</ol>
+<h3>Legend tester</h3>
+<div class="ctrl" style="margin-top:0">
+<div><label for="leg">Legend</label><select id="leg">
+<option value="sum">The sum of two Book weights is in the Book</option>
+<option value="prod">The product of two Book weights is in the Book</option>
+<option value="prime">Every Book weight is prime</option>
+<option value="odd">Every odd number from 9 up is in the Book</option>
+<option value="sq">Every odd square from 9 up is in the Book</option>
+</select></div>
+<div><label for="legn">Test the first</label><select id="legn"><option>100</option><option selected>1000</option><option>10000</option></select></div>
+<button class="primary" id="legrun">Test it</button>
+</div>
+<p class="verdict" id="legout" aria-live="polite" style="text-align:left;margin-top:12px"></p>
+</div>
+<aside class="box tool">
+<h3>Proof toolkit: examples vs proof</h3>
+<p><b>To break</b> a "for all" claim, one counterexample is enough. 9 + 13 = 22, and 22 is even, so "the sum of two Book weights is in the Book" is broken.</p>
+<p><b>To prove</b> a "for all" claim, work with a general member: write a Book weight as 4<i class="v">m</i> + 1, never as "say, 13". What you show for 4<i class="v">m</i> + 1 holds for every one of them at once.</p>
+<p style="margin:0">A legend that passed 10,000 tests may still fail at the 10,001st. In Chapter 5 one of the Vault's prophecies survives every small test and still breaks.</p>
+</aside>
+</div></section>
+
+<section class="band alt" id="vault"><div class="wrap">
+<h2>The Prophecy Vault</h2>
+<p>Seal these prophecies for the whole voyage. Mark how sure your crew is now; you will open each one in the chapter that gives you the tools. Your choices stay in this browser only. Some will break. A broken prophecy you predicted would break is a win.</p>
+<div class="cards" id="cards"></div>
+</div></section>
+
+<section class="band" id="theory"><div class="wrap">
+<h2>Theory: divisibility and the division algorithm</h2>
+<div class="two">
+<div>
+<p>For integers <i class="v">a</i> and <i class="v">d</i>, write <i class="v">d</i> | <i class="v">a</i> ("<i class="v">d</i> divides <i class="v">a</i>") if <i class="v">a</i> = <i class="v">dk</i> for some integer <i class="v">k</i>. An integer is <b>even</b> if 2 | <i class="v">n</i>, and <b>odd</b> if <i class="v">n</i> = 2<i class="v">k</i> + 1 for some integer <i class="v">k</i>.</p>
+<div class="box thm"><h3>Theorem 1.1 (the division algorithm)</h3>
+<p style="margin:0">For any integer <i class="v">a</i> and any integer <i class="v">b</i> &gt; 0, there are unique integers <i class="v">q</i> and <i class="v">r</i> with <i class="v">a</i> = <i class="v">qb</i> + <i class="v">r</i> and 0 ≤ <i class="v">r</i> &lt; <i class="v">b</i>.</p></div>
+<div class="pf"><p><b>Proof.</b> <i>Existence.</i> The set {<i class="v">a</i> − <i class="v">kb</i> : <i class="v">k</i> an integer} contains nonnegative numbers (take <i class="v">k</i> very negative). By the well-ordering principle it has a smallest nonnegative member <i class="v">r</i> = <i class="v">a</i> − <i class="v">qb</i>. If <i class="v">r</i> ≥ <i class="v">b</i>, then <i class="v">r</i> − <i class="v">b</i> = <i class="v">a</i> − (<i class="v">q</i> + 1)<i class="v">b</i> would be a smaller nonnegative member. So 0 ≤ <i class="v">r</i> &lt; <i class="v">b</i>.</p>
+<p><i>Uniqueness.</i> If <i class="v">qb</i> + <i class="v">r</i> = <i class="v">q'b</i> + <i class="v">r'</i> with both remainders in [0, <i class="v">b</i>), then <i class="v">b</i> | <i class="v">r</i> − <i class="v">r'</i>, and |<i class="v">r</i> − <i class="v">r'</i>| &lt; <i class="v">b</i>, so <i class="v">r</i> = <i class="v">r'</i> and then <i class="v">q</i> = <i class="v">q'</i>.</p></div>
+<div class="box thm"><h3>Theorem 1.2 (what the Book contains)</h3>
+<p style="margin:0">A number <i class="v">W</i> is in the Book of Water if and only if <i class="v">W</i> = 4<i class="v">m</i> + 1 for some integer <i class="v">m</i> ≥ 2. Then each hydrogen weighs <i class="v">h</i> = (<i class="v">W</i> − 5)/2.</p></div>
+<div class="pf"><p><b>Proof.</b> If <i class="v">h</i> = 2<i class="v">k</i> with <i class="v">k</i> ≥ 1, the weight is 2<i class="v">h</i> + 5 = 4<i class="v">k</i> + 5 = 4(<i class="v">k</i> + 1) + 1, with <i class="v">m</i> = <i class="v">k</i> + 1 ≥ 2. Conversely, if <i class="v">W</i> = 4<i class="v">m</i> + 1 with <i class="v">m</i> ≥ 2, take <i class="v">h</i> = 2(<i class="v">m</i> − 1), a positive even number, and check that 2<i class="v">h</i> + 5 = <i class="v">W</i>.</p></div>
+</div>
+<div>
+<div class="box thm"><h3>Theorem 1.3 (Vault card V1)</h3>
+<p style="margin:0">The product of two Book weights is a Book weight.</p></div>
+<div class="pf"><p><b>Proof.</b> (4<i class="v">m</i> + 1)(4<i class="v">n</i> + 1) = 16<i class="v">mn</i> + 4<i class="v">m</i> + 4<i class="v">n</i> + 1 = 4(4<i class="v">mn</i> + <i class="v">m</i> + <i class="v">n</i>) + 1, and 4<i class="v">mn</i> + <i class="v">m</i> + <i class="v">n</i> ≥ 2 when <i class="v">m</i>, <i class="v">n</i> ≥ 2. By Theorem 1.2 the product is in the Book.</p></div>
+<div class="box tool"><h3>Proof toolkit: induction</h3>
+<p>To prove a statement <i class="v">P</i>(<i class="v">n</i>) for every <i class="v">n</i> ≥ 1: prove <i class="v">P</i>(1) (the base case), then prove that <i class="v">P</i>(<i class="v">n</i>) implies <i class="v">P</i>(<i class="v">n</i> + 1) (the step). Like dominoes: the first falls, and each one knocks over the next.</p>
+<p style="margin:0"><b>Example.</b> The first <i class="v">n</i> Book weights (9, 13, 17, …) add up to <i class="v">n</i>(2<i class="v">n</i> + 7).</p></div>
+<div class="pf"><p><b>Proof.</b> The <i class="v">k</i>-th Book weight is 4<i class="v">k</i> + 5. Base case: 9 = 1·(2 + 7). Step: if the first <i class="v">n</i> weights add to <i class="v">n</i>(2<i class="v">n</i> + 7), adding the next one, 4(<i class="v">n</i> + 1) + 5 = 4<i class="v">n</i> + 9, gives 2<i class="v">n</i>² + 11<i class="v">n</i> + 9 = (<i class="v">n</i> + 1)(2<i class="v">n</i> + 9) = (<i class="v">n</i> + 1)(2(<i class="v">n</i> + 1) + 7).</p></div>
+<div class="box tool"><h3>Proof toolkit: the contrapositive</h3>
+<p style="margin:0">"If <i class="v">P</i> then <i class="v">Q</i>" is the same claim as "if not <i class="v">Q</i> then not <i class="v">P</i>". Example: <b>if <i class="v">n</i>² is in the Book, then <i class="v">n</i> is odd.</b> Contrapositive: if <i class="v">n</i> is even, <i class="v">n</i>² = 4<i class="v">k</i>² is a multiple of 4, so it is not of the form 4<i class="v">m</i> + 1.</p></div>
+</div>
+</div>
+</div></section>
+
+<section class="band alt" id="arena"><div class="wrap game">
+<div>
+<h2>Arena: El Gran Pesado's weigh-in</h2>
+<p>El Gran Pesado shouts a weight. Is it real water? If it is, name the weight of each hydrogen. If not, shout "¡Imposible!" Your crew's streak counts every right call in a row.</p>
+<p>In class, play it as lucha rounds: one student announces the weight, every pair shows its answer at once ("¡3, 2, 1, lucha!"), and a different student explains each round. No points against each other: the whole room plays against El Gran Pesado.</p>
+<div class="box tool" style="margin-top:18px">
+<h3>Proof wrestling (class format)</h3>
+<p style="margin:0">One crew states a claim about the Book. The other crew gets five minutes to break it with a counterexample, or concede. A third crew judges the proof. Precise statements win: "every Book weight is odd" survives; "every odd number is a Book weight" does not.</p>
+</div>
+</div>
+<div class="forge">
+<p class="small" style="margin:0;text-align:center">El Gran Pesado's molecule weighs</p>
+<div class="big" id="gw"></div>
+<div class="ctrl" style="justify-content:center;margin-top:0">
+<div><label for="gh">Each H weighs</label><input id="gh" type="number" min="1"></div>
+<button class="primary" id="gcheck">Check H</button>
+<button class="o" id="gimp">¡Imposible!</button>
+</div>
+<p class="verdict" id="gout" aria-live="polite"></p>
+<p class="small" style="text-align:center" id="gstreak">Streak: 0</p>
+<div style="text-align:center"><button id="gnext">Next weight</button></div>
+</div>
+</div></section>
+
+<section class="band" id="culture"><div class="wrap two">
+<div>
+<h2>Culture: prophecies old and new</h2>
+<p><b>The Maya codices.</b> Only four Maya books survive from before the Spanish conquest. The Dresden Codex is full of counted cycles of days, used to predict the movements of Venus, eclipses and seasons of rain. Its scribes made prophecies the way you will: find a pattern, trust the arithmetic, write it down.</p>
+<p><b>Odd and even in Euclid.</b> Book IX of Euclid's <i>Elements</i> proves facts about odd and even numbers like the ones in this chapter, for example that an odd number times an odd number is odd.</p>
+<p><b>Forecasts as prophecies.</b> Today's El Niño forecasts are prophecies built from data: weaker Pacific winds, warmer water spreading east, then a prediction of storms in Southern California and droughts elsewhere. Like your Vault, they are tested when the season arrives.</p>
+</div>
+<aside class="box thm">
+<h3>Discuss with your crew</h3>
+<p>Does your family have a saying, story or legend about rain or water? What does it predict, and could you test it?</p>
+<p style="margin:0">Name your crew and write one family saying about water on the first page of your Prophecy Journal.</p>
+</aside>
+</div></section>
+
+<section class="band alt" id="problems"><div class="wrap">
+<h2>Problems</h2>
+<div class="tiers">
+<div class="tier"><h3>Deckhand</h3><ol>
+<li>Is 2025 in the Book? If so, what does each hydrogen weigh? Is 2026?
+<details><summary>Answer</summary>2025 = 4·506 + 1, so yes, with h = 1010. 2026 is even, so no.</details></li>
+<li>Find <i class="v">q</i> and <i class="v">r</i> in the division algorithm for <i class="v">a</i> = −17, <i class="v">b</i> = 5.
+<details><summary>Answer</summary>−17 = (−4)·5 + 3, so q = −4, r = 3 (the remainder must be between 0 and 4).</details></li>
+<li>Prove that the sum of two odd numbers is even.</li>
+<li>Prove that no Book weight is the sum of two Book weights.</li>
+</ol></div>
+<div class="tier"><h3>Navigator</h3><ol>
+<li>Prove that the square of any odd number leaves remainder 1 when divided by 8.</li>
+<li>Prove by induction that 4<sup><i class="v">n</i></sup> − 1 is divisible by 3 for every <i class="v">n</i> ≥ 1.</li>
+<li>Prove: if <i class="v">d</i> | <i class="v">a</i> and <i class="v">d</i> | <i class="v">b</i>, then <i class="v">d</i> | (<i class="v">ax</i> + <i class="v">by</i>) for all integers <i class="v">x</i>, <i class="v">y</i>.</li>
+<li>Repair the broken legend "every odd number from 9 up is in the Book" into a true statement, and prove it.</li>
+</ol></div>
+<div class="tier"><h3>Cartographer</h3><ol>
+<li>Which squares are in the Book? Prove your answer.
+<details><summary>Hint</summary>Look at odd and even squares separately; Navigator 1 helps.</details></li>
+<li>Call a Book weight a <b>Book prime</b> if it is not the product of two Book weights (81 = 9·9 is not one; 21 is). List the Book primes below 200. Do you notice anything strange about 441?</li>
+<li>Mojadito gets a new rule: the two hydrogens may weigh different even numbers. Which weights are possible now?</li>
+</ol></div>
+</div>
+</div></section>
+
+<section class="band" id="code"><div class="wrap">
+<h2>Code quest: the Book in Python</h2>
+<p>These cells run real Python in your browser. The first run loads Python (about 10 MB, once).</p>
+<div id="cells"></div>
+<p class="small" id="pystat" aria-live="polite"></p>
+</div></section>
+
+<section class="band alt" id="logbook"><div class="wrap two">
+<div>
+<h2>Logbook</h2>
+<ul class="log2">
+<li><b>Division algorithm (1.1):</b> <i class="v">a</i> = <i class="v">qb</i> + <i class="v">r</i> with 0 ≤ <i class="v">r</i> &lt; <i class="v">b</i>, and <i class="v">q</i>, <i class="v">r</i> are unique.</li>
+<li><b>The Book (1.2):</b> the water weights are exactly 4<i class="v">m</i> + 1 with <i class="v">m</i> ≥ 2: 9, 13, 17, 21, …</li>
+<li><b>Products (1.3):</b> the Book is closed under multiplication, but not under addition.</li>
+<li><b>Tools:</b> one counterexample breaks a "for all"; a general member proves it; induction; the contrapositive.</li>
+</ul>
+</div>
+<div>
+<h3>Prophecies opened in this chapter</h3>
+<ul class="log2"><li>Vault card V1, "the product of two Book weights is in the Book": <b>fulfilled</b> (Theorem 1.3).</li></ul>
+<p class="stage" style="margin-top:16px">Dawn. The ship pulls out of Mojadito with six students, one sealed Vault and El Gran Pesado at the rail. Across the water, a harbor that smells of ammonia, and a second Book that nobody in Mojadito has ever read.</p>
+</div>
+</div></section>
+
+<section class="band"><div class="wrap pager"><a href="index.html">Contents</a><a href="ch2.html">Chapter 2: Ammonia Bay →</a></div></section>
+<footer class="band"><div class="wrap">Modular Worlds, Chapter 1 · draft · UCI Math CEO</div></footer>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js" defer></script>
+<script src="book.js"></script>
+<script>
+{
+const {$,esc}=MW;
+const inBook=w=>w>=9&&w%4===1;
+
+/* hero: the Book */
+let h=6;
+function drawBook(){
+  const w=2*h+5;
+  $('#mol').innerHTML=`<div class="atom h">H<small>(${h})</small></div><div class="bond"></div><div class="atom o">O<small>(5)</small></div><div class="bond"></div><div class="atom h">H<small>(${h})</small></div>`;
+  $('#mol').setAttribute('aria-label',`Water molecule: hydrogen ${h}, oxygen 5, hydrogen ${h}`);
+  $('#hout').textContent=`each H = ${h}`;
+  $('#wbig').textContent=w;
+  $('#wsum').textContent=`${h} + 5 + ${h} = ${w}, page ${h/2} of the Book`;
+  const first=Math.max(1,h/2-5),pages=Array.from({length:12},(_,i)=>first+i);
+  $('#bookstrip').innerHTML=pages.map(k=>`<span class="${k===h/2?'w':''}" title="page ${k}">${4*k+5}</span>`).join('');
+  $('#hdown').disabled=h<=2;
+}
+$('#hdown').addEventListener('click',()=>{if(h>2){h-=2;drawBook()}});
+$('#hup').addEventListener('click',()=>{if(h<400){h+=2;drawBook()}});
+drawBook();
+
+/* legend tester */
+const book=n=>Array.from({length:n},(_,i)=>4*i+9);
+const isPrime=n=>{if(n<2)return false;for(let d=2;d*d<=n;d++)if(n%d===0)return false;return true};
+const LEG={
+ sum:n=>{const B=book(n);for(const a of B)for(const b of B){if(!inBook(a+b))return `Broken: ${a} + ${b} = ${a+b}, which is not in the Book.`}},
+ prod:n=>{const B=book(Math.min(n,2000));for(const a of B)for(const b of B){if(!inBook(a*b))return `Broken: ${a} × ${b} = ${a*b}.`}},
+ prime:n=>{for(const a of book(n))if(!isPrime(a))return `Broken: ${a} = ${(()=>{for(let d=2;;d++)if(a%d===0)return d+' × '+a/d})()}.`},
+ odd:n=>{for(let a=9;a<9+2*n;a+=2)if(!inBook(a))return `Broken: ${a} is odd but not in the Book (${a} = 4·${(a-3)/4} + 3).`},
+ sq:n=>{for(let k=3;k<3+n;k+=2)if(!inBook(k*k))return `Broken: ${k}² = ${k*k}.`}
+};
+$('#legrun').addEventListener('click',()=>{const n=+$('#legn').value,r=LEG[$('#leg').value](n),o=$('#legout');
+  if(r){o.textContent=r;o.className='verdict no'}else{o.textContent=`Survived all ${n} tests. That is evidence, not a proof: can you prove it?`;o.className='verdict ok'}});
+
+/* vault */
+const V=[
+ {id:'v1',t:'The product of two Book weights is in the Book.',s:'Opened in Chapter 1'},
+ {id:'v2',t:'Any two Books meet: they share at least one weight.',s:'Opened in Chapter 2'},
+ {id:'v3',t:'Every weight can be balanced with oxygen (5) and nitrogen (7) weights.',s:'Opened in Chapter 3'},
+ {id:'v4',t:'Past some weight, every weight can be built from oxygen (5) and nitrogen (7) atoms.',s:'Opened in Chapter 4'},
+ {id:'v5',t:'Every Book weight breaks into Book primes in only one way.',s:'Opened in Chapter 5'},
+ {id:'v6',t:'Every date of the 260-day Maya Tzolk’in eventually meets every date of the 365-day Haab’.',s:'Opened in Chapter 7'},
+ {id:'v7',t:'Every prime number in the Book of Water is a sum of two squares.',s:'Opened in Chapter 10'}];
+MW.cards($('#cards'),V,'mw-vault',i=>'Vault card V'+(i+1));
+
+/* arena */
+let G={w:0,streak:0,done:false};
+function nextG(){const real=Math.random()<0.5;let w;
+  if(real)w=4*(2+Math.floor(Math.random()*60))+1;else{const k=2+Math.floor(Math.random()*120);w=[2*k,4*k+3][Math.floor(Math.random()*2)];if(w<9)w+=4}
+  G.w=w;G.done=false;$('#gw').textContent=w;$('#gh').value='';$('#gout').textContent='';$('#gout').className='verdict'}
+function verdict(ok,msg){if(G.done)return;G.done=true;G.streak=ok?G.streak+1:0;$('#gout').textContent=msg;$('#gout').className='verdict '+(ok?'ok':'no');$('#gstreak').textContent='Streak: '+G.streak}
+$('#gcheck').addEventListener('click',()=>{const v=parseInt($('#gh').value,10);if(!(v>0)){$('#gout').textContent='Type a hydrogen weight first.';return}
+  if(inBook(G.w)){const hh=(G.w-5)/2;verdict(v===hh,v===hh?`Real water! ${hh} + 5 + ${hh} = ${G.w}.`:`Not quite: ${v} + 5 + ${v} = ${2*v+5}. Try the moves: take away 5, then halve.`)}
+  else verdict(false,`El Gran Pesado laughs. ${G.w} is not real water: ${G.w%2===0?'it is even, and every water weight is odd':`take away 5 and halve to get ${(G.w-5)/2}, which is odd`}.`)});
+$('#gimp').addEventListener('click',()=>{if(inBook(G.w)){const hh=(G.w-5)/2;verdict(false,`It was real: each H weighs ${hh}.`)}
+  else verdict(true,G.w%2===0?`¡Imposible! ${G.w} is even, and every water weight is odd.`:`¡Imposible! ${G.w} − 5 = ${G.w-5}, halved is ${(G.w-5)/2}: odd, so no even hydrogen works.`)});
+$('#gnext').addEventListener('click',nextG);nextG();
+
+/* code */
+const CELLS=[
+{t:'Cell 1 · write the Book',c:`def book(n):
+    """The first n weights in the Book of Water."""
+    return [h + 5 + h for h in range(2, 2 * n + 1, 2)]
+
+def in_book(w):
+    return w >= 9 and w % 4 == 1
+
+print(book(10))
+print(2025, in_book(2025), "  each H =", (2025 - 5) // 2)
+print(2026, in_book(2026))`},
+{t:'Cell 2 · a legend tester',c:`def first_counterexample(legend, n=1000):
+    B = book(n)
+    for a in B:
+        for b in B:
+            if not legend(a, b):
+                return (a, b)
+    return None
+
+print("sum:", first_counterexample(lambda a, b: in_book(a + b)))
+print("product:", first_counterexample(lambda a, b: in_book(a * b), 300))
+# Quest: write a test for "a + b - 5 is always in the Book". True or false? Prove it.`},
+{t:'Cell 3 · Book primes (a look ahead)',c:`B = book(60)   # weights up to 245
+products = {a * b for a in B for b in B}
+book_primes = [w for w in B if w not in products]
+print("Book primes below 245:", book_primes)
+# Quest: find all the ways to write 441 as a product of two Book weights.`}];
+MW.cells($('#cells'),CELLS,{status:$('#pystat'),setup:`def book(n):
+    return [h + 5 + h for h in range(2, 2 * n + 1, 2)]
+
+def in_book(w):
+    return w >= 9 and w % 4 == 1
+`});
+}
+</script>
+</body>
+</html>

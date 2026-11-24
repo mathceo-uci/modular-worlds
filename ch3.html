@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Euclid's Forge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="book.css">
+</head>
+<body>
+
+<nav class="toc" aria-label="Chapter sections"><div class="wrap">
+<a class="brand" href="index.html">Modular Worlds</a><a href="#landing">Landing</a><a href="#explore">Explore</a><a href="#prophecies">Prophecies</a><a href="#theory">Theory</a><a href="#arena">Arena</a><a href="#culture">Culture</a><a href="#problems">Problems</a><a href="#code">Code quest</a><a href="#logbook">Logbook</a>
+</div></nav>
+
+<header class="band hero" id="landing"><div class="wrap">
+<div>
+<div class="kicker">Modular Worlds · Chapter 3</div>
+<h1>Euclid's Forge</h1>
+<p class="lede">Where the smiths weigh everything with two kinds of weights, and a legend says any weight can be balanced.</p>
+<div class="episode" aria-label="Episode 3 opening scene">
+<p class="stage">Night. The crew's boat scrapes onto black sand. Sparks drift up from a forge built into the cliff.</p>
+<p><span class="who">Kevin:</span> Two days off Ammonia Bay and we still haven't proved a thing. We just keep guessing.</p>
+<p><span class="who">Ana:</span> Guessing is how prophecies start. Proving is how they end.</p>
+<p class="stage">A masked figure steps out of the smoke. El Gran Pesado, sleeves rolled, holding a single iron bead.</p>
+<p><span class="who">El Gran Pesado:</span> On this island the smiths own only oxygen weights, five each, and nitrogen weights, seven each. This bead weighs <b>one</b>. Balance it, or your boat stays on my sand.</p>
+<p><span class="who">Mateo</span> <span class="stage">(under his breath)</span>: One? With fives and sevens? That's impossible.</p>
+<p><span class="who">Lucía:</span> Is it? Nobody said the weights all go on the same pan.</p>
+</div>
+</div>
+
+<section class="forge" aria-labelledby="forge-h">
+<h3 id="forge-h" style="margin:0 0 4px">The smiths' balance</h3>
+<p class="small" style="margin:0">Put weights on either pan. The bead sits on the left.</p>
+<div class="fig"><svg id="bal" role="img" aria-label="Two-pan balance"></svg></div>
+<div class="status" id="bstat" aria-live="polite"></div>
+<div class="pans">
+<div class="pan"><h3>Left pan (with the bead)</h3><div class="row">
+<button class="o" data-p="L" data-k="a" aria-label="Add one oxygen weight to the left pan">+ O</button>
+<button class="n" data-p="L" data-k="b" aria-label="Add one nitrogen weight to the left pan">+ N</button>
+<button data-p="L" data-k="u" aria-label="Remove the last weight from the left pan">Undo</button></div></div>
+<div class="pan"><h3>Right pan</h3><div class="row">
+<button class="o" data-p="R" data-k="a" aria-label="Add one oxygen weight to the right pan">+ O</button>
+<button class="n" data-p="R" data-k="b" aria-label="Add one nitrogen weight to the right pan">+ N</button>
+<button data-p="R" data-k="u" aria-label="Remove the last weight from the right pan">Undo</button></div></div>
+</div>
+<div class="ctrl">
+<div><label for="bead">Bead weighs</label><input id="bead" type="number" min="1" max="99" value="1"></div>
+<div><label for="wset">Weights</label><select id="wset"><option value="5,7">O = 5, N = 7</option><option value="6,9">6 and 9</option><option value="12,18">12 and 18</option><option value="8,13">8 and 13</option></select></div>
+<button id="clear">Clear pans</button>
+</div>
+</section>
+</div></header>
+
+<section class="band" id="explore"><div class="wrap two">
+<div>
+<h2>Explore: what can the smiths balance?</h2>
+<p>A weight on the same pan as the bead counts against it; a weight on the other pan counts for it. So a balance with <i class="v">x</i> oxygen weights and <i class="v">y</i> nitrogen weights is a solution of</p>
+<div class="math">bead = 5x + 7y,   where x, y can be negative</div>
+<p>(negative means "on the bead's pan").</p>
+<ol>
+<li>Balance a bead of 1. Then 2, 3, and every weight up to 12. Record each recipe.</li>
+<li>Switch the weights to 6 and 9. Which beads can you balance now? Which can you never balance, however hard you try?</li>
+<li>Try 12 and 18, then 8 and 13. Make a guess: which beads can be balanced with weights <i class="v">a</i> and <i class="v">b</i>?</li>
+<li>Once you can balance 1 with fives and sevens, how do you get 37 for free?</li>
+</ol>
+</div>
+<aside class="box tool">
+<h3>Proof toolkit: two ways to say "can't"</h3>
+<p>To show a bead <b>can</b> be balanced, one recipe is enough: show it.</p>
+<p>To show a bead <b>can't</b> be balanced, examples never finish the job. You need a reason that covers every possible recipe. With weights 6 and 9: every total 6x + 9y is a multiple of 3, because 6x + 9y = 3(2x + 3y). So a bead of 1, 2, 4 or 5 can never balance.</p>
+<p style="margin:0">Keep this move in your pocket: <b>find something every recipe has in common</b>.</p>
+</aside>
+</div></section>
+
+<section class="band alt" id="prophecies"><div class="wrap">
+<h2>Prophecies to seal</h2>
+<p>Pick a confidence for each card before you read the theory. Your choices stay in this browser only. Each card names the section that settles it.</p>
+<div class="cards" id="cards"></div>
+</div></section>
+
+<section class="band" id="theory"><div class="wrap">
+<h2>Theory: greatest common divisors</h2>
+<div class="two">
+<div>
+<p>Write <i class="v">d</i> | <i class="v">a</i> ("<i class="v">d</i> divides <i class="v">a</i>") when <i class="v">a</i> = <i class="v">dk</i> for some integer <i class="v">k</i>. For integers <i class="v">a</i>, <i class="v">b</i> not both 0, the <b>greatest common divisor</b> gcd(<i class="v">a</i>, <i class="v">b</i>) is the largest integer that divides both.</p>
+<p>Listing divisors works for small numbers and fails fast for big ones. The smiths' trick is to shrink the problem without changing the answer.</p>
+<div class="box thm"><h3>Lemma 3.1 (the forge lemma)</h3>
+<p style="margin:0">If <i class="v">a</i> = <i class="v">qb</i> + <i class="v">r</i>, then gcd(<i class="v">a</i>, <i class="v">b</i>) = gcd(<i class="v">b</i>, <i class="v">r</i>).</p></div>
+<div class="pf"><p><b>Proof.</b> We show the two pairs have exactly the same common divisors; then their greatest ones agree. If <i class="v">d</i> | <i class="v">a</i> and <i class="v">d</i> | <i class="v">b</i>, then <i class="v">d</i> divides <i class="v">a</i> − <i class="v">qb</i> = <i class="v">r</i>. Conversely, if <i class="v">d</i> | <i class="v">b</i> and <i class="v">d</i> | <i class="v">r</i>, then <i class="v">d</i> divides <i class="v">qb</i> + <i class="v">r</i> = <i class="v">a</i>.</p></div>
+<div class="box thm"><h3>Euclid's algorithm</h3>
+<p style="margin:0">Divide, keep the divisor and the remainder, repeat. The last nonzero remainder is the gcd.</p></div>
+<div class="math">252 = 1·198 + 54
+198 = 3·54  + 36
+ 54 = 1·36  + 18
+ 36 = 2·18  + 0     so gcd(252, 198) = 18</div>
+<p><b>Why it stops:</b> the remainders strictly decrease (0 ≤ <i class="v">r</i> &lt; <i class="v">b</i>) and stay nonnegative, and a decreasing list of nonnegative integers cannot go on forever (the well-ordering principle). By Lemma 3.1, every line has the same gcd as the first, and the last pair (18, 0) has gcd 18.</p>
+</div>
+<div>
+<h3>Run Euclid backwards</h3>
+<p>Each remainder is a combination of the two numbers above it. Substitute upward:</p>
+<div class="math">18 = 54 − 1·36
+   = 54 − (198 − 3·54)  = 4·54 − 198
+   = 4·(252 − 198) − 198 = 4·252 − 5·198</div>
+<div class="box thm"><h3>Theorem 3.2 (Bézout's identity)</h3>
+<p style="margin:0">For integers <i class="v">a</i>, <i class="v">b</i> not both 0, there are integers <i class="v">x</i>, <i class="v">y</i> with <i class="v">ax</i> + <i class="v">by</i> = gcd(<i class="v">a</i>, <i class="v">b</i>). In fact, gcd(<i class="v">a</i>, <i class="v">b</i>) is the <b>smallest positive</b> number of the form <i class="v">ax</i> + <i class="v">by</i>.</p></div>
+<div class="pf"><p><b>Proof.</b> Let <i class="v">s</i> be the smallest positive value of <i class="v">ax</i> + <i class="v">by</i> (it exists by well-ordering). Divide: <i class="v">a</i> = <i class="v">qs</i> + <i class="v">r</i> with 0 ≤ <i class="v">r</i> &lt; <i class="v">s</i>. Then <i class="v">r</i> = <i class="v">a</i> − <i class="v">qs</i> is also of the form <i class="v">ax</i> + <i class="v">by</i>, and smaller than <i class="v">s</i>, so <i class="v">r</i> = 0 and <i class="v">s</i> | <i class="v">a</i>. Likewise <i class="v">s</i> | <i class="v">b</i>, so <i class="v">s</i> ≤ gcd(<i class="v">a</i>, <i class="v">b</i>). And every common divisor of <i class="v">a</i> and <i class="v">b</i> divides <i class="v">ax</i> + <i class="v">by</i> = <i class="v">s</i>, so gcd(<i class="v">a</i>, <i class="v">b</i>) ≤ <i class="v">s</i>.</p></div>
+<div class="box thm"><h3>Corollary 3.3 (the smiths' legend)</h3>
+<p style="margin:0">A bead of weight <i class="v">t</i> can be balanced with weights <i class="v">a</i> and <i class="v">b</i> if and only if gcd(<i class="v">a</i>, <i class="v">b</i>) | <i class="v">t</i>. Since gcd(5, 7) = 1 and 1 = 3·5 − 2·7, every bead can be balanced: multiply the recipe for 1 by <i class="v">t</i>.</p></div>
+</div>
+</div>
+
+<h3 style="margin-top:20px">Try it: Euclid, forwards and backwards</h3>
+<div class="ctrl" style="margin-top:0">
+<div><label for="ea">a</label><input id="ea" type="number" value="391" min="1"></div>
+<div><label for="eb">b</label><input id="eb" type="number" value="299" min="1"></div>
+<button class="primary" id="erun">Run Euclid</button>
+</div>
+<div class="scroll" style="margin-top:12px"><table id="etab" aria-label="Steps of Euclid's algorithm"></table></div>
+<p id="eres" style="margin-top:10px" aria-live="polite"></p>
+</div></section>
+
+<section class="band alt" id="arena"><div class="wrap game">
+<div>
+<h2>Arena: Euclid's Game</h2>
+<p>Two numbers on the board. On your turn, subtract any positive multiple of the smaller number from the larger, without going below 0. Whoever makes a 0 wins.</p>
+<p>You move first against El Gran Pesado. He never makes a mistake. Some starting pairs are winnable; some are not. Play several, then answer the strategy question below the board.</p>
+<div class="ctrl" style="margin-top:6px">
+<div><label for="gstart">Starting pair</label><select id="gstart"><option value="30,7">30 and 7</option><option value="40,25">40 and 25</option><option value="21,8">21 and 8</option><option value="55,34">55 and 34</option><option value="r">Random</option></select></div>
+<button class="primary" id="gnew">New game</button>
+</div>
+<div class="box tool" style="margin-top:18px">
+<h3>Strategy question (Cartographer)</h3>
+<p style="margin:0">Call the numbers <i class="v">a</i> ≥ <i class="v">b</i>. If <i class="v">a</i> ≥ 2<i class="v">b</i>, the player to move can always win. Why? When <i class="v">b</i> &lt; <i class="v">a</i> &lt; 2<i class="v">b</i> there is only one legal move. Find the exact rule for who wins; it involves the ratio <i class="v">a</i>/<i class="v">b</i> and a famous number.</p>
+</div>
+</div>
+<div>
+<div class="piles" id="piles" role="img" aria-label="Game board"></div>
+<div class="status" id="gstat" aria-live="polite"></div>
+<div class="moves" id="moves" aria-label="Your possible moves"></div>
+<ol class="log" id="glog" aria-label="Move history"></ol>
+</div>
+</div></section>
+
+<section class="band" id="culture"><div class="wrap two">
+<div>
+<h2>Culture: one algorithm, many forges</h2>
+<p><b>Greece, about 300 BCE.</b> Euclid's <i>Elements</i>, Book VII, opens with this exact procedure: repeatedly subtract the smaller number from the larger to find the greatest common measure of two numbers.</p>
+<p><b>China, the <i>Nine Chapters on the Mathematical Art</i>.</b> A method called "mutual subtraction" finds the same common divisor, used there to simplify fractions.</p>
+<p><b>India, 499 CE.</b> Āryabhaṭa's <i>kuṭṭaka</i> ("the pulverizer") runs the same divisions and works backwards through them to solve equations like 5<i class="v">x</i> + 7<i class="v">y</i> = <i class="v">c</i>. That is next week's land.</p>
+<p><b>France, 1844.</b> Gabriel Lamé proved that Euclid's algorithm takes at most about five times as many steps as the smaller number has digits, one of the first analyses of how fast an algorithm runs. The slowest inputs are neighbouring Fibonacci numbers.</p>
+</div>
+<aside class="box thm">
+<h3>Discuss with your crew</h3>
+<p>The algorithm is named after Euclid, yet several cultures found it. Who decides whose name goes on an idea?</p>
+<p style="margin:0">Which version would you have found first: the slow "keep subtracting" one, or the fast "divide and keep the remainder" one? What does that say about how algorithms improve?</p>
+</aside>
+</div></section>
+
+<section class="band alt" id="problems"><div class="wrap">
+<h2>Problems</h2>
+<p>Deckhand problems are for everyone. Navigator and Cartographer problems are where you stretch.</p>
+<div class="tiers">
+<div class="tier"><h3>Deckhand</h3><ol>
+<li>Find gcd(1071, 462) with Euclid's algorithm, then write it as 1071<i class="v">x</i> + 462<i class="v">y</i>.
+<details><summary>Answer</summary>gcd = 21, and 21 = −3·1071 + 7·462.</details></li>
+<li>Give a recipe that balances a bead of 4 with weights 5 and 7.
+<details><summary>Answer</summary>4 times the recipe for 1: x = 12, y = −8. Shorter: x = −2, y = 2 (7 + 7 = 5 + 5 + 4).</details></li>
+<li>Prove that gcd(<i class="v">a</i>, <i class="v">b</i>) divides <i class="v">a</i> − <i class="v">b</i>.</li>
+<li>Can a bead of 50 be balanced with weights 12 and 18? Explain.
+<details><summary>Answer</summary>No: gcd(12, 18) = 6 and 6 does not divide 50.</details></li>
+</ol></div>
+<div class="tier"><h3>Navigator</h3><ol>
+<li>Prove that <i class="v">a</i> and <i class="v">b</i> are coprime (gcd 1) if and only if <i class="v">ax</i> + <i class="v">by</i> = 1 has an integer solution.</li>
+<li>Prove that consecutive Fibonacci numbers are coprime: gcd(<i class="v">F</i><sub><i class="v">n</i>+1</sub>, <i class="v">F</i><sub><i class="v">n</i></sub>) = 1.</li>
+<li>Prove: if <i class="v">d</i> | <i class="v">a</i> and <i class="v">d</i> | <i class="v">b</i>, then <i class="v">d</i> | gcd(<i class="v">a</i>, <i class="v">b</i>).</li>
+<li>Break or prove: "If <i class="v">d</i> divides <i class="v">ax</i> + <i class="v">by</i> for some integers <i class="v">x</i>, <i class="v">y</i>, then <i class="v">d</i> = gcd(<i class="v">a</i>, <i class="v">b</i>)."
+<details><summary>Hint</summary>Try x = y = 0.</details></li>
+</ol></div>
+<div class="tier"><h3>Cartographer</h3><ol>
+<li>Which pairs of numbers up to 1000 make Euclid's algorithm take the most steps? Conjecture, test with the code quest, then try to prove your conjecture.</li>
+<li>Solve Euclid's Game: find the exact rule for which starting pairs the first player wins, and prove it.</li>
+<li>The smiths get a third weight. With weights 6, 10 and 15 (no two of them are coprime), which beads can be balanced? Generalise Bézout to three weights.</li>
+</ol></div>
+</div>
+</div></section>
+
+<section class="band" id="code"><div class="wrap">
+<h2>Code quest: build the forge in Python</h2>
+<p>These cells run real Python in your browser. The first run loads Python (about 10 MB, once). Edit anything and run again.</p>
+<div id="cells"></div>
+<p class="small" id="pystat" aria-live="polite"></p>
+</div></section>
+
+<section class="band alt" id="logbook"><div class="wrap two">
+<div>
+<h2>Logbook</h2>
+<ul class="log2">
+<li><b>Lemma 3.1:</b> if <i class="v">a</i> = <i class="v">qb</i> + <i class="v">r</i>, then gcd(<i class="v">a</i>, <i class="v">b</i>) = gcd(<i class="v">b</i>, <i class="v">r</i>).</li>
+<li><b>Euclid's algorithm:</b> divide and keep the remainder; the last nonzero remainder is the gcd. It always stops.</li>
+<li><b>Bézout (3.2):</b> gcd(<i class="v">a</i>, <i class="v">b</i>) = <i class="v">ax</i> + <i class="v">by</i> for some integers, and it is the smallest positive such number.</li>
+<li><b>The smiths' legend (3.3):</b> a bead <i class="v">t</i> balances with weights <i class="v">a</i>, <i class="v">b</i> exactly when gcd(<i class="v">a</i>, <i class="v">b</i>) | <i class="v">t</i>.</li>
+</ul>
+</div>
+<div>
+<h3>Prophecies opened in this chapter</h3>
+<ul class="log2">
+<li>"Every weight can be balanced with O and N weights": <b>fulfilled</b> (Corollary 3.3).</li>
+<li>"With weights 6 and 9, the smallest bead you can balance is 3": <b>fulfilled</b> (gcd = 3).</li>
+<li>"Every pair of numbers under 1000 takes at most 15 Euclid steps": <b>fulfilled</b> (the worst is 987 and 610, with 14 steps; check it in the code quest).</li>
+</ul>
+<p class="stage" style="margin-top:16px">El Gran Pesado drops the bead on the right pan, three oxygen weights beside it, two nitrogen weights on the left. The beam settles level. He nods once and points out to sea: "Next island. There, the weights cannot go on the bead's pan."</p>
+</div>
+</div></section>
+
+<section class="band"><div class="wrap pager"><a href="ch2.html">← Chapter 2: Ammonia Bay</a><a href="index.html">Contents</a><a href="guide-w3.html">Instructor guide, Week 3</a><a href="index.html#map">Chapter 4: Diophantine Delta (coming) →</a></div></section>
+<footer class="band"><div class="wrap">Modular Worlds, Chapter 3 · draft · UCI Math CEO</div></footer>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js" defer></script>
+<script src="book.js"></script>
+<script>
+{
+const {$,esc,css,egcd}=MW;
+
+/* ---------- balance ---------- */
+const B={L:[],R:[],w:[5,7],bead:1};
+const svg=$('#bal');
+function drawBal(){
+  const W=svg.clientWidth||520,H=svg.clientHeight||300;
+  const wt=k=>B.w[k==='a'?0:1];
+  const sumL=B.bead+B.L.reduce((s,k)=>s+wt(k),0), sumR=B.R.reduce((s,k)=>s+wt(k),0);
+  const diff=sumR-sumL, ang=Math.max(-14,Math.min(14,diff*1.6));
+  const cx=W/2, top=48, arm=Math.min(W*0.36,230), rad=ang*Math.PI/180;
+  const lx=cx-arm*Math.cos(rad), ly=top-arm*Math.sin(rad), rx=cx+arm*Math.cos(rad), ry=top+arm*Math.sin(rad);
+  const pan=(x,y,items,label,bead)=>{
+    const py=y+110, pw=Math.min(arm*0.9,170);
+    let s=`<line x1="${x}" y1="${y}" x2="${x-pw/2+8}" y2="${py}" stroke="${css('--mute')}" stroke-width="1.5"/><line x1="${x}" y1="${y}" x2="${x+pw/2-8}" y2="${py}" stroke="${css('--mute')}" stroke-width="1.5"/>`;
+    s+=`<path d="M${x-pw/2} ${py} Q${x} ${py+26} ${x+pw/2} ${py} Z" fill="${css('--brass')}"/>`;
+    const tokens=(bead?[{t:'bead'}]:[]).concat(items.map(k=>({t:k})));
+    const per=Math.max(1,Math.floor(pw/30));
+    tokens.forEach((tk,i)=>{
+      const col=i%per,row=Math.floor(i/per);
+      const tx=x-((Math.min(tokens.length,per)-1)*15)+col*30, ty=py-14-row*26;
+      if(tk.t==='bead') s+=`<circle cx="${tx}" cy="${ty+4}" r="9" fill="${css('--ink')}"/><text x="${tx}" y="${ty-10}" text-anchor="middle" font-size="12" fill="${css('--ink')}">${B.bead}</text>`;
+      else{const o=tk.t==='a';s+=`<rect x="${tx-12}" y="${ty-10}" width="24" height="22" rx="5" fill="${o?css('--ember'):css('--sea')}"/><text x="${tx}" y="${ty+5}" text-anchor="middle" font-size="12" font-weight="700" fill="${css('--bg')}">${B.w[o?0:1]}</text>`}
+    });
+    s+=`<text x="${x}" y="${py+44}" text-anchor="middle" font-size="15" fill="${css('--ink')}">${label}</text>`;
+    return s;
+  };
+  let s=`<rect x="${cx-5}" y="${top}" width="10" height="${H-top-16}" fill="${css('--line')}"/><rect x="${cx-46}" y="${H-18}" width="92" height="10" rx="4" fill="${css('--line')}"/>`;
+  s+=`<line x1="${lx}" y1="${ly}" x2="${rx}" y2="${ry}" stroke="${css('--ink')}" stroke-width="6" stroke-linecap="round"/><circle cx="${cx}" cy="${top}" r="8" fill="${css('--ember')}"/>`;
+  s+=pan(lx,ly,B.L,'Left: '+sumL,true)+pan(rx,ry,B.R,'Right: '+sumR,false);
+  svg.innerHTML=s;
+  svg.setAttribute('aria-label',`Balance. Left pan holds the bead of ${B.bead} plus ${B.L.length} weights, total ${sumL}. Right pan total ${sumR}. ${diff===0?'Balanced.':diff>0?'Right side heavier.':'Left side heavier.'}`);
+  const st=$('#bstat');
+  if(diff===0){const x=B.R.filter(k=>k==='a').length-B.L.filter(k=>k==='a').length,y=B.R.filter(k=>k==='b').length-B.L.filter(k=>k==='b').length;
+    st.textContent=`Balanced! ${B.bead} = ${B.w[0]}·(${x}) + ${B.w[1]}·(${y})`;st.className='status ok'}
+  else{st.textContent=diff>0?`Right pan heavier by ${diff}`:`Left pan heavier by ${-diff}`;st.className='status'}
+}
+const roBal=new ResizeObserver(drawBal);roBal.observe(svg);
+document.querySelectorAll('.pan button').forEach(b=>b.addEventListener('click',()=>{
+  const p=B[b.dataset.p];if(b.dataset.k==='u')p.pop();else if(p.length<14)p.push(b.dataset.k);drawBal()}));
+$('#clear').addEventListener('click',()=>{B.L=[];B.R=[];drawBal()});
+$('#bead').addEventListener('input',e=>{const v=parseInt(e.target.value,10);if(v>=1&&v<=99){B.bead=v;drawBal()}});
+$('#wset').addEventListener('change',e=>{B.w=e.target.value.split(',').map(Number);B.L=[];B.R=[];drawBal()});
+MW.onTheme(drawBal);
+
+/* ---------- prophecies ---------- */
+const P=[
+ {id:'p31',t:'Every weight can be balanced with O (5) and N (7) weights.',s:'Settled by Corollary 3.3'},
+ {id:'p32',t:'With weights 6 and 9, the smallest bead you can balance is 3.',s:'Settled by Theorem 3.2'},
+ {id:'p33',t:'Every pair of numbers under 1000 takes at most 15 steps of Euclid’s algorithm.',s:'Settled in the code quest (cell 2)'},
+ {id:'p34',t:'If gcd(a, b) = 1, then gcd(a + b, b) = 1 too.',s:'Settled by Lemma 3.1 (try it yourself)'}];
+MW.cards($('#cards'),P,'mw-ch3',i=>'Prophecy 3.'+(i+1));
+
+/* ---------- Euclid stepper ---------- */
+function runE(){
+  let a=parseInt($('#ea').value,10),b=parseInt($('#eb').value,10);
+  if(!(a>0&&b>0)){$('#eres').textContent='Enter two positive whole numbers.';return}
+  if(a<b)[a,b]=[b,a];
+  const rows=[];let x=a,y=b;
+  while(y){const q=Math.floor(x/y),r=x%y;rows.push([x,q,y,r]);[x,y]=[y,r]}
+  $('#etab').innerHTML='<thead><tr><th>Step</th><th>a</th><th class="l"></th><th>q</th><th class="l"></th><th>b</th><th class="l"></th><th>r</th></tr></thead><tbody>'+
+   rows.map((r,i)=>`<tr><td>${i+1}</td><td>${r[0]}</td><td class="l">=</td><td>${r[1]}</td><td class="l">×</td><td>${r[2]}</td><td class="l">+</td><td>${r[3]}</td></tr>`).join('')+'</tbody>';
+  const[g,u,v]=egcd(a,b);
+  $('#eres').innerHTML=`gcd(${a}, ${b}) = <b>${g}</b> after ${rows.length} step${rows.length>1?'s':''}. Bézout: ${g} = ${a}·(${u}) + ${b}·(${v}).`;
+}
+$('#erun').addEventListener('click',runE);runE();
+
+/* ---------- Euclid's game ---------- */
+const memo=new Map();
+function wins(a,b){if(a<b)[a,b]=[b,a];const k=a+','+b;if(memo.has(k))return memo.get(k);
+  let w=false;for(let m=1;m*b<=a;m++){const r=a-m*b;if(r===0||!wins(b,r)){w=true;break}}memo.set(k,w);return w}
+const G={a:30,b:7,over:false};
+function drawG(){
+  const mx=Math.max(G.a,G.b,1);
+  $('#piles').innerHTML=[G.a,G.b].map(n=>`<div class="pile"><div class="bar" style="height:${Math.max(4,Math.round(130*n/mx))}px"></div><div class="num">${n}</div></div>`).join('');
+  $('#piles').setAttribute('aria-label',`Board shows ${G.a} and ${G.b}`);
+  const big=Math.max(G.a,G.b),sm=Math.min(G.a,G.b),mv=$('#moves');
+  if(G.over||sm===0){mv.innerHTML='';return}
+  mv.innerHTML=Array.from({length:Math.floor(big/sm)},(_,i)=>i+1).map(m=>`<button class="o" data-m="${m}">− ${m}×${sm} → ${big-m*sm}</button>`).join('');
+}
+function logG(t){const li=document.createElement('li');li.textContent=t;$('#glog').appendChild(li);$('#glog').scrollTop=1e6}
+function move(m,who){const big=Math.max(G.a,G.b),sm=Math.min(G.a,G.b),r=big-m*sm;logG(`${who}: ${big} − ${m}×${sm} = ${r}`);G.a=sm;G.b=r;return r===0}
+$('#moves').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||G.over)return;
+  if(move(+b.dataset.m,'You')){G.over=true;$('#gstat').textContent='You made a 0. You win the forge!';drawG();return}
+  drawG();$('#gstat').textContent='El Gran Pesado is thinking…';
+  setTimeout(()=>{const big=Math.max(G.a,G.b),sm=Math.min(G.a,G.b);let pick=1;
+    for(let m=Math.floor(big/sm);m>=1;m--){const r=big-m*sm;if(r===0||!wins(sm,r)){pick=m;break}}
+    if(move(pick,'El Gran Pesado')){G.over=true;$('#gstat').textContent='El Gran Pesado made a 0. He wins this round.'}
+    else $('#gstat').textContent='Your move.';drawG()},450)});
+function newG(){let v=$('#gstart').value;
+  if(v==='r'){const b=5+Math.floor(Math.random()*30),a=b+1+Math.floor(Math.random()*60);v=a+','+b}
+  [G.a,G.b]=v.split(',').map(Number);G.over=false;$('#glog').innerHTML='';$('#gstat').textContent='Your move.';drawG()}
+$('#gnew').addEventListener('click',newG);newG();
+
+/* ---------- Python cells ---------- */
+const CELLS=[
+{t:'Cell 1 · gcd and extended Euclid',c:`def gcd(a, b):
+    while b:
+        a, b = b, a % b
+    return abs(a)
+
+def ext_gcd(a, b):
+    """Return (g, x, y) with a*x + b*y == g == gcd(a, b)."""
+    if b == 0:
+        return (a, 1, 0)
+    g, x, y = ext_gcd(b, a % b)
+    return (g, y, x - (a // b) * y)
+
+for a, b in [(252, 198), (391, 299), (5, 7), (1071, 462)]:
+    g, x, y = ext_gcd(a, b)
+    assert a*x + b*y == g == gcd(a, b)
+    print(f"gcd({a}, {b}) = {g} = {a}*({x}) + {b}*({y})")`},
+{t:'Cell 2 · the slowest pairs (Prophecy 3.3)',c:`def steps(a, b):
+    n = 0
+    while b:
+        a, b = b, a % b
+        n += 1
+    return n
+
+N = 1000   # try 300 first if your laptop is slow
+best = max((steps(a, b), a, b) for a in range(1, N + 1) for b in range(1, a + 1))
+print("most steps for numbers up to", N, ":", best)
+
+fib = [1, 1]
+while fib[-1] < N:
+    fib.append(fib[-1] + fib[-2])
+print("Fibonacci numbers:", fib)`},
+{t:'Cell 3 · a recipe for any bead',c:`def recipe(a, b, bead):
+    """Return (x, y) with a*x + b*y == bead, or None if impossible."""
+    g, x, y = ext_gcd(a, b)
+    if bead % g:
+        return None
+    k = bead // g
+    return (x * k, y * k)
+
+for bead in range(1, 13):
+    print(bead, recipe(5, 7, bead))
+print("6 and 9, bead 4:", recipe(6, 9, 4))
+# Quest: change recipe() so it returns the recipe with the fewest weights in total.`}];
+const SETUP=`def gcd(a, b):
+    while b:
+        a, b = b, a % b
+    return abs(a)
+
+def ext_gcd(a, b):
+    if b == 0:
+        return (a, 1, 0)
+    g, x, y = ext_gcd(b, a % b)
+    return (g, y, x - (a // b) * y)
+`;
+MW.cells($('#cells'),CELLS,{setup:SETUP,status:$('#pystat')});
+}
+</script>
+</body>
+</html>
