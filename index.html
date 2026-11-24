@@ -28,16 +28,16 @@
 <div>
 <div class="kicker">A playful first course in number theory</div>
 <h1>Modular Worlds</h1>
-<p class="lede">Six students, one ship, and an archipelago where every island's chemistry hides a theorem. Ten lands, ten weeks: divisibility, Euclid, Diophantine equations, primes, congruences, the Chinese Remainder Theorem, Fermat, RSA and sums of two squares.</p>
+<p class="lede">Six students, one ship, and an archipelago where every island's chemistry hides a theorem. Eleven lands, ten weeks: parity and divisibility, Euclid, Diophantine equations, primes, congruences, the Chinese Remainder Theorem, Fermat, RSA and sums of two squares.</p>
 <p>Written for math and computer science majors in a lower-division course. No proofs course is needed: the proof toolkit is built in, one chapter at a time.</p>
-<div class="row" style="margin-top:8px"><a class="btn primary" href="ch1.html">Start with Chapter 1</a><a class="btn" href="ch3.html">Jump to Euclid's Forge</a></div>
+<div class="row" style="margin-top:8px"><a class="btn primary" href="ch0.html">Start with Chapter 0</a><a class="btn" href="ch3.html">Jump to Euclid's Forge</a></div>
 </div>
-<div class="map" role="img" aria-label="Map of the Modular Archipelago: ten islands joined by a dotted route, from Mojadito to the Return to Earth. Islands 1 to 3 are unlocked."><svg id="mapsvg"></svg></div>
+<div class="map" role="img" aria-label="Map of the Modular Archipelago: eleven islands joined by a dotted route, from Mojadito to the Return to Earth. Islands 0 to 3 are unlocked."><svg id="mapsvg"></svg></div>
 </div></header>
 
 <section class="band" id="map-list"><div class="wrap" id="map">
 <h2>The voyage, chapter by chapter</h2>
-<p>Each chapter is one land and one week of the course. Chapters 1 to 3 are ready to read; the rest are on the way.</p>
+<p>Each chapter is one land. Most take one week of the course; Chapters 1 and 2 share Week 2. Chapters 0 to 3 are ready to read.</p>
 <div class="chapters" id="chapters"></div>
 </div></section>
 
@@ -59,7 +59,7 @@
 </div>
 <aside class="box instr">
 <h3>Status of this draft</h3>
-<p style="margin:0">Chapters 1–3 and the Week 3 guide are drafts for review. Episode videos with the college-age crew are in production. Grading and exams are still being decided.</p>
+<p style="margin:0">Chapters 0–3 and the Week 3 guide are drafts for review. Episode videos with the college-age crew are in production. Grading and exams are still being decided.</p>
 </aside>
 </div></section>
 
@@ -70,34 +70,35 @@
 {
 const {$,esc,css}=MW;
 const CH=[
- ['Mojadito, Home Port','Divisibility, the division algorithm, conjecture and proof, induction','ch1.html'],
- ['Ammonia Bay','Arithmetic progressions, gcd and lcm, when two Books meet','ch2.html'],
- ["Euclid's Forge","Euclid's algorithm, Bézout's identity, the smiths' balance",'ch3.html'],
- ['Diophantine Delta','Linear Diophantine equations, the Frobenius coin problem',''],
- ['Prime Peaks','Primes, unique factorization, and a world where it fails',''],
- ['Clockwork Isles','Congruences, inverses, check digits',''],
- ['The Calendar Isles','The Chinese Remainder Theorem and the Maya Calendar Round',''],
- ["Fermat's Lighthouse","Orders, Fermat's and Euler's theorems, fast powers",''],
- ['Secret Tides','RSA and Diffie–Hellman: cryptography and privacy',''],
- ['Return to Earth','Sums of two squares, and the Vault opens','']];
-$('#chapters').innerHTML=CH.map((c,i)=>c[2]?`<a class="chap" href="${c[2]}"><div class="n">Chapter ${i+1}</div><h3>${esc(c[0])}</h3><p>${esc(c[1])}</p><span class="badge">Ready to read</span></a>`
- :`<div class="chap soon"><div class="n">Chapter ${i+1}</div><h3>${esc(c[0])}</h3><p>${esc(c[1])}</p><span class="badge">Coming</span></div>`).join('');
+ ['The Entrance Exam','Even and odd, proof by contradiction, multiples and divisors','ch0.html','Week 1'],
+ ['Mojadito, Home Port','Divisibility, the division algorithm, conjecture and proof, induction','ch1.html','Week 2'],
+ ['Ammonia Bay','Arithmetic progressions, gcd and lcm, when two Books meet','ch2.html','Week 2'],
+ ["Euclid's Forge","Euclid's algorithm, Bézout's identity, the smiths' balance",'ch3.html','Week 3'],
+ ['Diophantine Delta','Linear Diophantine equations, the Frobenius coin problem','','Week 4'],
+ ['Prime Peaks','Primes, unique factorization, and a world where it fails','','Week 5'],
+ ['Clockwork Isles','Congruences, inverses, check digits','','Week 6'],
+ ['The Calendar Isles','The Chinese Remainder Theorem and the Maya Calendar Round','','Week 7'],
+ ["Fermat's Lighthouse","Orders, Fermat's and Euler's theorems, fast powers",'','Week 8'],
+ ['Secret Tides','RSA and Diffie–Hellman: cryptography and privacy','','Week 9'],
+ ['Return to Earth','Sums of two squares, and the Vault opens','','Week 10']];
+$('#chapters').innerHTML=CH.map((c,i)=>c[2]?`<a class="chap" href="${c[2]}"><div class="n">Chapter ${i} · ${esc(c[3]||'')}</div><h3>${esc(c[0])}</h3><p>${esc(c[1])}</p><span class="badge">Ready to read</span></a>`
+ :`<div class="chap soon"><div class="n">Chapter ${i} · ${esc(c[3]||'')}</div><h3>${esc(c[0])}</h3><p>${esc(c[1])}</p><span class="badge">Coming</span></div>`).join('');
 const svg=$('#mapsvg');
 function drawMap(){
   const W=svg.clientWidth||600,H=svg.clientHeight||400;
   let seed=7;const r=()=>(seed=seed*16807%2147483647)/2147483647;
-  const pts=CH.map((_,i)=>{const t=i/9;return[W*(0.1+0.8*t),H*(0.5+0.3*Math.sin(t*Math.PI*2.2+0.4))]});
+  const pts=CH.map((_,i)=>{const t=i/(CH.length-1);return[W*(0.1+0.8*t),H*(0.5+0.3*Math.sin(t*Math.PI*2.2+0.4))]});
   const sea=css('--sea'),bg=css('--bg'),brass=css('--brass'),ember=css('--ember');
   let s=`<defs><radialGradient id="glow"><stop offset="0" stop-color="#ffffff" stop-opacity=".18"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient></defs><rect width="${W}" height="${H}" fill="${sea}"/><circle cx="${W*0.3}" cy="${H*0.2}" r="${W*0.5}" fill="url(#glow)"/>`;
   for(let k=0;k<26;k++){const x=r()*W,y=r()*H;s+=`<path d="M${x} ${y} q8 -5 16 0 t16 0" fill="none" stroke="${bg}" stroke-opacity=".25" stroke-width="1.5"/>`}
   s+=`<path d="M${pts.map(p=>p.join(' ')).join(' L')}" fill="none" stroke="${bg}" stroke-width="2.5" stroke-dasharray="2 9" stroke-linecap="round" opacity=".9"/>`;
   const R=Math.max(14,Math.min(W,H)*0.055);
-  pts.forEach(([x,y],i)=>{const open=i<3;const rx=R*(1+r()*0.5),ry=R*(0.7+r()*0.3);
+  pts.forEach(([x,y],i)=>{const open=i<4;const rx=R*(1+r()*0.5),ry=R*(0.7+r()*0.3);
     s+=`<ellipse cx="${x+3}" cy="${y+5}" rx="${rx}" ry="${ry}" fill="#000" opacity=".18"/>`;
     s+=`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${open?brass:bg}" opacity="${open?1:.55}"/>`;
     s+=`<ellipse cx="${x-rx*0.25}" cy="${y-ry*0.3}" rx="${rx*0.45}" ry="${ry*0.35}" fill="#fff" opacity=".22"/>`;
-    s+=`<text x="${x}" y="${y+6}" text-anchor="middle" font-family="Roboto Flex,Roboto,sans-serif" font-weight="900" font-size="${Math.round(R*0.9)}" fill="${open?bg:sea}">${i+1}</text>`});
-  const [sx,sy]=pts[3];s+=`<path d="M${sx-R*2.2} ${sy-R*1.6} l${R*0.7} ${R*0.5} l${R*0.7} -${R*0.5} z" fill="${ember}"/><rect x="${sx-R*1.55}" y="${sy-R*2.5}" width="2" height="${R*0.9}" fill="${bg}"/>`;
+    s+=`<text x="${x}" y="${y+6}" text-anchor="middle" font-family="Roboto Flex,Roboto,sans-serif" font-weight="900" font-size="${Math.round(R*0.9)}" fill="${open?bg:sea}">${i}</text>`});
+  const [sx,sy]=pts[4];s+=`<path d="M${sx-R*2.2} ${sy-R*1.6} l${R*0.7} ${R*0.5} l${R*0.7} -${R*0.5} z" fill="${ember}"/><rect x="${sx-R*1.55}" y="${sy-R*2.5}" width="2" height="${R*0.9}" fill="${bg}"/>`;
   svg.innerHTML=s;
 }
 const roMap=new ResizeObserver(drawMap);roMap.observe(svg);MW.onTheme(drawMap);

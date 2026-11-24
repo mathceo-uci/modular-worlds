@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Entrance Exam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="book.css">
+<style>
+.dance{display:flex;flex-wrap:wrap;gap:10px 14px;justify-content:center;align-items:flex-start;min-height:110px;padding:16px;background:var(--panel);border-radius:12px}
+.pair{display:flex;flex-direction:column;gap:6px}
+.dot{width:30px;height:30px;border-radius:50%;background:var(--sea)}
+.dot.b{background:var(--brass)}
+.dot.odd{background:var(--ember);box-shadow:0 0 0 4px color-mix(in srgb,var(--ember) 30%,transparent)}
+.steppers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+.stepper{display:flex;align-items:center;gap:8px;justify-content:center;background:var(--panel);border-radius:10px;padding:8px}
+.stepper output{font-family:"Roboto Flex",sans-serif;font-size:24px;font-weight:900;min-width:2.2em;text-align:center}
+.trial{border-top:1px solid var(--line)}
+.trial .kicker{margin-bottom:4px}
+.scene{border-left:3px solid var(--ember);padding:2px 0 2px 16px;margin:0 0 18px}
+.scene p{margin-bottom:.55em}
+.floor{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:3px;max-width:420px;margin:0 auto;aspect-ratio:1}
+.floor button{min-height:0;padding:0;border-radius:4px;border:1px solid var(--line);background:var(--bg);font-size:12px}
+.floor button.gone{visibility:hidden}
+.floor.color button.dk{background:color-mix(in srgb,var(--ink) 18%,var(--bg))}
+.floor button.sel{outline:3px solid var(--ember);outline-offset:-3px}
+.floor button.dom{background:var(--brass)!important;border-color:var(--brass)}
+.floor button.dom.h0{border-top-right-radius:0;border-bottom-right-radius:0}
+.doors{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:4px;max-width:460px;margin:0 auto}
+.door{aspect-ratio:3/4;border-radius:6px 6px 2px 2px;background:var(--line);display:flex;align-items:flex-end;justify-content:center;font-size:11px;padding-bottom:2px;color:var(--mute);font-variant-numeric:tabular-nums}
+.door.open{background:var(--sea);color:var(--bg);font-weight:700}
+.door.hit{box-shadow:0 0 0 2px var(--ember)}
+.crates{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-end;justify-content:center;padding:12px;background:var(--panel);border-radius:12px;min-height:90px}
+.crate{border:2px solid var(--brass);border-radius:4px;display:grid;gap:2px;padding:3px}
+.crate i{display:block;width:9px;height:9px;border-radius:50%;background:var(--sea)}
+.crate.bad{border-color:var(--ember);border-style:dashed}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<nav class="toc" aria-label="Chapter sections"><div class="wrap">
+<a class="brand" href="index.html">Modular Worlds</a><a href="#landing">Landing</a><a href="#prophecies">Prophecies</a><a href="#t1">Pairs</a><a href="#t2">Broken floor</a><a href="#t3">Diagonal</a><a href="#t4">Crates</a><a href="#t5">Hundred doors</a><a href="#culture">Culture</a><a href="#problems">Problems</a><a href="#code">Code quest</a><a href="#logbook">Logbook</a>
+</div></nav>
+
+<header class="band hero" id="landing"><div class="wrap">
+<div>
+<div class="kicker">Modular Worlds · Chapter 0</div>
+<h1>The Entrance Exam</h1>
+<p class="lede">Before anyone sails, El Gran Pesado tests who can think in pairs, who can prove "impossible", and who can work as a crew.</p>
+<div class="episode" aria-label="Episode 0 opening scene">
+<p class="stage">Mojadito, the Night of Pairs. Lanterns hang two by two over every street; couples dance in the plaza. Six strangers stand alone at the doors of the Harbor Hall, each holding the same letter.</p>
+<p><span class="who">Mateo</span> <span class="stage">(reading aloud)</span>: "One ship. Five trials. Pass them, and sail at dawn." That's it?</p>
+<p><span class="who">Kevin:</span> That's a scam. Nobody hands out ships.</p>
+<p><span class="who">Lucía:</span> Then why did you come?</p>
+<p class="stage">The doors swing open. El Gran Pesado, in a mask stitched with silver numbers, looks the six of them over.</p>
+<p><span class="who">El Gran Pesado:</span> In Mojadito, everything goes in pairs. Tonight, so do you. One rule: nobody passes alone. If one of you fails, all six stay on the dock.</p>
+<p><span class="who">Sofía</span> <span class="stage">(under her breath, to Ana)</span>: He's counting us. Six. Even.</p>
+<p><span class="who">Ana:</span> Then let's not leave anyone over.</p>
+</div>
+</div>
+
+<section class="forge" aria-labelledby="dance-h">
+<h3 id="dance-h" style="margin:0 0 4px">The Dance of Pairs</h3>
+<p class="small" style="margin:0 0 10px">Two groups of dancers join the plaza. Everyone pairs up. Is anyone left over?</p>
+<div class="dance" id="dance" role="img" aria-label="Dancers in pairs"></div>
+<div class="steppers">
+<div class="stepper"><button data-g="a" data-d="-1" aria-label="One fewer dancer in the teal group">−</button><output id="na" aria-label="Teal group">5</output><button data-g="a" data-d="1" aria-label="One more dancer in the teal group">+</button></div>
+<div class="stepper"><button data-g="b" data-d="-1" aria-label="One fewer dancer in the brass group">−</button><output id="nb" aria-label="Brass group">7</output><button data-g="b" data-d="1" aria-label="One more dancer in the brass group">+</button></div>
+</div>
+<p class="verdict" id="dout" aria-live="polite" style="margin-top:10px"></p>
+</section>
+</div></header>
+
+<section class="band alt" id="prophecies"><div class="wrap">
+<h2>Prophecies to seal</h2>
+<p>Each trial settles one card. Mark your crew's confidence before you start: a correct "it will break" is worth as much as a correct "true". Choices stay in this browser.</p>
+<div class="cards" id="cards"></div>
+</div></section>
+
+<section class="band trial" id="t1"><div class="wrap two">
+<div>
+<div class="kicker">Trial 1</div>
+<h2>The Dance of Pairs: even and odd</h2>
+<div class="scene">
+<p><span class="who">El Gran Pesado:</span> Two groups walk into the plaza. Both have someone left over when they pair up. Will the plaza?</p>
+<p><span class="who">Mateo:</span> Odd plus odd… is odd? Obviously.</p>
+<p><span class="who">Lucía</span> <span class="stage">(pointing at the two lonely dancers finding each other)</span>: Look again.</p>
+</div>
+<p>A number is <b>even</b> if its dancers all pair up: <i class="v">n</i> = 2<i class="v">k</i> for some integer <i class="v">k</i>. It is <b>odd</b> if exactly one is left over: <i class="v">n</i> = 2<i class="v">k</i> + 1. Every integer is one or the other, never both (Chapter 1's division algorithm proves it).</p>
+<div class="box thm"><h3>Theorem 0.1 (the plaza rules)</h3>
+<p style="margin:0">even + even = even, odd + odd = even, even + odd = odd; odd × odd = odd, and even × anything = even.</p></div>
+<div class="pf"><p><b>Proof of odd + odd.</b> Write the two odd numbers as 2<i class="v">j</i> + 1 and 2<i class="v">k</i> + 1, using <b>different letters</b> (they need not be equal). Their sum is 2<i class="v">j</i> + 2<i class="v">k</i> + 2 = 2(<i class="v">j</i> + <i class="v">k</i> + 1), which is even: the two leftover dancers pair with each other.</p></div>
+<div class="pf"><p><b>Proof of odd × odd.</b> (2<i class="v">j</i> + 1)(2<i class="v">k</i> + 1) = 4<i class="v">jk</i> + 2<i class="v">j</i> + 2<i class="v">k</i> + 1 = 2(2<i class="v">jk</i> + <i class="v">j</i> + <i class="v">k</i>) + 1.</p></div>
+</div>
+<aside>
+<div class="box tool"><h3>Proof toolkit: a direct proof</h3>
+<p>1. Write what you know in symbols (odd means 2<i class="v">k</i> + 1).<br>2. Calculate.<br>3. Rearrange into the shape you want (even means 2 × an integer).<br>4. Say in words what you showed.</p>
+<p style="margin:0"><b>Classic slip:</b> writing both odd numbers as 2<i class="v">k</i> + 1 with the same <i class="v">k</i>. That only proves the claim for a number added to itself.</p></div>
+<div class="box thm"><h3>Try it</h3>
+<p style="margin:0">Is the sum of three odd numbers odd or even? Of 25 odd numbers? Of 100? Find the rule, then prove it.</p></div>
+</aside>
+</div></section>
+
+<section class="band trial alt" id="t2"><div class="wrap two">
+<div>
+<div class="kicker">Trial 2</div>
+<h2>The Broken Floor: proving "impossible"</h2>
+<div class="scene">
+<p class="stage">A tiled courtyard, 8 by 8, with two opposite corner tiles smashed. A pile of rugs, each exactly two tiles long.</p>
+<p><span class="who">El Gran Pesado:</span> Cover every tile. No overlaps, no rugs hanging over the edge.</p>
+<p><span class="who">Diego</span> <span class="stage">(after twenty minutes)</span>: I've tried every way I can think of. It's always two tiles short.</p>
+<p><span class="who">Kevin:</span> "Every way you can think of" isn't every way. Prove it can't be done, or keep trying.</p>
+</div>
+<p>Trying more rugs will never prove the job impossible. You need something that every possible arrangement has in common: an <b>invariant</b>.</p>
+<p>Colour the floor like a chessboard. Every rug covers one dark tile and one light tile, wherever it goes. The two smashed corners are the same colour, so the floor has 32 tiles of one colour and 30 of the other. Thirty-one rugs would cover 31 of each. Impossible.</p>
+<div class="box tool"><h3>Proof toolkit: proof by contradiction</h3>
+<p style="margin:0">To prove a statement, assume it is false and follow the logic until you reach something impossible (31 = 32, or "a number that is both even and odd"). Then the assumption was wrong. Here: <i>suppose</i> the floor can be covered; count colours; contradiction.</p></div>
+</div>
+<div class="forge">
+<h3 style="margin:0 0 4px">Try to cover the floor</h3>
+<p class="small" style="margin:0 0 10px">Tap a tile, then a neighbouring tile, to lay a rug. Tap a rug to lift it.</p>
+<div class="floor" id="floor" aria-label="8 by 8 floor"></div>
+<p class="verdict" id="fout" aria-live="polite" style="margin-top:10px"></p>
+<div class="ctrl" style="justify-content:center">
+<label style="display:flex;gap:8px;align-items:center;color:var(--ink)"><input type="checkbox" id="fcol"> Show the colours</label>
+<div><label for="fmode">Smashed tiles</label><select id="fmode"><option value="opp">Opposite corners</option><option value="diff">Two tiles of different colours</option></select></div>
+<button id="fclear">Lift all rugs</button>
+</div>
+</div>
+</div></section>
+
+<section class="band trial" id="t3"><div class="wrap two">
+<div>
+<div class="kicker">Trial 3</div>
+<h2>The Unmeasurable Diagonal</h2>
+<div class="scene">
+<p class="stage">A square courtyard, one rope-length on each side. El Gran Pesado hands Sofía a measuring rope with knots.</p>
+<p><span class="who">El Gran Pesado:</span> Measure the diagonal as a fraction. Tie a rope of <i class="v">p</i> knots, cut it into <i class="v">q</i> equal parts. Any <i class="v">p</i>, any <i class="v">q</i>.</p>
+<p><span class="who">Sofía</span> <span class="stage">(after a long silence)</span>: You're not asking us to measure it. You're asking us to prove we can't.</p>
+</div>
+<div class="box thm"><h3>Theorem 0.2</h3>
+<p style="margin:0">If <i class="v">n</i>² is even, then <i class="v">n</i> is even.</p></div>
+<div class="pf"><p><b>Proof (by contradiction).</b> Suppose <i class="v">n</i>² is even but <i class="v">n</i> is odd. By Theorem 0.1, odd × odd is odd, so <i class="v">n</i>² = <i class="v">n</i> × <i class="v">n</i> is odd. A number cannot be both even and odd. So <i class="v">n</i> is even.</p></div>
+<div class="box thm"><h3>Theorem 0.3 (the diagonal)</h3>
+<p style="margin:0">There are no whole numbers <i class="v">p</i>, <i class="v">q</i> with (<i class="v">p</i>/<i class="v">q</i>)² = 2. In other words, √2 is not a fraction.</p></div>
+<div class="pf"><p><b>Proof (by contradiction).</b> Suppose <i class="v">p</i>/<i class="v">q</i> = √2, written in lowest terms (not both even). Then <i class="v">p</i>² = 2<i class="v">q</i>², so <i class="v">p</i>² is even, so <i class="v">p</i> is even (Theorem 0.2): <i class="v">p</i> = 2<i class="v">m</i>. Then 4<i class="v">m</i>² = 2<i class="v">q</i>², so <i class="v">q</i>² = 2<i class="v">m</i>² is even, and <i class="v">q</i> is even too. Both even: contradiction with lowest terms.</p></div>
+</div>
+<aside>
+<div class="box tool"><h3>Proof toolkit: contradiction vs contrapositive</h3>
+<p>Theorem 0.2 also follows from its contrapositive: "if <i class="v">n</i> is odd, then <i class="v">n</i>² is odd", which is a direct proof.</p>
+<p style="margin:0">Contradiction shines when the conclusion is "there is no such thing", as in Theorem 0.3: you cannot check every fraction, but you can show that the first one you pick already breaks.</p></div>
+<div class="box thm"><h3>Try it</h3>
+<p style="margin:0">Where does the same proof break if you try it for √4? Find the exact line that fails. Then adapt the proof to √3 (hint: work with "divisible by 3" instead of "even").</p></div>
+</aside>
+</div></section>
+
+<section class="band trial alt" id="t4"><div class="wrap two">
+<div>
+<div class="kicker">Trial 4</div>
+<h2>The Crate Market: multiples and divisors</h2>
+<div class="scene">
+<p class="stage">Dawn is close. The harbor market: stacks of lantern crates. Each crate size holds an exact number of lanterns.</p>
+<p><span class="who">El Gran Pesado:</span> Pack 36 lanterns. Every crate full, none left over. Which crate sizes work?</p>
+<p><span class="who">Diego:</span> 1, 2, 3, 4, 6, 9, 12, 18, 36. Nine sizes.</p>
+<p><span class="who">Ana:</span> And if a crate of 12 fits in the ship's hold exactly, and crates of 3 fit inside the 12…</p>
+</div>
+<p>Write <i class="v">d</i> | <i class="v">a</i> ("<i class="v">d</i> divides <i class="v">a</i>") when <i class="v">a</i> = <i class="v">dk</i> for some integer <i class="v">k</i>: <i class="v">a</i> lanterns fill crates of size <i class="v">d</i> exactly. Then <i class="v">a</i> is a <b>multiple</b> of <i class="v">d</i>, and <i class="v">d</i> is a <b>divisor</b> of <i class="v">a</i>. Watch the edge cases: every <i class="v">d</i> divides 0 (zero crates), and 0 divides only 0.</p>
+<div class="box thm"><h3>Theorem 0.4 (crates inside crates)</h3>
+<p style="margin:0">If <i class="v">a</i> | <i class="v">b</i> and <i class="v">b</i> | <i class="v">c</i>, then <i class="v">a</i> | <i class="v">c</i>.</p></div>
+<div class="pf"><p><b>Proof.</b> <i class="v">b</i> = <i class="v">aj</i> and <i class="v">c</i> = <i class="v">bk</i> for integers <i class="v">j</i>, <i class="v">k</i>. Then <i class="v">c</i> = (<i class="v">aj</i>)<i class="v">k</i> = <i class="v">a</i>(<i class="v">jk</i>).</p></div>
+<div class="box thm"><h3>Theorem 0.5 (mixing loads)</h3>
+<p style="margin:0">If <i class="v">d</i> | <i class="v">a</i> and <i class="v">d</i> | <i class="v">b</i>, then <i class="v">d</i> | <i class="v">ax</i> + <i class="v">by</i> for all integers <i class="v">x</i>, <i class="v">y</i>.</p></div>
+<div class="pf"><p><b>Proof.</b> <i class="v">a</i> = <i class="v">dj</i>, <i class="v">b</i> = <i class="v">dk</i>, so <i class="v">ax</i> + <i class="v">by</i> = <i class="v">d</i>(<i class="v">jx</i> + <i class="v">ky</i>).</p></div>
+</div>
+<div>
+<div class="forge">
+<h3 style="margin:0 0 4px">Pack the lanterns</h3>
+<div class="ctrl" style="margin-top:0">
+<div><label for="cn">Lanterns</label><input id="cn" type="number" min="1" max="120" value="36"></div>
+<div><label for="cd">Crate size</label><input id="cd" type="number" min="1" max="120" value="12"></div>
+</div>
+<div class="crates" id="crates" role="img" aria-label="Crates" style="margin-top:12px"></div>
+<p class="verdict" id="cout" aria-live="polite" style="margin-top:10px"></p>
+<p class="small" id="clist" style="text-align:center;margin:0"></p>
+</div>
+<div class="box tool" style="margin-top:16px"><h3>Market legends to break</h3>
+<p style="margin:0">"If <i class="v">a</i> | <i class="v">bc</i>, then <i class="v">a</i> | <i class="v">b</i> or <i class="v">a</i> | <i class="v">c</i>." Try <i class="v">a</i> = 6, <i class="v">b</i> = 4, <i class="v">c</i> = 3.<br>"If <i class="v">a</i> | <i class="v">c</i> and <i class="v">b</i> | <i class="v">c</i>, then <i class="v">ab</i> | <i class="v">c</i>." Try 4, 6 and 12.<br>Both legends can be repaired. The first repair needs primes (Chapter 5); the second needs gcd (Chapters 2 and 3).</p></div>
+</div>
+</div></section>
+
+<section class="band trial" id="t5"><div class="wrap two">
+<div>
+<div class="kicker">Trial 5, the last one</div>
+<h2>The Hall of a Hundred Doors</h2>
+<div class="scene">
+<p class="stage">A corridor of 100 closed doors, numbered 1 to 100. El Gran Pesado's 100 apprentices wait in line.</p>
+<p><span class="who">El Gran Pesado:</span> Apprentice 1 flips every door. Apprentice 2 flips every second door. Apprentice 3, every third. And so on to apprentice 100. Before they start: which doors end up open? Answer right and the ship is yours.</p>
+<p><span class="who">Kevin:</span> We could just watch.</p>
+<p><span class="who">El Gran Pesado:</span> You could. But tomorrow there will be a million doors.</p>
+</div>
+<p>Door <i class="v">n</i> is flipped once for every divisor of <i class="v">n</i>. It ends open exactly when <i class="v">n</i> has an <b>odd</b> number of divisors. So the question is about parity and divisors at once.</p>
+<p>Divisors come in pairs: <i class="v">d</i> and <i class="v">n</i>/<i class="v">d</i>. For 12 the pairs are 1·12, 2·6, 3·4. A divisor is left without a partner only when <i class="v">d</i> = <i class="v">n</i>/<i class="v">d</i>, that is <i class="v">d</i>² = <i class="v">n</i>.</p>
+<div class="box thm"><h3>Theorem 0.6 (the open doors)</h3>
+<p style="margin:0">A positive integer has an odd number of divisors if and only if it is a perfect square. After 100 apprentices, the open doors are 1, 4, 9, 16, 25, 36, 49, 64, 81 and 100.</p></div>
+<div class="pf"><p><b>Proof.</b> Pair each divisor <i class="v">d</i> with <i class="v">n</i>/<i class="v">d</i>, which is also a divisor. Every divisor lands in exactly one pair, and a pair has two different members unless <i class="v">d</i> = <i class="v">n</i>/<i class="v">d</i>. If <i class="v">n</i> is not a square, every divisor has a different partner, so the count is even. If <i class="v">n</i> = <i class="v">s</i>², the divisor <i class="v">s</i> is its own partner and all the others pair off, so the count is odd.</p></div>
+</div>
+<div class="forge">
+<h3 style="margin:0 0 4px">Run the apprentices</h3>
+<p class="small" style="margin:0 0 10px">Predict first. Then watch.</p>
+<div class="doors" id="doors" aria-label="100 doors"></div>
+<p class="verdict" id="dstat" aria-live="polite" style="margin-top:10px"></p>
+<div class="ctrl" style="justify-content:center">
+<button class="primary" id="dnext">Next apprentice</button>
+<button id="dall">Run all 100</button>
+<button id="dreset">Close every door</button>
+</div>
+</div>
+</div></section>
+
+<section class="band alt" id="culture"><div class="wrap two">
+<div>
+<h2>Culture: pairs, and a dangerous diagonal</h2>
+<p><b>Ancient Greece.</b> Odd and even were among the first ideas the Pythagoreans studied. A later legend says that Hippasus, one of them, was drowned for revealing that the diagonal of a square cannot be measured as a fraction of its side. Historians doubt the story, but the theorem is real, and it shocked a culture that believed all things are made of whole numbers.</p>
+<p><b>The Andes.</b> Many Andean communities, from Inca times to today, organise themselves into two paired halves, hanan and hurin ("upper" and "lower"), which share work, ritual and responsibility. Pairing is not only arithmetic: it is a way to organise people.</p>
+<p><b>Puzzles that travel.</b> The broken chessboard and the hundred doors are classic puzzles, retold in many countries and many versions. Like Mojadito's legends, they last because they surprise.</p>
+</div>
+<aside class="box thm">
+<h3>Discuss with your crew</h3>
+<p>What traditions in your family or community come in pairs: dances, godparents, two sides of a family, call and response?</p>
+<p style="margin:0">El Gran Pesado's rule was "nobody passes alone". How did your crew make sure no one was left over during the trials?</p>
+</aside>
+</div></section>
+
+<section class="band" id="problems"><div class="wrap">
+<h2>Problems</h2>
+<div class="tiers">
+<div class="tier"><h3>Deckhand</h3><ol>
+<li>Prove that even + odd is odd, and that even × any integer is even.</li>
+<li>List all divisors of 60. How many are there? Is that count odd or even, and why does Theorem 0.6 predict it?
+<details><summary>Answer</summary>1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60: twelve, an even number, because 60 is not a square.</details></li>
+<li>True or false: if 4 | <i class="v">n</i>, then 2 | <i class="v">n</i>. If 2 | <i class="v">n</i>, then 4 | <i class="v">n</i>. Prove or give a counterexample.
+<details><summary>Answer</summary>True (Theorem 0.4, since 2 | 4). False: 2 | 6 but 4 does not divide 6.</details></li>
+<li>Prove that if <i class="v">n</i> is odd, then <i class="v">n</i>² − 1 is divisible by 4.</li>
+</ol></div>
+<div class="tier"><h3>Navigator</h3><ol>
+<li>Prove that √3 is not a fraction.</li>
+<li>Seven people at a party shake hands. Can every person shake hands with exactly three others? Prove your answer.
+<details><summary>Hint</summary>Count handshakes twice: once per person, once per handshake.</details></li>
+<li>Prove: if <i class="v">a</i> | <i class="v">b</i> and <i class="v">b</i> | <i class="v">a</i> for positive integers, then <i class="v">a</i> = <i class="v">b</i>.</li>
+<li>Repair "if <i class="v">a</i> | <i class="v">c</i> and <i class="v">b</i> | <i class="v">c</i>, then <i class="v">ab</i> | <i class="v">c</i>" for the case where <i class="v">a</i> and <i class="v">b</i> share no common divisor except 1. Test your repair on ten examples. (You will prove it in Chapter 3.)</li>
+</ol></div>
+<div class="tier"><h3>Cartographer</h3><ol>
+<li>In the Hall of a Hundred Doors, which doors are flipped exactly twice? Exactly three times? Describe all of them.</li>
+<li>Remove two tiles of different colours from an 8 × 8 floor. Can the rest always be covered by rugs? Explore with the floor above, then try to prove it.</li>
+<li>Which numbers are the sum of two odd squares? Of two even squares? Look for a pattern in the remainders when you divide by 4 or by 8.</li>
+</ol></div>
+</div>
+</div></section>
+
+<section class="band alt" id="code"><div class="wrap">
+<h2>Code quest: the exam in Python</h2>
+<p>These cells run real Python in your browser. The first run loads Python (about 10 MB, once).</p>
+<div id="cells"></div>
+<p class="small" id="pystat" aria-live="polite"></p>
+</div></section>
+
+<section class="band" id="logbook"><div class="wrap two">
+<div>
+<h2>Logbook</h2>
+<ul class="log2">
+<li><b>Parity (0.1):</b> odd + odd and even + even are even; odd × odd is odd.</li>
+<li><b>Contradiction (0.2, 0.3):</b> if <i class="v">n</i>² is even, <i class="v">n</i> is even; √2 is not a fraction.</li>
+<li><b>Invariants:</b> to prove "impossible", find what every attempt has in common (rug colours).</li>
+<li><b>Divisibility (0.4, 0.5):</b> it is transitive, and it passes to every combination <i class="v">ax</i> + <i class="v">by</i>.</li>
+<li><b>Divisor pairs (0.6):</b> only perfect squares have an odd number of divisors.</li>
+</ul>
+</div>
+<div>
+<h3>Prophecies opened in this chapter</h3>
+<ul class="log2" id="opened">
+<li>0.1, "the sum of three odd numbers is odd": <b>fulfilled</b>.</li>
+<li>0.2, "the broken floor can be covered": <b>broken</b> (colour count).</li>
+<li>0.3, "if a | bc then a | b or a | c": <b>broken</b> (6 | 12 = 4 × 3).</li>
+<li>0.4, "exactly 10 doors end up open": <b>fulfilled</b> (Theorem 0.6).</li>
+</ul>
+<p class="stage" style="margin-top:16px">The tenth door swings open. Behind it, a harbor office lit by one lamp, and a book thicker than a man's arm. El Gran Pesado takes off one glove. "Six of you came alone. Six of you pass together. The ship leaves at dawn."</p>
+</div>
+</div></section>
+
+<section class="band alt"><div class="wrap pager"><a href="index.html">Contents</a><a href="ch1.html">Chapter 1: Mojadito, Home Port →</a></div></section>
+<footer class="band"><div class="wrap">Modular Worlds, Chapter 0 · draft · UCI Math CEO</div></footer>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js" defer></script>
+<script src="book.js"></script>
+<script>
+{
+const {$}=MW;
+
+/* Trial 1 hero: the dance */
+const D={a:5,b:7};
+function drawDance(){
+  const dancers=[...Array(D.a).fill('a'),...Array(D.b).fill('b')],pairs=[];
+  for(let i=0;i<dancers.length;i+=2)pairs.push(dancers.slice(i,i+2));
+  const odd=dancers.length%2===1;
+  $('#dance').innerHTML=pairs.map((p,i)=>`<div class="pair">${p.map(g=>`<span class="dot ${g==='b'?'b':''} ${odd&&i===pairs.length-1&&p.length===1?'odd':''}"></span>`).join('')}</div>`).join('');
+  $('#na').textContent=D.a;$('#nb').textContent=D.b;
+  const par=n=>n%2?'odd':'even',o=$('#dout');
+  o.textContent=`${D.a} (${par(D.a)}) + ${D.b} (${par(D.b)}) = ${D.a+D.b}: ${odd?'one dancer left over, odd':'everyone paired, even'}`;
+  o.className='verdict '+(odd?'no':'ok');
+  $('#dance').setAttribute('aria-label',`${D.a} teal and ${D.b} brass dancers in ${Math.floor(dancers.length/2)} pairs${odd?', one left over':''}`);
+}
+document.querySelectorAll('.stepper button').forEach(b=>b.addEventListener('click',()=>{const g=b.dataset.g;D[g]=Math.max(0,Math.min(15,D[g]+(+b.dataset.d)));drawDance()}));
+drawDance();
+
+/* prophecies */
+MW.cards($('#cards'),[
+ {id:'p01',t:'The sum of three odd numbers is odd.',s:'Settled in Trial 1'},
+ {id:'p02',t:'An 8 × 8 floor with two opposite corners missing can be covered by 31 two-tile rugs.',s:'Settled in Trial 2'},
+ {id:'p03',t:'If a divides bc, then a divides b or a divides c.',s:'Settled in Trial 4'},
+ {id:'p04',t:'After all 100 apprentices pass, exactly 10 doors are open.',s:'Settled in Trial 5'}],'mw-ch0',i=>'Prophecy 0.'+(i+1));
+
+/* Trial 2: the floor */
+const F={gone:[[0,0],[7,7]],rug:{},sel:null,next:1};
+const key=(r,c)=>r*8+c;
+function drawFloor(){
+  const goneSet=new Set(F.gone.map(([r,c])=>key(r,c)));let h='';
+  for(let r=0;r<8;r++)for(let c=0;c<8;c++){const k=key(r,c),g=goneSet.has(k),rg=F.rug[k];
+    h+=`<button data-k="${k}" class="${g?'gone':''} ${(r+c)%2?'dk':''} ${rg?'dom':''} ${F.sel===k?'sel':''}" aria-label="Row ${r+1}, column ${c+1}${g?', smashed':rg?', covered by rug '+rg:''}" ${g?'tabindex="-1" aria-hidden="true"':''}>${rg||''}</button>`}
+  $('#floor').innerHTML=h;
+  const n=Object.keys(F.rug).length/2,dark=F.gone.filter(([r,c])=>(r+c)%2).length,o=$('#fout');
+  o.textContent=`${n} rug${n===1?'':'s'} laid, 31 needed.`+(n===31?' Covered!':'')+($('#fcol').checked?` Tiles left: ${32-(2-dark)} light, ${32-dark} dark.`:'');
+  o.className='verdict'+(n===31?' ok':'');
+}
+$('#floor').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.classList.contains('gone'))return;const k=+b.dataset.k;
+  if(F.rug[k]){const id=F.rug[k];for(const x in F.rug)if(F.rug[x]===id)delete F.rug[x];F.sel=null;drawFloor();return}
+  if(F.sel===null){F.sel=k}else{const a=F.sel,dr=Math.abs(Math.floor(a/8)-Math.floor(k/8)),dc=Math.abs(a%8-k%8);
+    if(dr+dc===1&&!F.rug[a]){F.rug[a]=F.rug[k]=F.next++}F.sel=(dr+dc===1)?null:k}
+  drawFloor();const nb=$(`#floor button[data-k="${k}"]`);if(nb)nb.focus()});
+$('#fcol').addEventListener('change',e=>{$('#floor').classList.toggle('color',e.target.checked);drawFloor()});
+$('#fmode').addEventListener('change',e=>{F.gone=e.target.value==='opp'?[[0,0],[7,7]]:[[0,0],[7,0]];F.rug={};F.sel=null;drawFloor()});
+$('#fclear').addEventListener('click',()=>{F.rug={};F.sel=null;drawFloor()});
+drawFloor();
+
+/* Trial 4: crates */
+function drawCrates(){
+  const n=parseInt($('#cn').value,10),d=parseInt($('#cd').value,10),o=$('#cout');
+  if(!(n>=1&&n<=120&&d>=1&&d<=120)){o.textContent='Use whole numbers from 1 to 120.';return}
+  const full=Math.floor(n/d),left=n%d,cols=Math.ceil(Math.sqrt(d));
+  const crate=(k,bad)=>`<div class="crate ${bad?'bad':''}" style="grid-template-columns:repeat(${Math.min(cols,k||1)},9px)">${'<i></i>'.repeat(k)}</div>`;
+  $('#crates').innerHTML=Array.from({length:Math.min(full,40)},()=>crate(d,false)).join('')+(left?crate(left,true):'');
+  $('#crates').setAttribute('aria-label',`${full} full crates of ${d}${left?' and one partly filled crate with '+left:''}`);
+  o.textContent=left?`${d} does not divide ${n}: ${full} full crates and ${left} lantern${left>1?'s':''} left over.`:`${d} | ${n}: ${full} full crate${full>1?'s':''}, nothing left over.`;
+  o.className='verdict '+(left?'no':'ok');
+  const divs=[];for(let k=1;k<=n;k++)if(n%k===0)divs.push(k);
+  $('#clist').textContent=`Divisors of ${n}: ${divs.join(', ')} (${divs.length} of them).`;
+}
+['cn','cd'].forEach(id=>$('#'+id).addEventListener('input',drawCrates));drawCrates();
+
+/* Trial 5: doors */
+const R={open:Array(101).fill(false),k:0};
+function drawDoors(hit){
+  $('#doors').innerHTML=Array.from({length:100},(_,i)=>{const n=i+1;return `<div class="door ${R.open[n]?'open':''} ${hit&&n%hit===0?'hit':''}" aria-label="Door ${n} ${R.open[n]?'open':'closed'}">${n}</div>`}).join('');
+  const open=R.open.reduce((s,v,i)=>v&&i?s.concat(i):s,[]);
+  $('#dstat').textContent=R.k===0?'All 100 doors are closed.':`After apprentice ${R.k}: ${open.length} doors open${open.length<=12?' ('+open.join(', ')+')':''}.`;
+  $('#dnext').disabled=R.k>=100;
+}
+function step(){if(R.k>=100)return;R.k++;for(let n=R.k;n<=100;n+=R.k)R.open[n]=!R.open[n]}
+$('#dnext').addEventListener('click',()=>{step();drawDoors(R.k)});
+$('#dall').addEventListener('click',()=>{while(R.k<100)step();drawDoors(0)});
+$('#dreset').addEventListener('click',()=>{R.open=Array(101).fill(false);R.k=0;drawDoors(0)});
+drawDoors(0);
+
+/* code */
+MW.cells($('#cells'),[
+{t:'Cell 1 · check the plaza rules (not a proof!)',c:`for a in range(-20, 21):
+    for b in range(-20, 21):
+        if a % 2 == 1 and b % 2 == 1:
+            assert (a + b) % 2 == 0      # odd + odd is even
+            assert (a * b) % 2 == 1      # odd * odd is odd
+print("No counterexample between -20 and 20.")
+# Quest: why is checking 1,681 pairs still not a proof? What does the proof do that the loop cannot?`},
+{t:'Cell 2 · divisors and the hundred doors',c:`def divisors(n):
+    return [d for d in range(1, n + 1) if n % d == 0]
+
+print("divisors of 36:", divisors(36))
+
+doors = [False] * 101
+for k in range(1, 101):
+    for n in range(k, 101, k):
+        doors[n] = not doors[n]
+print("open:", [n for n in range(1, 101) if doors[n]])
+print("odd number of divisors:", [n for n in range(1, 101) if len(divisors(n)) % 2 == 1])`},
+{t:'Cell 3 · hunting counterexamples in the market',c:`def first_break(claim, N=30):
+    for a in range(1, N):
+        for b in range(1, N):
+            for c in range(1, N):
+                if not claim(a, b, c):
+                    return (a, b, c)
+
+# "if a | bc then a | b or a | c"
+print(first_break(lambda a, b, c: (b * c) % a != 0 or b % a == 0 or c % a == 0))
+# "if a | b and b | c then a | c"  (Theorem 0.4: should find nothing)
+print(first_break(lambda a, b, c: not (b % a == 0 and c % b == 0) or c % a == 0))`}],{status:$('#pystat')});
+}
+</script>
+</body>
+</html>
