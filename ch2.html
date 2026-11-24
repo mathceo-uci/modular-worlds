@@ -221,7 +221,7 @@ function drawC(){
   for(let x=lo;x<=hi&&nums.length<56;x++){const a=inB(x,s,d),b=inB(x,t,e);if(a||b)nums.push(`<span class="${a&&b?'both':a?'w':'a'}">${x}</span>`)}
   $('#cstrip').innerHTML=nums.join('');
   const m=firstMeet(s,d,t,e),g=gcd(d,e),o=$('#cout');
-  if(m===null){o.textContent=`Never: gcd(${d}, ${e}) = ${g} does not divide ${s} − ${t} = ${s-t}.`;o.className='verdict no'}
+  if(m===null){o.textContent=`Never: gcd(${d}, ${e}) = ${g} does not divide ${s} − ${t} = ${neg(s-t)}.`;o.className='verdict no'}
   else{o.textContent=`First shared weight ${m}, then every lcm(${d}, ${e}) = ${lcm(d,e)}.`;o.className='verdict ok'}
 }
 ['sa','da','sb','db'].forEach(id=>$('#'+id).addEventListener('input',drawC));
@@ -240,7 +240,7 @@ const rnd=n=>Math.floor(Math.random()*n);
 function nextR(){const d=2+rnd(9),e=2+rnd(9),s=1+rnd(25),t=1+rnd(25);R.q=[s,d,t,e];R.ans=firstMeet(s,d,t,e);R.done=false;
   $('#rq').textContent=`start ${s}, step ${d}   and   start ${t}, step ${e}`;$('#ra').value='';$('#rout').textContent='';$('#rout').className='verdict'}
 function say(ok,msg){if(R.done)return;R.done=true;R.streak=ok?R.streak+1:0;$('#rout').textContent=msg;$('#rout').className='verdict '+(ok?'ok':'no');$('#rstreak').textContent='Streak: '+R.streak}
-const why=()=>{const[s,d,t,e]=R.q;return `gcd(${d}, ${e}) = ${gcd(d,e)} and ${s} − ${t} = ${s-t}`};
+const why=()=>{const[s,d,t,e]=R.q;return `gcd(${d}, ${e}) = ${gcd(d,e)} and ${s} − ${t} = ${neg(s-t)}`};
 $('#rcheck').addEventListener('click',()=>{const v=parseInt($('#ra').value,10);if(!(v>0)){$('#rout').textContent='Type a weight first.';return}
   if(R.ans===null)say(false,`They never meet: ${why()}.`);else say(v===R.ans,v===R.ans?`Yes! ${v}, then every ${lcm(R.q[1],R.q[3])}.`:`Not quite: the first shared weight is ${R.ans}.`)});
 $('#rnever').addEventListener('click',()=>{if(R.ans===null)say(true,`Never, proved: ${why()}, and the gcd does not divide the difference.`);else say(false,`They do meet, first at ${R.ans}.`)});
