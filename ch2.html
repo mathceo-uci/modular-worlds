@@ -209,6 +209,7 @@
 <script>
 {
 const {$,gcd,lcm}=MW;
+const neg=n=>String(n).replace('-','\u2212');
 const inB=(x,s,d)=>x>=s&&(x-s)%d===0;
 function firstMeet(s,d,t,e){if((s-t)%gcd(d,e)!==0)return null;for(let x=Math.max(s,t);x<=Math.max(s,t)+lcm(d,e);x++)if(inB(x,s,d)&&inB(x,t,e))return x;return null}
 
