@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Poets' Corner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&family=Roboto+Serif:ital,opsz,wght@0,8..144,400;1,8..144,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="book.css">
+<style>
+.field{display:flex;flex-direction:column;gap:4px}
+.field .lbl{display:flex;justify-content:space-between;gap:8px;font-size:15px;color:var(--mute)}
+.field .lbl output{color:var(--ink);font-weight:700}
+input[type=range]{width:100%;accent-color:var(--sea);height:32px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{min-height:40px}
+.seg button[aria-pressed=true]{background:var(--sea);color:var(--bg);border-color:var(--sea)}
+.note{font-size:15px;color:var(--mute)}
+.words{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.words label{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--mute)}
+.words input{flex:1;min-width:0}
+.chip{display:inline-flex;align-items:center;justify-content:center;min-width:1.9em;height:1.9em;border-radius:999px;font-weight:700;font-size:14px;color:#fff;padding:0 .4em}
+.grid{overflow-x:auto;position:relative}
+.grid table{border-collapse:separate;border-spacing:4px;margin:0}
+.grid th{font-size:13px;color:var(--mute);font-weight:500;text-align:left;padding-right:6px}
+.status{white-space:pre-line;text-align:left;font-family:'Roboto Mono',monospace;font-size:15px;background:var(--code);border-radius:10px;padding:10px 12px;margin:0}
+.stanza{margin:18px 0 6px;font-weight:700;color:var(--brass)}
+.line{display:grid;grid-template-columns:2.2em minmax(0,1fr) auto;gap:8px;align-items:center;margin:4px 0}
+.line .n{font-size:13px;color:var(--mute);text-align:right;font-variant-numeric:tabular-nums}
+.line input{width:100%;min-height:40px;font-family:'Roboto Serif',Georgia,serif;font-size:17px}
+.line .end{font-family:'Roboto Serif',Georgia,serif;font-style:italic;white-space:nowrap}
+.line .cnt{font-family:'Roboto Mono',monospace;font-size:14px;white-space:nowrap;min-width:6.5em;text-align:right}
+.line .cnt.ok{color:var(--sea);font-weight:700}
+.poem{font-family:'Roboto Serif',Georgia,serif;font-size:18px;line-height:1.6;white-space:pre-wrap;background:var(--panel);border-radius:12px;padding:18px 22px;margin:12px 0}
+.two2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(18px,3vw,40px);align-items:start}
+@media(max-width:860px){.two2{grid-template-columns:minmax(0,1fr)}}
+.two2>div{min-width:0}
+</style>
+</head>
+<body>
+
+<nav class="toc" aria-label="Poets' Corner sections"><div class="wrap">
+<a class="brand" href="index.html">Modular Worlds</a><a href="#sestina">The sestina machine</a><a href="#write-s">Write a sestina</a><a href="#fib">Fibonacci tides</a><a href="studio.html">The Studio</a>
+</div></nav>
+
+<header class="band hero"><div class="wrap two">
+<div>
+<div class="kicker">Modular Worlds · The Studio</div>
+<h1>The Poets' Corner</h1>
+<p class="lede">In the ship's library, Sofía keeps a notebook of poems with rules. Some forms are older than algebra, and their rules are modular arithmetic in disguise: words that rotate on a schedule, lines that grow and shrink with the tides of a sequence.</p>
+<p>You may write in English, in Spanish or in both. Your lines stay in this browser only; nobody else sees them unless you copy and share them.</p>
+</div>
+<aside class="box thm">
+<h3>The rule of the corner</h3>
+<p style="margin:0">A form is a constraint, and constraints are where ideas come from. The math tells you <i>where</i> each word must land. What the poem says is all yours.</p>
+</aside>
+</div></header>
+
+<section class="band" id="sestina"><div class="wrap two2">
+<div>
+<div class="kicker">Clockwork Isles · permutations</div>
+<h2>The sestina machine</h2>
+<p>A sestina has six stanzas of six lines. It never rhymes; instead, six <b>end-words</b> close the lines, and they move from stanza to stanza by one fixed shuffle, the <i>spiral</i>: take the last word, then the first, then the second-to-last, then the second, and so on.</p>
+<p>Troubadour poets in 12th-century Provence (Arnaut Daniel is credited with the first) used it. In the 20th century the French writer and mathematician Raymond Queneau asked: for which numbers of words <i class="v">n</i> does the spiral shuffle bring every word through every position before coming home?</p>
+<div class="field"><span class="lbl">Your end-words</span><div class="seg" id="presets"></div></div>
+<div class="words" id="words"></div>
+<div class="field" style="margin-top:12px"><label class="lbl" for="nw">Number of end-words n <output id="nw-o"></output></label><input type="range" id="nw" min="2" max="12" value="6"></div>
+<p class="status" id="perm-info" aria-live="polite"></p>
+</div>
+<div>
+<div class="grid" id="sgrid" role="table" aria-label="Which end-word closes each line, stanza by stanza"></div>
+<div class="box tool"><h3>Listen to the numbers</h3>
+<p style="margin:0">With 6 words, every word visits every position once, and the seventh stanza would be the first again. Try 4 words: the shuffle splits into smaller cycles and comes home early. Find all <i class="v">n</i> up to 12 that work like 6 (the <b>Queneau numbers</b>). Bonus: there is a beautiful test using mod 2<i class="v">n</i> + 1. Can you find it?</p></div>
+</div>
+</div></section>
+
+<section class="band alt" id="write-s"><div class="wrap">
+<h2>Write a sestina</h2>
+<p class="note">Each line already knows its end-word. Write toward it. The three-line <b>envoi</b> at the end uses all six words, two per line. Skip lines, come back, change your words above: your lines are kept.</p>
+<div id="slines"></div>
+<div class="row" style="margin-top:14px"><button class="primary" id="show-s">Show my poem</button><button id="clear-s">Clear my lines</button></div>
+<div id="out-s" aria-live="polite"></div>
+</div></section>
+
+<section class="band" id="fib"><div class="wrap two2">
+<div>
+<div class="kicker">Fibonacci, mod m</div>
+<h2>Fibonacci tides</h2>
+<p>A <b>Fib</b> is a short poem whose lines have 1, 1, 2, 3, 5, 8 syllables: each count is the sum of the two before. Now take the counts mod <i class="v">m</i>. The numbers rise and fall like a tide, and, surprisingly, the tide always comes back to 1, 1. The length of one full tide is the <b>Pisano period</b>.</p>
+<div class="field"><span class="lbl">Form</span><div class="seg" id="fibmode"></div></div>
+<div class="field"><label class="lbl" for="fm">Modulus m <output id="fm-o"></output></label><input type="range" id="fm" min="2" max="12" value="5"></div>
+<div class="field"><span class="lbl">Syllable counter</span><div class="seg" id="lang"></div></div>
+<p class="status" id="fib-info" aria-live="polite"></p>
+<p class="note">The counter is a rough guide (English and Spanish words are both full of exceptions). If your ear disagrees with it, trust your ear. A line with 0 syllables is a breath: leave it empty.</p>
+</div>
+<div>
+<div id="flines"></div>
+<div class="row" style="margin-top:14px"><button class="primary" id="show-f">Show my poem</button><button id="clear-f">Clear my lines</button></div>
+<div id="out-f" aria-live="polite"></div>
+<div class="box tool"><h3>Why does the tide return?</h3>
+<p style="margin:0">There are only <i class="v">m</i>² possible pairs of neighbours mod <i class="v">m</i>, so some pair must repeat. Each pair decides the next number, and it also decides the one before (subtract!). Use that to prove the tide comes back to 1, 1, and not just to some later pair.</p></div>
+</div>
+</div></section>
+
+<section class="band"><div class="wrap pager"><a href="studio.html">← The Studio</a><a href="loom.html">The Loom →</a></div></section>
+<footer class="band"><div class="wrap">Modular Worlds · The Poets' Corner · draft · UCI Math CEO</div></footer>
+
+<script src="book.js"></script>
+<script>
+{
+const {$,esc}=MW;
+const COLS=['#0c5f73','#c8401a','#9a6b12','#7a4f9a','#2f7d4f','#d81159','#1d6fa5','#8a5a2b','#4b5563','#b4549a','#3c7a89','#a23b2a'];
+const KEY='mw-poets';
+let S={};try{S=JSON.parse(localStorage.getItem(KEY))||{}}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+S.words=S.words||['tide','salt','clock','island','lantern','home','storm','map','key','door','star','road'];
+S.sl=S.sl||{};S.fl=S.fl||{};
+const PRE={en:['tide','salt','clock','island','lantern','home','storm','map','key','door','star','road'],es:['marea','sal','reloj','isla','faro','casa','tormenta','mapa','llave','puerta','estrella','camino']};
+function seg(id,items,init,fn){const box=$('#'+id);box.innerHTML=items.map(([v,l])=>`<button data-v="${v}" aria-pressed="${v===init}">${l}</button>`).join('');
+  box.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;box.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));fn(b.dataset.v)})}
+const gcd=MW.gcd,lcm=(a,b)=>a/gcd(a,b)*b;
+
+/* ---------- sestina ---------- */
+let N=6;
+const spiral=n=>{const s=[];let lo=0,hi=n-1;while(lo<=hi){s.push(hi--);if(lo<=hi)s.push(lo++)}return s};
+function stanzas(n){const sp=spiral(n);let cur=[...Array(n).keys()];const out=[cur];for(let k=1;k<n;k++){cur=sp.map(i=>cur[i]);out.push(cur)}return out}
+function cycles(n){const sp=spiral(n),seen=Array(n).fill(false),c=[];for(let i=0;i<n;i++){if(seen[i])continue;let j=i,L=0;while(!seen[j]){seen[j]=true;j=sp[j];L++}c.push(L)}return c}
+function chip(w){return `<span class="chip" style="background:${COLS[w]}" aria-hidden="true">${w+1}</span>`}
+function buildWords(){$('#words').innerHTML=Array.from({length:N},(_,i)=>`<label>${chip(i)}<input data-i="${i}" value="${esc(S.words[i]||'')}" aria-label="End-word ${i+1}"></label>`).join('')}
+$('#words').addEventListener('input',e=>{const i=+e.target.dataset.i;S.words[i]=e.target.value;save();drawGrid();buildLines(true)});
+seg('presets',[['en','Voyage words (English)'],['es','Palabras del viaje (español)']],'',v=>{S.words=PRE[v].slice();save();buildWords();drawGrid();buildLines()});
+const nw=$('#nw');nw.addEventListener('input',()=>{N=+nw.value;$('#nw-o').textContent=N;buildWords();drawGrid();buildLines()});$('#nw-o').textContent=N;
+function drawGrid(){const st=stanzas(N),c=cycles(N),ord=c.reduce(lcm,1);
+  let h='<table><tr><th scope="col">Stanza</th>'+Array.from({length:N},(_,i)=>`<th scope="col">Line ${i+1}</th>`).join('')+'</tr>';
+  st.forEach((row,k)=>{h+=`<tr><th scope="row">${k+1}</th>`+row.map(w=>`<td>${chip(w)}<span class="sr-only"> ${esc(S.words[w]||'word '+(w+1))}</span></td>`).join('')+'</tr>'});
+  $('#sgrid').innerHTML=h+'</table>';
+  const one=c.length===1;
+  $('#perm-info').textContent=`n = ${N}: the spiral shuffle splits into cycle${c.length>1?'s':''} of length ${c.join(', ')}.\nThe end-words return to their starting places after lcm = ${ord} stanza${ord>1?'s':''}.\n${one?`One single cycle: ${N} is a Queneau number, and every word visits every line.`:`More than one cycle: some words never reach some lines.`}`}
+const sr=document.createElement('style');sr.textContent='.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}';document.head.appendChild(sr);
+
+/* lines */
+const ENVOI=[[1,4],[3,2],[5,0]]; /* middle word, end word (0-based), classic envoi pattern 2-5, 4-3, 6-1 */
+function buildLines(keepFocus){if(keepFocus){$('#slines').querySelectorAll('.end').forEach(el=>{const w=+el.dataset.w;el.textContent=S.words[w]||'…'});return}
+  const st=stanzas(N);let h='';
+  st.forEach((row,k)=>{h+=`<p class="stanza">Stanza ${k+1}</p>`;row.forEach((w,i)=>{const id=`s${N}-${k}-${i}`;h+=`<div class="line"><span class="n">${k*N+i+1}</span><input id="${id}" data-k="${id}" value="${esc(S.sl[id]||'')}" aria-label="Stanza ${k+1}, line ${i+1}, ends with ${esc(S.words[w]||'')}"><span class="end" data-w="${w}">${esc(S.words[w]||'…')}</span></div>`})});
+  if(N===6){h+='<p class="stanza">Envoi</p>';ENVOI.forEach(([m,e],i)=>{const id=`s6-env-${i}`;h+=`<div class="line"><span class="n">${37+i}</span><input id="${id}" data-k="${id}" value="${esc(S.sl[id]||'')}" aria-label="Envoi line ${i+1}: use ${esc(S.words[m])} inside and end with ${esc(S.words[e])}"><span class="end">…<span data-w="${m}" class="end">${esc(S.words[m])}</span>… <span class="end" data-w="${e}">${esc(S.words[e])}</span></span></div>`})}
+  $('#slines').innerHTML=h}
+$('#slines').addEventListener('input',e=>{const k=e.target.dataset.k;if(!k)return;S.sl[k]=e.target.value;save()});
+$('#show-s').addEventListener('click',()=>{const st=stanzas(N);let t=[];st.forEach((row,k)=>{row.forEach((w,i)=>t.push(S.sl[`s${N}-${k}-${i}`]||`…${S.words[w]||''}`));t.push('')});
+  if(N===6)ENVOI.forEach((_,i)=>t.push(S.sl[`s6-env-${i}`]||'…'));
+  $('#out-s').innerHTML=`<div class="poem">${esc(t.join('\n').trim())}</div><p class="note">Select the text to copy it.</p>`});
+$('#clear-s').addEventListener('click',()=>{Object.keys(S.sl).filter(k=>k.startsWith(`s${N}-`)).forEach(k=>delete S.sl[k]);save();buildLines();$('#out-s').innerHTML=''});
+buildWords();drawGrid();buildLines();
+
+/* ---------- Fibonacci tides ---------- */
+let FM='mod',M=5,LANG='en';
+const fm=$('#fm');fm.addEventListener('input',()=>{M=+fm.value;$('#fm-o').textContent=M;buildFib()});$('#fm-o').textContent=M;
+seg('fibmode',[['classic','Classic Fib: 1, 1, 2, 3, 5, 8'],['mod','A full tide mod m']],'mod',v=>{FM=v;fm.disabled=v==='classic';buildFib()});
+seg('lang',[['en','English'],['es','Español']],'en',v=>{LANG=v;buildFib()});
+function pisano(m){const s=[1,1];while(true){const n=(s[s.length-1]+s[s.length-2])%m;s.push(n);const L=s.length;if(s[L-1]===1&&s[L-2]===1&&L>3){s.length=L-2;return s}if(L>500)return s}}
+const counts=()=>FM==='classic'?[1,1,2,3,5,8]:pisano(M);
+function sylEN(w){w=w.toLowerCase().replace(/[^a-z]/g,'');if(!w)return 0;if(w.length<=3)return 1;w=w.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/,'').replace(/^y/,'');const g=w.match(/[aeiouy]{1,2}/g);return Math.max(1,g?g.length:1)}
+function sylES(w){w=w.toLowerCase().replace(/[^a-záéíóúüñ]/g,'').replace(/q?u(?=[eiéí])|(?<=g)u(?=[eiéí])/g,m=>m==='qu'?'q':'');if(!w)return 0;
+  const V='aeiouáéíóúü',strong='aeoáéó',acc='íú';let n=0,prev='';for(const ch of w){if(V.includes(ch)){if(!V.includes(prev))n++;else if((strong.includes(ch)&&strong.includes(prev))||acc.includes(ch)||acc.includes(prev))n++}prev=ch}
+  if(w.endsWith('y')&&!V.includes(w[w.length-2]||'a'))n++;return Math.max(1,n)}
+const syl=t=>(t.match(/[\p{L}'’]+/gu)||[]).reduce((s,w)=>s+(LANG==='en'?sylEN(w):sylES(w)),0);
+const fkey=i=>`${FM==='classic'?'c':'m'+M}-${i}`;
+function buildFib(){const c=counts();
+  $('#fib-info').textContent=FM==='classic'?'Six lines: 1, 1, 2, 3, 5, 8 syllables.':`Fibonacci mod ${M}: ${c.join(', ')}\nThe Pisano period is ${c.length}: after ${c.length} lines the tide is back to 1, 1.`;
+  $('#flines').innerHTML=c.map((k,i)=>`<div class="line"><span class="n">${k}</span><input data-i="${i}" value="${esc(S.fl[fkey(i)]||'')}" aria-label="Line ${i+1}: ${k?k+' syllable'+(k>1?'s':''):'a breath, leave empty'}" ${k?'':'placeholder="(breath)"'}><span class="cnt" id="fc${i}" aria-live="off"></span></div>`).join('');
+  c.forEach((_,i)=>mark(i))}
+function mark(i){const c=counts()[i],t=S.fl[fkey(i)]||'',n=syl(t),el=$('#fc'+i);el.textContent=t?`${n} / ${c}${n===c?' ✓':''}`:`0 / ${c}${c===0?' ✓':''}`;el.classList.toggle('ok',n===c)}
+$('#flines').addEventListener('input',e=>{const i=+e.target.dataset.i;S.fl[fkey(i)]=e.target.value;save();mark(i)});
+$('#show-f').addEventListener('click',()=>{const t=counts().map((_,i)=>S.fl[fkey(i)]||'');$('#out-f').innerHTML=`<div class="poem">${esc(t.join('\n'))}</div><p class="note">Select the text to copy it.</p>`});
+$('#clear-f').addEventListener('click',()=>{counts().forEach((_,i)=>delete S.fl[fkey(i)]);save();buildFib();$('#out-f').innerHTML=''});
+buildFib();
+}
+</script>
+</body>
+</html>

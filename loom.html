@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Loom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="book.css">
+<style>
+.piece .wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(18px,3vw,40px);align-items:start}
+@media(max-width:860px){.piece .wrap{grid-template-columns:minmax(0,1fr)}}
+.easel{position:relative;width:100%;aspect-ratio:1;border-radius:14px;overflow:hidden;background:var(--panel)}
+.easel canvas{position:absolute;inset:0;width:100%;height:100%}
+.panel{display:flex;flex-direction:column;gap:14px}
+.field{display:flex;flex-direction:column;gap:4px}
+.field .lbl{display:flex;justify-content:space-between;gap:8px;font-size:15px;color:var(--mute)}
+.field .lbl output{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--sea);height:32px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{min-height:40px}
+.seg button[aria-pressed=true]{background:var(--sea);color:var(--bg);border-color:var(--sea)}
+.swatches{display:flex;flex-wrap:wrap;gap:6px}
+.swatches label{display:flex;flex-direction:column;align-items:center;font-size:12px;color:var(--mute);gap:2px}
+input[type=color]{width:40px;height:40px;border:1px solid var(--line);border-radius:8px;padding:2px;background:var(--bg);cursor:pointer}
+.note{font-size:15px;color:var(--mute)}
+.status{white-space:pre-line;text-align:left;font-family:'Roboto Mono',monospace;font-size:15px;background:var(--code);border-radius:10px;padding:10px 12px;margin:0}
+.still img{display:block;width:100%;max-width:480px;border-radius:10px;border:1px solid var(--line)}
+</style>
+</head>
+<body>
+
+<nav class="toc" aria-label="Loom sections"><div class="wrap">
+<a class="brand" href="index.html">Modular Worlds</a><a href="#beads">Bead bracelets</a><a href="#loom">The loom</a><a href="studio.html">The Studio</a>
+</div></nav>
+
+<header class="band hero"><div class="wrap two">
+<div>
+<div class="kicker">Modular Worlds · The Studio</div>
+<h1>The Loom</h1>
+<p class="lede">Diego's grandmother taught him to bead and to weave, and he packed a small loom for the voyage. Patterns that go around and around are cycles, and cycles are modular arithmetic. Here the math decides whether a bracelet closes cleanly and whether a cloth holds together at all.</p>
+</div>
+<aside class="box thm">
+<h3>How to keep a piece</h3>
+<p style="margin:0">Press <b>Make a still</b>, then right-click the picture (or press and hold on a phone) to save it. Bead traditions from Wixárika (Huichol) work in Mexico to Emberá chaquira in Colombia, and weavers from Oaxaca to the Andes, solve these same puzzles by hand.</p>
+</aside>
+</div></header>
+
+<section class="band piece" id="beads"><div class="wrap">
+<div><div class="easel"><canvas id="cv-beads" role="img"></canvas></div>
+<p class="note">The outer ring is the first time around the bracelet. Each ring inside is one more lap, threading the same pattern on.</p></div>
+<div class="panel">
+<div><div class="kicker">Calendar Isles · lcm and the Chinese Remainder Theorem</div><h2>Bead bracelets</h2>
+<p class="note">A bracelet has <i class="v">n</i> spots. You thread a colour pattern of length <i class="v">p</i> again and again: bead number <i class="v">k</i> gets colour <i class="v">k</i> mod <i class="v">p</i> and lands on spot <i class="v">k</i> mod <i class="v">n</i>. If <i class="v">p</i> does not divide <i class="v">n</i>, the first lap has a seam. Keep going around: when does the pattern close perfectly?</p></div>
+<div class="field"><label class="lbl" for="bn">Spots on the bracelet n <output id="bn-o"></output></label><input type="range" id="bn" min="3" max="30" value="12"></div>
+<div class="field"><label class="lbl" for="bp">Pattern length p <output id="bp-o"></output></label><input type="range" id="bp" min="1" max="8" value="5"></div>
+<div class="field"><span class="lbl">Pattern colours</span><div class="swatches" id="bsw"></div></div>
+<div class="row"><button id="b-rand">Surprise me</button><button class="primary" id="b-still">Make a still</button></div>
+<p class="status" id="b-info" aria-live="polite"></p>
+<div class="still" id="b-out"></div>
+<div class="box tool" style="margin:0"><h3>Ask why</h3>
+<p style="margin:0">With 12 spots and a 5-bead pattern, every spot ends up wearing every colour exactly once. With 12 spots and a 4-bead pattern, each spot only ever sees one colour. Predict, for any <i class="v">n</i> and <i class="v">p</i>, how many colours each spot sees. This is a first glimpse of the Chinese Remainder Theorem.</p></div>
+</div>
+</div></section>
+
+<section class="band alt piece" id="loom"><div class="wrap">
+<div><div class="easel"><canvas id="cv-loom" role="img"></canvas></div>
+<p class="note">Vertical threads are the warp; horizontal threads are the weft. Each square shows whichever thread is on top.</p></div>
+<div class="panel">
+<div><div class="kicker">Clockwork Isles · gcd and units</div><h2>The loom</h2>
+<p class="note">In a <b>satin</b> weave, each weft row lifts one warp thread out of every <i class="v">n</i>, and each new row moves the lift <i class="v">s</i> threads over: row <i class="v">j</i> lifts thread <i class="v">s</i>·<i class="v">j</i> mod <i class="v">n</i>. Satin feels smooth because the lifts are scattered, never touching. Weavers' rule: <i class="v">s</i> must share no factor with <i class="v">n</i>, and must not be 1 or <i class="v">n</i> − 1. Try to see why.</p></div>
+<div class="field"><span class="lbl">Weave</span><div class="seg" id="lw"></div></div>
+<div class="field" id="f-n"><label class="lbl" for="ln">Repeat n <output id="ln-o"></output></label><input type="range" id="ln" min="2" max="12" value="5"></div>
+<div class="field" id="f-s"><label class="lbl" for="ls">Step s <output id="ls-o"></output></label><input type="range" id="ls" min="1" max="11" value="2"></div>
+<div class="field"><label class="lbl" for="lt">Threads per side <output id="lt-o"></output></label><input type="range" id="lt" min="10" max="72" value="30"></div>
+<div class="field"><label class="lbl" for="lsw">Stripe width <output id="lsw-o"></output></label><input type="range" id="lsw" min="1" max="12" value="5"></div>
+<div class="field"><span class="lbl">Warp colours (vertical) · weft colours (horizontal)</span><div class="swatches" id="lsw-c"></div></div>
+<div class="row"><button id="l-rand">Surprise me</button><button class="primary" id="l-still">Make a still</button></div>
+<p class="status" id="l-info" aria-live="polite"></p>
+<div class="still" id="l-out"></div>
+<div class="box tool" style="margin:0"><h3>Ask why</h3>
+<p style="margin:0">There is no true satin with <i class="v">n</i> = 4 or <i class="v">n</i> = 6. Prove it. Then explain what goes wrong when gcd(<i class="v">s</i>, <i class="v">n</i>) &gt; 1: look for warp threads that are never lifted, and imagine pulling on them.</p></div>
+</div>
+</div></section>
+
+<section class="band"><div class="wrap pager"><a href="poets.html">← The Poets' Corner</a><a href="studio.html">The Studio</a></div></section>
+<footer class="band"><div class="wrap">Modular Worlds · The Loom · draft · UCI Math CEO</div></footer>
+
+<script src="book.js"></script>
+<script>
+{
+const {$,gcd}=MW;const lcm=(a,b)=>a/gcd(a,b)*b;const mod=(a,m)=>((a%m)+m)%m;
+const probe=document.createElement('span');probe.style.display='none';document.body.appendChild(probe);
+const col=v=>{probe.style.color=`var(${v})`;return getComputedStyle(probe).color};
+function ctx(cv){const d=window.devicePixelRatio||1,W=cv.clientWidth||500,H=cv.clientHeight||500;cv.width=Math.round(W*d);cv.height=Math.round(H*d);const g=cv.getContext('2d');g.setTransform(d,0,0,d,0,0);return[g,W,H]}
+function range(id,fn){const el=$('#'+id),o=$('#'+id+'-o');el.addEventListener('input',()=>{o.textContent=el.value;fn()});o.textContent=el.value;return el}
+function setR(id,v){$('#'+id).value=v;$('#'+id+'-o').textContent=v}
+function seg(id,items,init,fn){const box=$('#'+id);box.innerHTML=items.map(([v,l])=>`<button data-v="${v}" aria-pressed="${v===init}">${l}</button>`).join('');
+  box.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;box.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));fn(b.dataset.v)})}
+function still(cv,out,what){$(out).innerHTML=`<img alt="A still of ${what}" src="${$(cv).toDataURL('image/png')}"><p class="note">Right-click or press and hold the picture to save it.</p>`}
+const PALS=[['#c8401a','#f2b134','#0c5f73','#f6f1e7','#7a4f9a','#2f7d4f','#d81159','#151a1d'],['#e63946','#ffbe0b','#3a86ff','#8338ec','#06d6a0','#ff006e','#fb5607','#073b4c'],['#9c2c1c','#e8b04a','#1f4e5f','#e9e1cf','#5b8c5a','#b5651d','#2b2d42','#d4a5a5']];
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+
+/* ---------- beads ---------- */
+const B={cols:PALS[0].slice()};
+const bn=range('bn',drawB),bp=range('bp',()=>{swB();drawB()});
+function swB(){const p=+bp.value;$('#bsw').innerHTML=Array.from({length:p},(_,i)=>`<label>${i}<input type="color" data-i="${i}" value="${B.cols[i]}" aria-label="Colour ${i} of the pattern"></label>`).join('')}
+$('#bsw').addEventListener('input',e=>{B.cols[+e.target.dataset.i]=e.target.value;drawB()});
+$('#b-rand').addEventListener('click',()=>{setR('bn',rnd(5,24));setR('bp',rnd(2,7));B.cols=PALS[rnd(0,2)].slice().sort(()=>Math.random()-0.5);swB();drawB()});
+$('#b-still').addEventListener('click',()=>still('#cv-beads','#b-out','a bead bracelet'));
+function drawB(){const cv=$('#cv-beads'),[g,W,H]=ctx(cv),n=+bn.value,p=+bp.value,L=lcm(n,p),laps=L/n,cx=W/2,cy=H/2,R0=Math.min(W,H)*0.45;g.clearRect(0,0,W,H);
+  const shown=Math.min(laps,8),gap=R0*0.62/Math.max(shown,1),br=Math.min(gap*0.42,R0*Math.PI/n*0.42);
+  for(let lap=0;lap<shown;lap++){const R=R0-lap*gap;g.strokeStyle=col('--line');g.lineWidth=1;g.beginPath();g.arc(cx,cy,R,0,7);g.stroke();
+    for(let s=0;s<n;s++){const k=lap*n+s,a=2*Math.PI*s/n-Math.PI/2,x=cx+R*Math.cos(a),y=cy+R*Math.sin(a);g.beginPath();g.arc(x,y,br,0,7);g.fillStyle=B.cols[k%p];g.fill();g.strokeStyle='rgba(0,0,0,.35)';g.lineWidth=1;g.stroke()}}
+  if(n%p){const a=-Math.PI/2-Math.PI/n;g.strokeStyle=col('--ember');g.lineWidth=3;g.setLineDash([6,5]);g.beginPath();g.moveTo(cx+(R0+br*1.8)*Math.cos(a),cy+(R0+br*1.8)*Math.sin(a));g.lineTo(cx+(R0-br*1.8)*Math.cos(a),cy+(R0-br*1.8)*Math.sin(a));g.stroke();g.setLineDash([])}
+  g.fillStyle=col('--ink');g.font=`700 ${Math.max(14,R0*0.09)}px "Roboto Flex",Roboto,sans-serif`;g.textAlign='center';g.textBaseline='middle';g.fillText(`${laps} lap${laps>1?'s':''}`,cx,cy);
+  const d=gcd(n,p);
+  $('#b-info').textContent=`n = ${n}, p = ${p}, gcd = ${d}.\n${n%p?`First lap: a seam, because ${p} does not divide ${n}.`:`${p} divides ${n}: the pattern closes on the first lap.`}\nThe pattern closes perfectly after lcm(${n}, ${p}) = ${L} beads, ${laps} lap${laps>1?'s':''}.${laps>8?' (The picture shows the first 8.)':''}\nEach spot wears ${p/d} of the ${p} colours.`;
+  cv.setAttribute('aria-label',`Bracelet with ${n} spots and a ${p}-colour pattern, drawn as ${shown} rings. It closes after ${laps} laps; each spot sees ${p/d} colours.`)}
+swB();new ResizeObserver(drawB).observe($('#cv-beads'));
+
+/* ---------- loom ---------- */
+const Lm={w:'satin',warp:['#0c5f73','#f2b134'],weft:['#f6f1e7','#c8401a']};
+seg('lw',[['plain','Plain'],['twill','Twill'],['satin','Satin']],'satin',v=>{Lm.w=v;$('#f-s').style.display=v==='satin'?'':'none';$('#ln').min=v==='plain'?2:v==='twill'?3:2;drawL()});
+const ln=range('ln',()=>{$('#ls').max=Math.max(1,+ln.value-1);if(+$('#ls').value>+$('#ls').max)setR('ls',$('#ls').max);drawL()}),ls=range('ls',drawL),lt=range('lt',drawL),lsw=range('lsw',drawL);
+function swL(){$('#lsw-c').innerHTML=Lm.warp.map((c,i)=>`<label>warp ${i+1}<input type="color" data-k="warp" data-i="${i}" value="${c}" aria-label="Warp colour ${i+1}"></label>`).join('')+Lm.weft.map((c,i)=>`<label>weft ${i+1}<input type="color" data-k="weft" data-i="${i}" value="${c}" aria-label="Weft colour ${i+1}"></label>`).join('')}
+$('#lsw-c').addEventListener('input',e=>{Lm[e.target.dataset.k][+e.target.dataset.i]=e.target.value;drawL()});
+$('#l-rand').addEventListener('click',()=>{const P=PALS[rnd(0,2)].slice().sort(()=>Math.random()-0.5);Lm.warp=[P[0],P[1]];Lm.weft=[P[2],P[3]];setR('lsw',rnd(1,8));if(Lm.w==='satin'){const n=rnd(5,12);setR('ln',n);$('#ls').max=n-1;let s;do{s=rnd(2,n-2)}while(gcd(s,n)!==1&&n>4);setR('ls',s)}else setR('ln',rnd(3,8));swL();drawL()});
+$('#l-still').addEventListener('click',()=>still('#cv-loom','#l-out','a woven cloth'));
+function up(i,j){const n=+ln.value,s=+ls.value;if(Lm.w==='plain')return (i+j)%2===0;if(Lm.w==='twill')return mod(i+j,n)<Math.ceil(n/2);return mod(s*j-i,n)===0}
+function drawL(){const cv=$('#cv-loom'),[g,W]=ctx(cv),T=+lt.value,sw=+lsw.value,c=W/T,n=+ln.value,s=+ls.value;g.clearRect(0,0,W,W);
+  for(let j=0;j<T;j++)for(let i=0;i<T;i++){const u=up(i,j),x=i*c,y=j*c;g.fillStyle=u?Lm.warp[Math.floor(i/sw)%2]:Lm.weft[Math.floor(j/sw)%2];g.fillRect(x,y,c+0.5,c+0.5);
+    if(c>7){g.fillStyle='rgba(0,0,0,.14)';if(u)g.fillRect(x+c-1.5,y,1.5,c);else g.fillRect(x,y+c-1.5,c,1.5)}}
+  let msg;
+  if(Lm.w==='plain')msg='Plain weave: over one, under one. Thread i is up on row j when i + j is even.';
+  else if(Lm.w==='twill')msg=`Twill: thread i is up on row j when (i + j) mod ${n} < ${Math.ceil(n/2)}. Each row shifts by one, so diagonals appear.`;
+  else{const d=gcd(s,n),lifted=new Set();for(let j=0;j<n;j++)for(let i=0;i<n;i++)if(up(i,j))lifted.add(i);
+    msg=`Satin: row j lifts the threads i with i ≡ ${s}·j (mod ${n}).\n`+(d>1?`gcd(${s}, ${n}) = ${d}: only ${lifted.size} of every ${n} warp threads are ever lifted. The others float loose and are never tied into the cloth.`:s===1||s===n-1?`gcd(${s}, ${n}) = 1, so every thread is lifted, but step ${s} puts each lift right next to the last: a twill line, not a satin.`:`gcd(${s}, ${n}) = 1 and ${s} is not 1 or ${n-1}: a true ${n}-thread satin. Every thread is tied, and no two lifts touch.`)}
+  $('#l-info').textContent=msg;cv.setAttribute('aria-label',`Woven cloth, ${T} by ${T} threads, ${Lm.w} weave${Lm.w==='satin'?` with repeat ${n} and step ${s}`:Lm.w==='twill'?` repeating every ${n} threads`:''}, stripes ${sw} threads wide`)}
+swL();new ResizeObserver(drawL).observe($('#cv-loom'));
+MW.onTheme(()=>{drawB();drawL()});
+}
+</script>
+</body>
+</html>
