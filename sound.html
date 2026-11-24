@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Sound Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="book.css">
+<style>
+.piece .wrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(18px,3vw,40px);align-items:start}
+@media(max-width:860px){.piece .wrap{grid-template-columns:minmax(0,1fr)}}
+.easel{position:relative;width:100%;aspect-ratio:1;border-radius:14px;overflow:hidden;background:var(--panel)}
+.easel.wide{aspect-ratio:16/10}
+.easel canvas{position:absolute;inset:0;width:100%;height:100%}
+.panel{display:flex;flex-direction:column;gap:14px}
+.field{display:flex;flex-direction:column;gap:4px}
+.field .lbl{display:flex;justify-content:space-between;gap:8px;font-size:15px;color:var(--mute)}
+.field .lbl output{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--sea);height:32px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{min-height:40px}
+.seg button[aria-pressed=true],button.on{background:var(--sea);color:var(--bg);border-color:var(--sea)}
+.note{font-size:15px;color:var(--mute)}
+.keys{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px}
+.keys button{min-height:44px;padding:0;font-size:14px}
+.keys button.now{background:var(--brass);color:var(--bg);border-color:var(--brass)}
+fieldset.track{border:1px solid var(--line);border-radius:12px;padding:10px 14px 12px;margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px 14px}
+fieldset.track legend{font-weight:700;padding:0 6px;display:flex;gap:10px;align-items:center}
+fieldset.track .wide2{grid-column:1/-1;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+fieldset.track .pat{font-family:'Roboto Mono',monospace;font-size:15px;letter-spacing:.06em}
+@media(max-width:520px){fieldset.track{grid-template-columns:minmax(0,1fr)}}
+.status{text-align:left;white-space:pre-line;font-family:'Roboto Mono',monospace;font-size:15px;background:var(--code);border-radius:10px;padding:10px 12px;margin:0;overflow-wrap:anywhere}
+.mixer{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.mixer .field{min-width:220px;flex:1}
+</style>
+</head>
+<body>
+
+<nav class="toc" aria-label="Sound Room sections"><div class="wrap">
+<a class="brand" href="index.html">Modular Worlds</a><a href="#clock">Note clock</a><a href="#drums">Euclid's drum circle</a><a href="#melody">Residue melodies</a><a href="studio.html">The Studio</a>
+</div></nav>
+
+<header class="band hero"><div class="wrap two">
+<div>
+<div class="kicker">Modular Worlds · The Studio</div>
+<h1>The Sound Room</h1>
+<p class="lede">Behind the Studio there is a smaller cabin with a cajón, a cowbell and an old keyboard. Mateo calls it the Sound Room. Here the arithmetic of the voyage is something you hear: notes go around a clock of 12, and Euclid's algorithm keeps the beat.</p>
+<p>Use headphones or turn your speakers down a little first. Nothing plays until you press a button.</p>
+</div>
+<aside class="box thm">
+<h3>Volume</h3>
+<div class="mixer">
+<div class="field"><label class="lbl" for="vol">Main volume <output id="vol-o">60%</output></label><input type="range" id="vol" min="0" max="1" step="0.05" value="0.6"></div>
+<button id="stopall">Stop all sound</button>
+</div>
+<p class="note" style="margin:8px 0 0">Every sound here is made by your browser from the rules on the page: no recordings.</p>
+</aside>
+</div></header>
+
+<section class="band piece" id="clock"><div class="wrap">
+<div><div class="easel"><canvas id="cv-clock" role="img" aria-label="A clock of 12 musical notes"></canvas></div></div>
+<div class="panel">
+<div><div class="kicker">The Clockwork Isles</div><h2>The note clock</h2>
+<p class="note">A piano repeats every 12 keys, so musicians already count notes mod 12: C is 0, C♯ is 1, up to B, which is 11. Pick a step <i class="v">s</i> and walk around the clock: 0, <i class="v">s</i>, 2<i class="v">s</i>, 3<i class="v">s</i>, … mod 12, until you come home.</p></div>
+<div class="field"><span class="lbl">Famous steps</span><div class="seg" id="clock-pre"></div></div>
+<div class="field"><label class="lbl" for="clock-s">Step s <output id="clock-s-o"></output></label><input type="range" id="clock-s" min="1" max="11" value="7"></div>
+<div class="field"><label class="lbl" for="clock-sp">Speed (notes per minute) <output id="clock-sp-o"></output></label><input type="range" id="clock-sp" min="60" max="400" step="10" value="180"></div>
+<div class="row"><button class="primary" id="clock-play">Play the walk</button></div>
+<p class="status" id="clock-info" aria-live="polite"></p>
+<div class="field"><span class="lbl">Or tap a single note</span><div class="keys" id="clock-keys"></div></div>
+<div class="box tool" style="margin:0"><h3>Listen, then ask why</h3>
+<p style="margin:0">Which steps visit all 12 notes before coming home? Which get stuck on 6, 4 or 3 notes? Find a rule with the gcd. Then compare steps 5 and 7: same notes, opposite order. Why? (Hint: 5 ≡ −7 mod 12.)</p></div>
+</div>
+</div></section>
+
+<section class="band alt piece" id="drums"><div class="wrap">
+<div><div class="easel"><canvas id="cv-drums" role="img" aria-label="Rhythm rings"></canvas></div>
+<p class="note">Each ring is one track. Dots are pulses; filled dots are beats. Connect the beats and you get the rhythm's polygon.</p></div>
+<div class="panel">
+<div><div class="kicker">Chapter 3, Euclid's Forge</div><h2>Euclid's drum circle</h2>
+<p class="note">Spread <i class="v">k</i> beats as evenly as possible over <i class="v">n</i> pulses. The recipe for "as evenly as possible" is Euclid's algorithm in disguise, and the rhythms it makes, written E(<i class="v">k</i>, <i class="v">n</i>), are played all over the world.</p></div>
+<div class="field"><span class="lbl">Rhythms from around the world</span><div class="seg" id="drum-pre"></div></div>
+<div id="tracks" class="panel" style="gap:10px"></div>
+<div class="field"><label class="lbl" for="drum-sp">Speed (pulses per minute) <output id="drum-sp-o"></output></label><input type="range" id="drum-sp" min="120" max="600" step="10" value="320"></div>
+<div class="row"><button class="primary" id="drum-play">Play the circle</button></div>
+<p class="status" id="drum-info" aria-live="polite"></p>
+<div class="box tool" style="margin:0"><h3>Listen, then ask why</h3>
+<p style="margin:0">Try "3 against 4": the tracks start together, drift apart, and meet again. After how many pulses? Change the lengths and predict the meeting point before you press play. This is the lcm, and it is the heart of the Chinese Remainder Theorem in Chapter 8.</p></div>
+</div>
+</div></section>
+
+<section class="band piece" id="melody"><div class="wrap">
+<div><div class="easel wide"><canvas id="cv-mel" role="img" aria-label="Melody roll"></canvas></div></div>
+<div class="panel">
+<div><div class="kicker">Clockwork Isles and Fermat's Lighthouse</div><h2>Residue melodies</h2>
+<p class="note">Lay <i class="v">m</i> notes of a scale in a row, numbered 0 to <i class="v">m</i> − 1. The melody plays note (<i class="v">a</i>·<i class="v">k</i> + <i class="v">b</i>) mod <i class="v">m</i> for <i class="v">k</i> = 0, 1, 2, … and loops when the leftovers start to repeat.</p></div>
+<div class="field"><span class="lbl">Scale</span><div class="seg" id="mel-scale"></div></div>
+<div class="field"><label class="lbl" for="mel-m">Notes in the row m <output id="mel-m-o"></output></label><input type="range" id="mel-m" min="2" max="16" value="10"></div>
+<div class="field"><label class="lbl" for="mel-a">Multiplier a <output id="mel-a-o"></output></label><input type="range" id="mel-a" min="0" max="15" value="3"></div>
+<div class="field"><label class="lbl" for="mel-b">Shift b <output id="mel-b-o"></output></label><input type="range" id="mel-b" min="0" max="15" value="0"></div>
+<div class="field"><label class="lbl" for="mel-sp">Speed (notes per minute) <output id="mel-sp-o"></output></label><input type="range" id="mel-sp" min="60" max="480" step="10" value="240"></div>
+<div class="row"><button class="primary" id="mel-play">Play the melody</button><button id="mel-rand">Surprise me</button></div>
+<p class="status" id="mel-info" aria-live="polite"></p>
+<div class="box tool" style="margin:0"><h3>Listen, then ask why</h3>
+<p style="margin:0">When does the melody use every note in the row before repeating? When does it get stuck on just a few? Compare <i class="v">a</i> with <i class="v">m</i> − <i class="v">a</i>: the second melody is the first one turned upside down. Prove it.</p></div>
+</div>
+</div></section>
+
+<section class="band alt"><div class="wrap">
+<h2>Where the rhythms come from</h2>
+<p>The link between Euclid's algorithm and traditional rhythms was found by the computer scientist Godfried Toussaint, in <a href="https://cgm.cs.mcgill.ca/~godfried/publications/banff.pdf">"The Euclidean Algorithm Generates Traditional Musical Rhythms"</a> (Bridges, 2005). The names of the rhythms above come from his paper. Rhythms are cycles, so a rhythm and its rotations count as the same "necklace": the presets start each one where musicians usually do.</p>
+</div></section>
+
+<section class="band"><div class="wrap pager"><a href="studio.html">← The Studio</a><a href="index.html">Contents</a></div></section>
+<footer class="band"><div class="wrap">Modular Worlds · The Sound Room · draft · UCI Math CEO</div></footer>
+
+<script src="book.js"></script>
+<script>
+{
+const {$,gcd}=MW;
+const lcm=(a,b)=>a/gcd(a,b)*b;
+const mod=(a,m)=>((a%m)+m)%m;
+/* colours from CSS (resolves light-dark) */
+const probe=document.createElement('span');probe.style.display='none';document.body.appendChild(probe);
+const col=v=>{probe.style.color=`var(${v})`;return getComputedStyle(probe).color};
+/* ---------- audio ---------- */
+const A={c:null,out:null,noise:null};
+function audio(){
+  if(!A.c){const c=new (window.AudioContext||window.webkitAudioContext)();const comp=c.createDynamicsCompressor();const g=c.createGain();g.gain.value=+$('#vol').value;g.connect(comp);comp.connect(c.destination);A.c=c;A.out=g;
+    const b=c.createBuffer(1,c.sampleRate,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;A.noise=b}
+  if(A.c.state==='suspended')A.c.resume();return A.c}
+$('#vol').addEventListener('input',e=>{$('#vol-o').textContent=Math.round(e.target.value*100)+'%';if(A.out)A.out.gain.value=+e.target.value});
+function env(g,t,v,d){g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(v,t+0.008);g.gain.exponentialRampToValueAtTime(0.0001,t+d)}
+function tone(f,t,d=0.5,v=0.28){const c=A.c;
+  [[1,v,d,'triangle'],[2.01,v*0.18,d*0.5,'sine'],[3.99,v*0.12,0.09,'sine']].forEach(([m,vv,dd,ty])=>{const o=c.createOscillator(),g=c.createGain();o.type=ty;o.frequency.value=f*m;env(g,t,vv,dd);o.connect(g);g.connect(A.out);o.start(t);o.stop(t+dd+0.05)})}
+function noise(t,d,v,type,freq,q=1){const c=A.c,s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=A.noise;f.type=type;f.frequency.value=freq;f.Q.value=q;env(g,t,v,d);s.connect(f);f.connect(g);g.connect(A.out);s.start(t);s.stop(t+d+0.05)}
+const VOICES={
+  low:{name:'Low drum',play:t=>{const c=A.c,o=c.createOscillator(),g=c.createGain();o.frequency.setValueAtTime(150,t);o.frequency.exponentialRampToValueAtTime(48,t+0.14);env(g,t,0.7,0.32);o.connect(g);g.connect(A.out);o.start(t);o.stop(t+0.4)}},
+  clap:{name:'Clap',play:t=>{noise(t,0.12,0.38,'bandpass',1300,0.9);noise(t+0.012,0.1,0.2,'bandpass',1100,0.9)}},
+  bell:{name:'Cowbell',play:t=>{const c=A.c;[562,845].forEach(f=>{const o=c.createOscillator(),g=c.createGain(),bp=c.createBiquadFilter();o.type='square';o.frequency.value=f;bp.type='bandpass';bp.frequency.value=900;env(g,t,0.12,0.22);o.connect(bp);bp.connect(g);g.connect(A.out);o.start(t);o.stop(t+0.3)})}},
+  wood:{name:'Woodblock',play:t=>{const c=A.c,o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=1050;env(g,t,0.35,0.07);o.connect(g);g.connect(A.out);o.start(t);o.stop(t+0.1)}},
+  shaker:{name:'Shaker',play:t=>noise(t,0.07,0.18,'highpass',5500)}};
+/* one sequencer plays at a time */
+let current=null;
+function Seq(stepSec,onStep,onStop,btn,label){
+  const S={playing:false,i:0,timer:0,vis:[]};
+  S.start=()=>{if(current&&current!==S)current.stop();audio();current=S;S.playing=true;S.i=0;S.next=A.c.currentTime+0.08;btn.classList.add('on');btn.textContent='Stop';
+    S.timer=setInterval(()=>{while(S.playing&&S.next<A.c.currentTime+0.12){const i=S.i,t=S.next;const go=onStep(i,t);S.vis.push(setTimeout(()=>S.playing&&S.onVis&&S.onVis(i),Math.max(0,(t-A.c.currentTime)*1000)));S.next+=stepSec();S.i++;if(go===false){S.stopAt=t+stepSec();setTimeout(S.stop,Math.max(0,(S.stopAt-A.c.currentTime)*1000)+50);clearInterval(S.timer);break}}},25)};
+  S.stop=()=>{if(!S.playing)return;S.playing=false;clearInterval(S.timer);S.vis.forEach(clearTimeout);S.vis=[];btn.classList.remove('on');btn.textContent=label;if(current===S)current=null;onStop&&onStop()};
+  btn.addEventListener('click',()=>S.playing?S.stop():S.start());
+  return S}
+$('#stopall').addEventListener('click',()=>{current&&current.stop();if(A.c)A.c.suspend().then(()=>A.c.resume())});
+
+function ctx(cv){const d=window.devicePixelRatio||1,W=cv.clientWidth||500,H=cv.clientHeight||500;cv.width=Math.round(W*d);cv.height=Math.round(H*d);const g=cv.getContext('2d');g.setTransform(d,0,0,d,0,0);return[g,W,H]}
+function range(id,fn){const el=$('#'+id),o=$('#'+id+'-o');const up=()=>{o.textContent=el.value;fn&&fn()};el.addEventListener('input',up);o.textContent=el.value;return el}
+function seg(id,items,init,fn){const box=$('#'+id);box.innerHTML=items.map(([v,l])=>`<button data-v="${v}" aria-pressed="${v===init}">${l}</button>`).join('');
+  box.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;box.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));fn(b.dataset.v)})}
+
+/* ---------- 1 note clock ---------- */
+const NAMES=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
+const freq=p=>261.63*Math.pow(2,p/12);
+const CL={s:7,now:-1,played:0};
+const sEl=range('clock-s',()=>{CL.s=+sEl.value;syncPre();clockInfo();drawClock()});
+const spEl=range('clock-sp');
+const walk=()=>{const L=12/gcd(CL.s,12);return Array.from({length:L+1},(_,k)=>mod(k*CL.s,12))};
+const PRE=[[1,'1 · all the keys'],[7,'7 · circle of fifths'],[5,'5 · circle of fourths'],[2,'2 · whole tones'],[3,'3'],[4,'4'],[6,'6']];
+seg('clock-pre',PRE.map(([v,l])=>[String(v),l]),'7',v=>{CL.s=+v;sEl.value=v;$('#clock-s-o').textContent=v;clockInfo();drawClock()});
+function syncPre(){$('#clock-pre').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.v===CL.s))}
+function clockInfo(){const w=walk(),g=gcd(CL.s,12);$('#clock-info').textContent=`Step ${CL.s}: gcd(${CL.s}, 12) = ${g}, so the walk visits ${12/g} note${12/g>1?'s':''} before coming home.\n${w.map(p=>NAMES[p]).join(' → ')}`}
+$('#clock-keys').innerHTML=NAMES.map((n,i)=>`<button data-p="${i}" aria-label="${n}, number ${i}">${n}<br><span class="small">${i}</span></button>`).join('');
+$('#clock-keys').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;audio();tone(freq(+b.dataset.p),A.c.currentTime+0.01,0.7);CL.now=+b.dataset.p;drawClock();markKey()});
+function markKey(){$('#clock-keys').querySelectorAll('button').forEach(b=>b.classList.toggle('now',+b.dataset.p===CL.now))}
+function drawClock(){const cv=$('#cv-clock'),[g,W,H]=ctx(cv),R=Math.min(W,H)*0.35,cx=W/2,cy=H/2;g.clearRect(0,0,W,H);
+  const P=p=>{const a=2*Math.PI*p/12-Math.PI/2;return[cx+R*Math.cos(a),cy+R*Math.sin(a)]};
+  g.strokeStyle=col('--line');g.lineWidth=2;g.beginPath();g.arc(cx,cy,R,0,7);g.stroke();
+  const w=walk(),n=CL.played;
+  g.lineWidth=2;g.strokeStyle=col('--sea');g.globalAlpha=0.22;g.beginPath();w.forEach((p,i)=>{const[x,y]=P(p);i?g.lineTo(x,y):g.moveTo(x,y)});g.stroke();g.globalAlpha=1;
+  if(n>1){g.lineWidth=4;g.strokeStyle=col('--sea');g.beginPath();w.slice(0,n).forEach((p,i)=>{const[x,y]=P(p);i?g.lineTo(x,y):g.moveTo(x,y)});g.stroke()}
+  const fs=Math.max(12,R*0.11);
+  for(let p=0;p<12;p++){const[x,y]=P(p),on=w.includes(p),cur=p===CL.now;g.beginPath();g.arc(x,y,fs*1.25,0,7);g.fillStyle=cur?col('--brass'):on?col('--sea'):col('--bg');g.fill();g.strokeStyle=on?col('--sea'):col('--line');g.lineWidth=2;g.stroke();
+    g.fillStyle=cur||on?col('--bg'):col('--mute');g.font=`700 ${fs}px Roboto, sans-serif`;g.textAlign='center';g.textBaseline='middle';g.fillText(NAMES[p],x,y-fs*0.25);g.font=`${fs*0.62}px Roboto, sans-serif`;g.fillText(p,x,y+fs*0.6)}
+  g.fillStyle=col('--ink');g.font=`700 ${fs*1.3}px "Roboto Flex", Roboto, sans-serif`;g.textAlign='center';g.fillText(`step ${CL.s}`,cx,cy-fs*0.5);g.font=`${fs*0.9}px Roboto, sans-serif`;g.fillStyle=col('--mute');g.fillText(`${12/gcd(CL.s,12)} notes`,cx,cy+fs*0.9);
+  cv.setAttribute('aria-label',`Clock of 12 notes. Walking by step ${CL.s} visits ${w.slice(0,-1).map(p=>NAMES[p]).join(', ')}, then returns to C.`)}
+const clockSeq=Seq(()=>60/+spEl.value,(i,t)=>{const w=walk();tone(freq(w[i]+(i===w.length-1?12:0)),t,0.55);return i<w.length-1},()=>{CL.now=-1;CL.played=0;drawClock();markKey()},$('#clock-play'),'Play the walk');
+clockSeq.onVis=i=>{const w=walk();CL.now=w[i];CL.played=i+1;drawClock();markKey()};
+new ResizeObserver(drawClock).observe($('#cv-clock'));clockInfo();
+
+/* ---------- 2 Euclid's drum circle ---------- */
+function bj(k,n){if(k<=0)return Array(n).fill(0);if(k>=n)return Array(n).fill(1);let a=Array.from({length:k},()=>[1]),b=Array.from({length:n-k},()=>[0]);
+  while(b.length>1){const m=Math.min(a.length,b.length),na=[];for(let i=0;i<m;i++)na.push(a[i].concat(b[i]));const rest=a.length>m?a.slice(m):b.slice(m);a=na;b=rest}return a.flat().concat(b.flat())}
+const pattern=T=>{const p=bj(T.k,T.n);return p.map((_,i)=>p[(i+T.r)%T.n])};
+const gaps=p=>{const on=p.map((v,i)=>v?i:-1).filter(i=>i>=0);return on.map((x,j)=>(j+1<on.length?on[j+1]:on[0]+p.length)-x)};
+let TR=[];
+const PRESETS={
+ tresillo:{label:'Tresillo, Cuba · E(3, 8)',t:[[3,8,0,'low'],[8,8,0,'shaker'],[0,8,0,'clap']]},
+ cinquillo:{label:'Cinquillo, Cuba · E(5, 8)',t:[[5,8,0,'bell'],[2,8,0,'low'],[8,8,0,'shaker']]},
+ cumbia:{label:'Cumbia, Colombia · E(3, 4)',t:[[3,4,2,'shaker'],[1,4,0,'low'],[0,4,0,'clap']]},
+ ewe:{label:'Ewe bell, Ghana · E(7, 12)',t:[[7,12,0,'bell'],[4,12,0,'low'],[0,12,0,'clap']]},
+ bossa:{label:'Bossa nova, Brazil · E(5, 16)',t:[[5,16,0,'wood'],[4,16,0,'low'],[16,16,0,'shaker']]},
+ poly:{label:'3 against 4',t:[[1,3,0,'low'],[1,4,0,'clap'],[0,12,0,'shaker']]}};
+seg('drum-pre',Object.entries(PRESETS).map(([k,v])=>[k,v.label]),'tresillo',v=>loadPreset(v));
+function loadPreset(key){TR=PRESETS[key].t.map(([k,n,r,voice])=>({k,n,r,voice,on:k>0}));buildTracks();drumInfo();drawDrums()}
+function buildTracks(){const box=$('#tracks');box.innerHTML=TR.map((T,i)=>`
+<fieldset class="track"><legend><label><input type="checkbox" data-i="${i}" data-f="on" ${T.on?'checked':''}> Track ${i+1}</label></legend>
+<div class="field"><label class="lbl" for="tk${i}">Beats k <output id="tk${i}-o">${T.k}</output></label><input type="range" id="tk${i}" data-i="${i}" data-f="k" min="0" max="${T.n}" value="${T.k}"></div>
+<div class="field"><label class="lbl" for="tn${i}">Pulses n <output id="tn${i}-o">${T.n}</output></label><input type="range" id="tn${i}" data-i="${i}" data-f="n" min="2" max="16" value="${T.n}"></div>
+<div class="field"><label class="lbl" for="tr${i}">Rotate <output id="tr${i}-o">${T.r}</output></label><input type="range" id="tr${i}" data-i="${i}" data-f="r" min="0" max="${T.n-1}" value="${T.r}"></div>
+<div class="wide2"><label for="tv${i}" class="note">Sound</label><select id="tv${i}" data-i="${i}" data-f="voice">${Object.entries(VOICES).map(([k,v])=>`<option value="${k}" ${k===T.voice?'selected':''}>${v.name}</option>`).join('')}</select>
+<span class="pat" id="tp${i}" aria-label="Pattern"></span></div></fieldset>`).join('');updatePats()}
+$('#tracks').addEventListener('input',e=>{const el=e.target,i=+el.dataset.i,f=el.dataset.f;if(!f)return;const T=TR[i];
+  if(f==='on')T.on=el.checked;else if(f==='voice')T.voice=el.value;else{T[f]=+el.value;$(`#${el.id}-o`).textContent=el.value}
+  if(f==='n'){T.k=Math.min(T.k,T.n);T.r=Math.min(T.r,T.n-1);const k=$('#tk'+i),r=$('#tr'+i);k.max=T.n;k.value=T.k;$('#tk'+i+'-o').textContent=T.k;r.max=T.n-1;r.value=T.r;$('#tr'+i+'-o').textContent=T.r}
+  if(f==='k'&&T.k>0&&!T.on){T.on=true;$(`#tracks input[data-i="${i}"][data-f="on"]`).checked=true}
+  updatePats();drumInfo();drawDrums()});
+function updatePats(){TR.forEach((T,i)=>{const p=pattern(T);$('#tp'+i).textContent=`E(${T.k}, ${T.n}) ${p.map(v=>v?'x':'·').join('')}`;$('#tp'+i).setAttribute('aria-label',`E(${T.k}, ${T.n}): ${p.map(v=>v?'beat':'rest').join(', ')}`)})}
+function cycleLen(){const act=TR.filter(T=>T.on&&T.k>0);return act.length?act.map(T=>T.n).reduce(lcm):0}
+function drumInfo(pulse){const act=TR.filter(T=>T.on&&T.k>0);if(!act.length){$('#drum-info').textContent='All tracks are silent. Give a track some beats.';return}
+  const L=cycleLen();const lines=act.map(T=>`E(${T.k}, ${T.n}): gaps ${gaps(pattern(T)).join('-')}`);
+  lines.push(act.length>1?`Tracks line up again every lcm(${act.map(T=>T.n).join(', ')}) = ${L} pulses.`:`The rhythm repeats every ${L} pulses.`);
+  if(pulse!==undefined)lines.push(`Pulse ${pulse%L+1} of ${L}`);$('#drum-info').textContent=lines.join('\n')}
+let DP=-1;
+function drawDrums(){const cv=$('#cv-drums'),[g,W,H]=ctx(cv),cx=W/2,cy=H/2,Rm=Math.min(W,H)*0.44;g.clearRect(0,0,W,H);
+  const cols=[col('--ember'),col('--sea'),col('--brass')];
+  TR.forEach((T,ti)=>{const R=Rm*(1-ti*0.3),p=pattern(T),c=cols[ti],on=T.on&&T.k>0,P=i=>{const a=2*Math.PI*i/T.n-Math.PI/2;return[cx+R*Math.cos(a),cy+R*Math.sin(a)]};
+    g.globalAlpha=on?1:0.3;g.strokeStyle=col('--line');g.lineWidth=1.5;g.beginPath();g.arc(cx,cy,R,0,7);g.stroke();
+    const hits=p.map((v,i)=>v?i:-1).filter(i=>i>=0);
+    if(hits.length>1){g.strokeStyle=c;g.lineWidth=2.5;g.beginPath();hits.forEach((i,j)=>{const[x,y]=P(i);j?g.lineTo(x,y):g.moveTo(x,y)});g.closePath();g.stroke();g.globalAlpha=on?0.12:0.05;g.fillStyle=c;g.fill();g.globalAlpha=on?1:0.3}
+    const cur=DP>=0?DP%T.n:-1,rr=Math.max(5,Math.min(14,R*0.09));
+    for(let i=0;i<T.n;i++){const[x,y]=P(i);g.beginPath();g.arc(x,y,i===cur?rr*1.5:rr,0,7);g.fillStyle=p[i]?c:col('--bg');g.fill();g.strokeStyle=i===cur?col('--ink'):c;g.lineWidth=i===cur?3:2;g.stroke()}
+    g.globalAlpha=1});
+  cv.setAttribute('aria-label','Rhythm rings: '+TR.filter(T=>T.on&&T.k>0).map(T=>`E(${T.k}, ${T.n}) ${pattern(T).map(v=>v?'x':'dot').join(' ')}`).join('; '))}
+const drumSeq=Seq(()=>60/+$('#drum-sp').value,(i,t)=>{TR.forEach(T=>{if(T.on&&T.k>0&&pattern(T)[i%T.n])VOICES[T.voice].play(t)})},()=>{DP=-1;drawDrums();drumInfo()},$('#drum-play'),'Play the circle');
+drumSeq.onVis=i=>{DP=i;drawDrums();if(i%2===0)drumInfo(i)};
+range('drum-sp');loadPreset('tresillo');new ResizeObserver(drawDrums).observe($('#cv-drums'));
+
+/* ---------- 3 residue melodies ---------- */
+const SCALES={penta:['Pentatonic',[0,2,4,7,9]],major:['Major',[0,2,4,5,7,9,11]],minor:['Minor',[0,2,3,5,7,8,10]],chrom:['All 12 keys',[0,1,2,3,4,5,6,7,8,9,10,11]]};
+const M={scale:'penta',now:-1};
+seg('mel-scale',Object.entries(SCALES).map(([k,v])=>[k,v[0]]),'penta',v=>{M.scale=v;melInfo();drawMel()});
+const mEl=range('mel-m',()=>{bEl.max=+mEl.value-1;if(+bEl.value>+bEl.max){bEl.value=bEl.max;$('#mel-b-o').textContent=bEl.value}melInfo();drawMel()}),aEl=range('mel-a',()=>{melInfo();drawMel()}),bEl=range('mel-b',()=>{melInfo();drawMel()});bEl.max=+mEl.value-1;
+range('mel-sp');
+const melSeq_=()=>{const m=+mEl.value,a=+aEl.value,b=+bEl.value,L=m/gcd(a,m);return Array.from({length:L},(_,k)=>mod(a*k+b,m))};
+const degFreq=d=>{const s=SCALES[M.scale][1];return 196*Math.pow(2,(s[d%s.length]+12*Math.floor(d/s.length))/12)};
+function melInfo(){const m=+mEl.value,a=+aEl.value,s=melSeq_(),g=gcd(a,m),used=new Set(s).size;
+  $('#mel-info').textContent=`(${a}·k + ${bEl.value}) mod ${m}: ${s.join(', ')}\ngcd(${a}, ${m}) = ${g}, so the melody repeats after ${s.length} note${s.length>1?'s':''} and uses ${used} of the ${m} notes.`}
+function drawMel(){const cv=$('#cv-mel'),[g,W,H]=ctx(cv),m=+mEl.value,s=melSeq_(),pad=16,cw=(W-2*pad)/Math.max(s.length,1),rh=(H-2*pad)/m;g.clearRect(0,0,W,H);
+  for(let r=0;r<m;r++){g.fillStyle=r%2?col('--panel'):col('--bg');g.fillRect(pad,H-pad-(r+1)*rh,W-2*pad,rh)}
+  g.fillStyle=col('--mute');g.font=`${Math.min(12,rh*0.7)}px Roboto, sans-serif`;g.textBaseline='middle';
+  s.forEach((d,k)=>{const x=pad+k*cw,y=H-pad-(d+1)*rh;g.fillStyle=k===M.now?col('--brass'):col('--sea');const rr=Math.min(6,rh/3,cw/3);g.beginPath();g.roundRect?g.roundRect(x+2,y+1,cw-4,rh-2,rr):g.rect(x+2,y+1,cw-4,rh-2);g.fill()});
+  if(s.length>1){g.strokeStyle=col('--ember');g.lineWidth=2;g.globalAlpha=0.6;g.beginPath();s.forEach((d,k)=>{const x=pad+k*cw+cw/2,y=H-pad-(d+0.5)*rh;k?g.lineTo(x,y):g.moveTo(x,y)});g.stroke();g.globalAlpha=1}
+  cv.setAttribute('aria-label',`Melody roll: ${s.length} notes, heights ${s.join(', ')} out of ${m}`)}
+const melSeq=Seq(()=>60/+$('#mel-sp').value,(i,t)=>{const s=melSeq_();tone(degFreq(s[i%s.length]),t,0.45,0.24)},()=>{M.now=-1;drawMel()},$('#mel-play'),'Play the melody');
+melSeq.onVis=i=>{M.now=i%melSeq_().length;drawMel()};
+$('#mel-rand').addEventListener('click',()=>{const m=2+Math.floor(Math.random()*15),a=Math.floor(Math.random()*16),b=Math.floor(Math.random()*m);mEl.value=m;aEl.value=a;bEl.max=m-1;bEl.value=b;['mel-m','mel-a','mel-b'].forEach(id=>$('#'+id+'-o').textContent=$('#'+id).value);melInfo();drawMel()});
+melInfo();new ResizeObserver(drawMel).observe($('#cv-mel'));
+MW.onTheme(()=>{drawClock();drawDrums();drawMel()});
+}
+</script>
+</body>
+</html>
