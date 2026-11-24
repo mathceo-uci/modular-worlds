@@ -42,7 +42,7 @@
 <body>
 
 <nav class="toc" aria-label="Chapter sections"><div class="wrap">
-<a class="brand" href="index.html">Modular Worlds</a><a href="#landing">Landing</a><a href="#prophecies">Prophecies</a><a href="#t1">Pairs</a><a href="#t2">Broken floor</a><a href="#t3">Diagonal</a><a href="#t4">Crates</a><a href="#t5">Hundred doors</a><a href="#culture">Culture</a><a href="#problems">Problems</a><a href="#code">Code quest</a><a href="#logbook">Logbook</a>
+<a class="brand" href="index.html">Modular Worlds</a><a href="#landing">Landing</a><a href="#prophecies">Prophecies</a><a href="#t1">Pairs</a><a href="#t2">Broken floor</a><a href="#t3">Diagonal</a><a href="#t4">Crates</a><a href="#t5">Hundred doors</a><a href="#mod3">Trios (mod 3)</a><a href="#culture">Culture</a><a href="#problems">Problems</a><a href="#code">Code quest</a><a href="#logbook">Logbook</a>
 </div></nav>
 
 <header class="band hero" id="landing"><div class="wrap">
@@ -220,7 +220,62 @@
 </div>
 </div></section>
 
-<section class="band alt" id="culture"><div class="wrap two">
+<section class="band trial alt" id="mod3"><div class="wrap two">
+<div>
+<div class="kicker">Side quest · before the ship leaves</div>
+<h2>Doña Trina's Trios: two ways to miss</h2>
+<div class="scene">
+<p class="stage">The festival is ending. At the last stall, an old lantern-maker packs lanterns in threes, never in pairs. Her sign reads: "Trina. Trios only."</p>
+<p><span class="who">Doña Trina:</span> You young people think there are two kinds of numbers: the ones that pair up and the ones that don't. Pack in threes, and a number can miss in two different ways.</p>
+<p><span class="who">Kevin:</span> Missing is missing.</p>
+<p><span class="who">Doña Trina</span> <span class="stage">(holding up one lantern, then two)</span>: Is one extra the same as one short?</p>
+</div>
+<p>Pack <i class="v">n</i> lanterns in trios. The leftover is 0, 1 or 2, so every integer belongs to exactly one of three families:</p>
+<div class="math">3k        a multiple of 3       (no leftover)
+3k + 1    one extra             (one lantern left over)
+3k + 2    two extra, which is   one short of a trio: 3k − 1</div>
+<p>Two numbers are <b>congruent mod 3</b>, written <i class="v">a</i> ≡ <i class="v">b</i> (mod 3), when 3 | <i class="v">a</i> − <i class="v">b</i>: they leave the same leftover. So 7 ≡ 1, 8 ≡ 2 ≡ −1 and 2027 ≡ 2 (mod 3). This is a first look at the idea that runs the whole Clockwork Isles chapter.</p>
+<div class="box thm"><h3>Theorem 0.7 (squares in trios)</h3>
+<p style="margin:0">The square of any integer is congruent to 0 or 1 mod 3, never 2. In particular, if 3 | <i class="v">n</i>², then 3 | <i class="v">n</i>.</p></div>
+<div class="pf"><p><b>Proof (by cases).</b> If <i class="v">n</i> = 3<i class="v">k</i>, then <i class="v">n</i>² = 3(3<i class="v">k</i>²). If <i class="v">n</i> = 3<i class="v">k</i> + 1, then <i class="v">n</i>² = 9<i class="v">k</i>² + 6<i class="v">k</i> + 1 = 3(3<i class="v">k</i>² + 2<i class="v">k</i>) + 1. If <i class="v">n</i> = 3<i class="v">k</i> + 2, then <i class="v">n</i>² = 9<i class="v">k</i>² + 12<i class="v">k</i> + 4 = 3(3<i class="v">k</i>² + 4<i class="v">k</i> + 1) + 1. Both ways of missing a multiple of 3 give leftover 1 after squaring, so a square with leftover 0 must come from <i class="v">n</i> = 3<i class="v">k</i>.</p></div>
+<div class="box tool"><h3>Proof toolkit: proof by cases</h3>
+<p style="margin:0">When every number falls into a few families, prove the claim for each family separately. The cases must cover everything: for mod 3, that means <b>three</b> cases, not two. The most common mistake in this quest is to check "multiple of 3" and "not a multiple of 3" and forget that "not" hides two different shapes.</p></div>
+</div>
+<div>
+<div class="forge">
+<h3 style="margin:0 0 4px">Trina's packing table</h3>
+<div class="ctrl" style="margin-top:0"><div><label for="tn">Lanterns</label><input id="tn" type="number" min="0" max="60" value="14"></div>
+<button id="tdown" aria-label="One lantern fewer">− 1</button><button id="tup" aria-label="One lantern more">+ 1</button></div>
+<div class="dance" id="trios" role="img" aria-label="Lanterns in trios" style="margin-top:12px"></div>
+<p class="verdict" id="tout" aria-live="polite" style="margin-top:10px"></p>
+</div>
+<div class="forge" style="margin-top:16px">
+<h3 style="margin:0 0 4px">Game: the Last Lantern</h3>
+<p class="small" style="margin:0 0 8px">Take 1 or 2 lanterns from the pile. Whoever takes the last lantern wins. You move first against Doña Trina, who knows exactly what she is doing.</p>
+<div class="big" id="lpile"></div>
+<div class="moves" style="justify-content:center"><button class="o" id="l1">Take 1</button><button class="o" id="l2">Take 2</button></div>
+<p class="verdict" id="lout" aria-live="polite"></p>
+<div class="ctrl" style="justify-content:center"><div><label for="lstart">Starting pile</label><select id="lstart"><option>10</option><option>12</option><option>17</option><option>21</option><option value="r">Random</option></select></div><button id="lnew">New game</button></div>
+<p class="small" style="margin:6px 0 0">Strategy question: from which piles can Trina always win? How does she use the two ways of missing a multiple of 3?</p>
+</div>
+</div>
+</div>
+<div class="wrap" style="margin-top:22px">
+<h3>Trina's puzzles</h3>
+<ol>
+<li><b>Fill the family tables.</b> Make a 3 × 3 table: which family do you land in when you <i>add</i> a number from one family to a number from another? Then a table for <i>multiplying</i>. Which cell surprises you?</li>
+<li><b>The square detector.</b> Is 2027 a perfect square? Answer in one line, without a calculator.
+<details><summary>Answer</summary>No: 2027 = 3·675 + 2 is one short of a multiple of 3, and no square is (Theorem 0.7).</details></li>
+<li><b>Three neighbours.</b> Show that among any three consecutive integers, exactly one is a multiple of 3. Use it to prove that <i class="v">n</i>³ − <i class="v">n</i> is always a multiple of 3 (and of 6).</li>
+<li><b>Two misses make a hit?</b> Can the sum of two numbers that are not multiples of 3 be a multiple of 3? Can their product? Explain using "one extra" and "one short".
+<details><summary>Answer</summary>The sum can: one extra plus one short is exactly a trio (1 + 2 = 3). The product cannot: (one extra)(one extra) and (one short)(one short) are one extra, and (one extra)(one short) is one short.</details></li>
+<li><b>Primes in trios.</b> Every prime larger than 3 is one extra or one short of a multiple of 3. Prove that <i class="v">p</i>² − 1 is then a multiple of 3.</li>
+<li><b>Back to the diagonal.</b> Navigator problem 1 asks you to prove √3 is not a fraction. Which line of Theorem 0.7 do you need?</li>
+</ol>
+</div>
+</section>
+
+<section class="band" id="culture"><div class="wrap two">
 <div>
 <h2>Culture: pairs, and a dangerous diagonal</h2>
 <p><b>Ancient Greece.</b> Odd and even were among the first ideas the Pythagoreans studied. A later legend says that Hippasus, one of them, was drowned for revealing that the diagonal of a square cannot be measured as a fraction of its side. Historians doubt the story, but the theorem is real, and it shocked a culture that believed all things are made of whole numbers.</p>
@@ -234,7 +289,7 @@
 </aside>
 </div></section>
 
-<section class="band" id="problems"><div class="wrap">
+<section class="band alt" id="problems"><div class="wrap">
 <h2>Problems</h2>
 <div class="tiers">
 <div class="tier"><h3>Deckhand</h3><ol>
@@ -260,14 +315,14 @@
 </div>
 </div></section>
 
-<section class="band alt" id="code"><div class="wrap">
+<section class="band" id="code"><div class="wrap">
 <h2>Code quest: the exam in Python</h2>
 <p>These cells run real Python in your browser. The first run loads Python (about 10 MB, once).</p>
 <div id="cells"></div>
 <p class="small" id="pystat" aria-live="polite"></p>
 </div></section>
 
-<section class="band" id="logbook"><div class="wrap two">
+<section class="band alt" id="logbook"><div class="wrap two">
 <div>
 <h2>Logbook</h2>
 <ul class="log2">
@@ -276,6 +331,7 @@
 <li><b>Invariants:</b> to prove "impossible", find what every attempt has in common (rug colours).</li>
 <li><b>Divisibility (0.4, 0.5):</b> it is transitive, and it passes to every combination <i class="v">ax</i> + <i class="v">by</i>.</li>
 <li><b>Divisor pairs (0.6):</b> only perfect squares have an odd number of divisors.</li>
+<li><b>Mod 3 (0.7):</b> every integer is 3<i class="v">k</i>, 3<i class="v">k</i> + 1 or 3<i class="v">k</i> + 2 (= 3<i class="v">k</i> − 1); squares are never 2 mod 3. Proof by cases needs all three families.</li>
 </ul>
 </div>
 <div>
@@ -285,12 +341,13 @@
 <li>0.2, "the broken floor can be covered": <b>broken</b> (colour count).</li>
 <li>0.3, "if a | bc then a | b or a | c": <b>broken</b> (6 | 12 = 4 × 3).</li>
 <li>0.4, "exactly 10 doors end up open": <b>fulfilled</b> (Theorem 0.6).</li>
+<li>0.5, "squares of non-multiples of 3 are one more than a multiple of 3": <b>fulfilled</b> (Theorem 0.7).</li>
 </ul>
 <p class="stage" style="margin-top:16px">The tenth door swings open. Behind it, a harbor office lit by one lamp, and a book thicker than a man's arm. El Gran Pesado takes off one glove. "Six of you came alone. Six of you pass together. The ship leaves at dawn."</p>
 </div>
 </div></section>
 
-<section class="band alt"><div class="wrap pager"><a href="index.html">Contents</a><a href="ch1.html">Chapter 1: Mojadito, Home Port →</a></div></section>
+<section class="band"><div class="wrap pager"><a href="index.html">Contents</a><a href="ch1.html">Chapter 1: Mojadito, Home Port →</a></div></section>
 <footer class="band"><div class="wrap">Modular Worlds, Chapter 0 · draft · UCI Math CEO</div></footer>
 
 <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js" defer></script>
@@ -320,7 +377,8 @@ MW.cards($('#cards'),[
  {id:'p01',t:'The sum of three odd numbers is odd.',s:'Settled in Trial 1'},
  {id:'p02',t:'An 8 × 8 floor with two opposite corners missing can be covered by 31 two-tile rugs.',s:'Settled in Trial 2'},
  {id:'p03',t:'If a divides bc, then a divides b or a divides c.',s:'Settled in Trial 4'},
- {id:'p04',t:'After all 100 apprentices pass, exactly 10 doors are open.',s:'Settled in Trial 5'}],'mw-ch0',i=>'Prophecy 0.'+(i+1));
+ {id:'p04',t:'After all 100 apprentices pass, exactly 10 doors are open.',s:'Settled in Trial 5'},
+ {id:'p05',t:'If a number is not a multiple of 3, its square is one more than a multiple of 3.',s:'Settled in the side quest (Theorem 0.7)'}],'mw-ch0',i=>'Prophecy 0.'+(i+1));
 
 /* Trial 2: the floor */
 const F={gone:[[0,0],[7,7]],rug:{},sel:null,next:1};
@@ -373,6 +431,33 @@ $('#dall').addEventListener('click',()=>{while(R.k<100)step();drawDoors(0)});
 $('#dreset').addEventListener('click',()=>{R.open=Array(101).fill(false);R.k=0;drawDoors(0)});
 drawDoors(0);
 
+
+/* Side quest: trios and the Last Lantern */
+function drawTrios(){
+  let n=parseInt($('#tn').value,10);if(!(n>=0&&n<=60)){$('#tout').textContent='Use 0 to 60 lanterns.';return}
+  const q=Math.floor(n/3),r=n%3;
+  let h='';for(let i=0;i<q;i++)h+='<div class="pair" style="flex-direction:row;gap:4px;padding:4px;border:2px solid var(--brass);border-radius:8px">'+'<span class="dot"></span>'.repeat(3)+'</div>';
+  if(r)h+='<div class="pair" style="flex-direction:row;gap:4px;padding:4px;border:2px dashed var(--ember);border-radius:8px">'+'<span class="dot odd"></span>'.repeat(r)+(r===2?'<span class="dot" style="background:transparent;border:2px dashed var(--ember)"></span>':'')+'</div>';
+  $('#trios').innerHTML=h||'<span class="small">No lanterns.</span>';
+  const fam=['a multiple of 3: '+n+' = 3\u00b7'+q,'one extra: '+n+' = 3\u00b7'+q+' + 1','one short: '+n+' = 3\u00b7'+q+' + 2 = 3\u00b7'+(q+1)+' \u2212 1'][r];
+  $('#tout').textContent=`${n} \u2261 ${r} (mod 3), ${fam}`;$('#tout').className='verdict '+(r?'no':'ok');
+  $('#trios').setAttribute('aria-label',`${q} trios of lanterns${r?(r===1?' and one extra lantern':' and two lanterns, one short of a trio'):''}`);
+}
+$('#tn').addEventListener('input',drawTrios);
+$('#tup').addEventListener('click',()=>{$('#tn').value=Math.min(60,(+$('#tn').value||0)+1);drawTrios()});
+$('#tdown').addEventListener('click',()=>{$('#tn').value=Math.max(0,(+$('#tn').value||0)-1);drawTrios()});
+drawTrios();
+const L={n:10,over:false};
+function drawL(){$('#lpile').textContent=L.n;$('#l1').disabled=L.over||L.n<1;$('#l2').disabled=L.over||L.n<2}
+function take(t){if(L.over||t>L.n)return;L.n-=t;
+  if(L.n===0){L.over=true;$('#lout').textContent='You took the last lantern. You beat Doña Trina!';$('#lout').className='verdict ok';drawL();return}
+  const r=L.n%3,m=r||1;L.n-=m;
+  if(L.n===0){L.over=true;$('#lout').textContent=`Trina takes ${m} and the last lantern. She wins.`;$('#lout').className='verdict no'}
+  else{$('#lout').textContent=`Trina takes ${m}. ${r?`She left you ${L.n}: a multiple of 3.`:'She shrugs: you left her a multiple of 3.'}`;$('#lout').className='verdict'}
+  drawL()}
+$('#l1').addEventListener('click',()=>take(1));$('#l2').addEventListener('click',()=>take(2));
+function newL(){const v=$('#lstart').value;L.n=v==='r'?7+Math.floor(Math.random()*20):+v;L.over=false;$('#lout').textContent='Your move.';$('#lout').className='verdict';drawL()}
+$('#lnew').addEventListener('click',newL);newL();
 /* code */
 MW.cells($('#cells'),[
 {t:'Cell 1 · check the plaza rules (not a proof!)',c:`for a in range(-20, 21):
@@ -403,7 +488,20 @@ print("odd number of divisors:", [n for n in range(1, 101) if len(divisors(n)) %
 # "if a | bc then a | b or a | c"
 print(first_break(lambda a, b, c: (b * c) % a != 0 or b % a == 0 or c % a == 0))
 # "if a | b and b | c then a | c"  (Theorem 0.4: should find nothing)
-print(first_break(lambda a, b, c: not (b % a == 0 and c % b == 0) or c % a == 0))`}],{status:$('#pystat')});
+print(first_break(lambda a, b, c: not (b % a == 0 and c % b == 0) or c % a == 0))`},
+{t:'Cell 4 \u00b7 Trina\u2019s families',c:`# leftovers mod 3 for sums, products and squares
+for a in range(3):
+    print([ (a + b) % 3 for b in range(3)], "  ", [ (a * b) % 3 for b in range(3)])
+print("squares mod 3:", sorted({(n * n) % 3 for n in range(1000)}))
+print("n^3 - n mod 6:", sorted({(n**3 - n) % 6 for n in range(1000)}))
+
+# The Last Lantern: which piles lose for the player to move?
+lose = [0]
+for n in range(1, 31):
+    win = any((n - t) in lose for t in (1, 2) if t <= n)
+    if not win:
+        lose.append(n)
+print("losing piles:", lose)`}],{status:$('#pystat')});
 }
 </script>
 </body>
