@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Proof Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&family=Roboto+Serif:ital,opsz,wght@0,8..144,400;1,8..144,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="book.css">
+<style>
+.claims{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:10px}
+.claimbtn{text-align:left;display:flex;flex-direction:column;gap:4px;padding:12px 14px;border-radius:12px;min-height:0;height:100%}
+.claimbtn .t{font-weight:700;font-size:16px}
+.claimbtn .s{font-size:14px;color:var(--mute);font-weight:400}
+.claimbtn .st{font-size:13px;color:var(--sea);font-weight:700}
+.claimbtn[aria-pressed=true]{outline:3px solid var(--sea);outline-offset:1px}
+.bench{background:var(--panel);border-radius:16px;padding:16px}
+.goal{font-size:18px;margin:0 0 4px}
+.expr{display:flex;flex-wrap:wrap;align-items:center;gap:8px;min-height:104px;padding:12px;border-radius:12px;background:var(--bg);border:1px solid var(--line)}
+.factor{display:flex;align-items:center;gap:6px;padding:6px 8px;border:2px dashed var(--line);border-radius:12px}
+.par{font-size:30px;color:var(--mute);font-weight:300}
+.term{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 10px;border-radius:10px;min-height:0}
+.term[aria-pressed=true]{outline:3px solid var(--brass);outline-offset:1px}
+.dots{display:flex;align-items:center;gap:3px;min-height:32px}
+.col{display:flex;flex-direction:column;gap:3px}
+.d{width:11px;height:11px;border-radius:50%;background:var(--sea)}
+.d.one{background:var(--ember)}
+.tl{font-size:12px;color:var(--mute);font-family:"Roboto Mono",monospace}
+.card{font-family:"Roboto Mono",monospace;font-size:16px;font-weight:500;padding:6px 4px}
+.plus{font-size:20px;color:var(--mute)}
+.moves{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 4px}
+.moves button{min-height:40px;font-size:15px}
+.moves button small{color:var(--mute);font-weight:400}
+.say{font-size:15px;line-height:1.55;padding:10px 12px;border-radius:10px;margin:8px 0;background:var(--bg);border:1px solid var(--line);min-height:1.6em}
+.say.bad{background:var(--ember-soft);border-color:var(--ember)}
+.say.good{background:var(--sea-soft);border-color:var(--sea)}
+.ask{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0;align-items:center}
+.ask .q{font-size:14px;color:var(--mute);width:100%}
+.ask button{min-height:40px;text-align:left}
+.badges{display:flex;gap:8px;flex-wrap:wrap;font-size:13px;margin-top:8px}
+.badge{padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--mute)}
+.badge.on{background:var(--sea-soft);border-color:var(--sea);color:var(--ink);font-weight:700}
+.grid2{border-collapse:collapse;font-family:"Roboto Mono",monospace;font-size:14px;margin:4px 0}
+.grid2 td,.grid2 th{white-space:nowrap;border:1px solid var(--line);padding:6px 10px;text-align:center}
+.grid2 th{color:var(--mute);font-weight:500}
+.report{margin-top:16px;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.report h3{margin:0}
+.report .sub{font-size:14px;color:var(--mute);margin:2px 0 12px}
+.report h4{margin:14px 0 4px;font-size:15px;color:var(--brass);text-transform:none}
+.distil{font-family:"Roboto Serif",Georgia,serif;font-size:18px;line-height:1.55;margin:0}
+.report table{width:100%;border-collapse:collapse;font-size:15px;table-layout:fixed}
+.report th{text-align:left;font-weight:500;font-size:13px;color:var(--mute);border-bottom:1px solid var(--line);padding:4px 6px}
+.report td,.report th{white-space:normal;text-align:left}
+.report td{vertical-align:top;padding:6px;border-bottom:1px solid var(--line)}
+.report td.n{width:32px;color:var(--mute)}
+.report td.s{font-family:"Roboto Mono",monospace;font-size:14px;overflow-wrap:anywhere}
+.report .qed{margin:10px 0 0}
+.report img{display:block;max-width:100%;border:1px solid var(--line);border-radius:10px;margin-top:10px}
+.report textarea{width:100%;min-height:110px;font-family:"Roboto Serif",Georgia,serif;font-size:16px;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+@media(max-width:560px){.report th:first-child,.report td.n{width:22px}}
+</style>
+</head>
+<body>
+
+<nav class="toc" aria-label="Proof Lab sections"><div class="wrap">
+<a class="brand" href="index.html">Modular Worlds</a><a href="#recipes">Recipes</a><a href="#bench">The bench</a><a href="#how">How the lab works</a><a href="ch0.html">Chapter 0</a>
+</div></nav>
+
+<header class="band hero"><div class="wrap two">
+<div>
+<div class="kicker">Modular Worlds · Chapter 0 companion</div>
+<h1>The Proof Lab</h1>
+<p class="lede">Behind the harbor in Mojadito, Lucía found an old laboratory. Every flask holds a number, and the shelves are labelled with recipes: <i>produce an even from two odds</i>, <i>produce a full trio from one extra and one short</i>. The rules of the lab are the rules of arithmetic. Follow them, and you produce a proof.</p>
+<p>Each recipe can be produced in more than one way. Find a route, pass Kevin's safety inspection, and the lab writes up your report.</p>
+</div>
+<aside class="box thm">
+<h3>The lab report</h3>
+<p><b>Distillate:</b> the essence of your proof in plain words, no symbols.</p>
+<p><b>Procedure:</b> the formal proof, one line per move, each with its reason.</p>
+<p style="margin:0"><b>Result:</b> the theorem you have produced, for every number of its kind, not just the examples.</p>
+</aside>
+</div></header>
+
+<section class="band" id="recipes"><div class="wrap">
+<h2>Recipes</h2>
+<p>Pick a recipe. Proving one adds it to your lab rules, so later recipes can use it. Your progress stays in this browser only.</p>
+<div class="claims" id="claims"></div>
+</div></section>
+
+<section class="band alt" id="bench"><div class="wrap">
+<div class="bench">
+<p class="goal" id="goal"></p>
+<p class="small" id="hint" style="margin:0 0 10px"></p>
+<div class="expr" id="expr" aria-label="Flasks on the bench"></div>
+<div class="moves">
+<button id="mUnpack">Read a label <small>(definition)</small></button>
+<button id="mSplit">Split off an atom</button>
+<button id="mBond">Bond loose atoms</button>
+<button id="mPour">Pour flasks together</button>
+<button id="mExpand">Expand the product</button>
+<button id="mRule">Use a lab rule</button>
+<button id="mClaim" class="primary">Submit for inspection</button>
+<button id="mUndo">Undo</button>
+<button id="mReset">Start over</button>
+</div>
+<div class="say" id="say" aria-live="polite"></div>
+<div class="ask" id="ask"></div>
+<div class="badges" id="badges"></div>
+</div>
+<div id="rep"></div>
+</div></section>
+
+<section class="band" id="how"><div class="wrap two">
+<div>
+<h2>How the lab works</h2>
+<p><b>Flasks are numbers.</b> A card like <span class="card">a</span> is a number you know one fact about (odd, even, one extra). Reading its label means using the definition: an odd number is some number of pairs plus one loose atom. The dots stand for <i>any</i> number of pairs, including none.</p>
+<p><b>Moves are reasons.</b> Every move is a rule of arithmetic or a result you proved earlier. The lab never asks you to follow a fixed path. It only checks that each move is legal, and that your final flask shows what the recipe asks for.</p>
+<p><b>Kevin inspects.</b> He looks for the classic mistakes: using the same letter for two different numbers, using the claim to prove itself, and forgetting the case with no pairs at all.</p>
+</div>
+<aside class="box tool">
+<h3>From report to proof</h3>
+<p>The procedure is a scaffold. A finished proof in a paper or on an exam is a short paragraph. After each report, rewrite it in your own words, in English, Spanish or both. Start from your Distillate: it tells you what the paragraph is about.</p>
+<p style="margin:0">Crews can swap report images and inspect each other's reasons, the way Kevin does.</p>
+</aside>
+</div></section>
+
+<section class="band alt"><div class="wrap pager"><a href="ch0.html">← Chapter 0: The Entrance Exam</a><a href="index.html">Contents</a><a href="studio.html">The Studio →</a></div></section>
+<footer class="band"><div class="wrap">Modular Worlds · The Proof Lab · draft · UCI Math CEO</div></footer>
+
+<script src="book.js"></script>
+<script>
+{
+const {$,esc}=MW;
+const KEY='mw-lab';
+let P={proven:[],routes:{},para:{}};try{P=Object.assign(P,JSON.parse(localStorage.getItem(KEY))||{})}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}};
+const RN={def:'By definition',lem:'By earlier results',mix:'Mixed route'};
+
+const CLAIMS=[
+ {id:'c1',title:'Neighbours',stmt:'If a is odd, then a + 1 is even.',g:2,goal:'even',lhs:'a + 1',given:'a is odd',
+  start:{mode:'sum',terms:[{t:'odd',n:'a'},{t:'one',v:1}]},routes:['def'],zero:'a = 1',ex:'3 + 1 = 4 and 9 + 1 = 10',
+  dist:{def:'An odd number is a stack of pairs with one atom left over. Add one more atom, and the two loose atoms bond into a pair, so nothing is left over.'}},
+ {id:'c2',title:'Even + even',stmt:'If a and b are even, then a + b is even.',g:2,goal:'even',lhs:'a + b',given:'a and b are even',
+  start:{mode:'sum',terms:[{t:'even',n:'a'},{t:'even',n:'b'}]},routes:['def'],zero:'a = 0',ex:'4 + 6 = 10 and 8 + 2 = 10',
+  dist:{def:'Two even numbers are made entirely of pairs. Pour them together and you still have only pairs, with nothing left over.'}},
+ {id:'c3',title:'Even + odd',stmt:'If a is even and b is odd, then a + b is odd.',g:2,goal:'odd',lhs:'a + b',given:'a is even and b is odd',
+  start:{mode:'sum',terms:[{t:'even',n:'a'},{t:'odd',n:'b'}]},routes:['def'],zero:'b = 1',ex:'4 + 3 = 7 and 10 + 5 = 15',
+  dist:{def:'An even number is all pairs, and an odd number is pairs plus one loose atom. Together the pairs stay pairs, and the loose atom has no partner, so exactly one is left over.'}},
+ {id:'c4',title:'Odd + odd',stmt:'If a and b are odd, then a + b is even.',g:2,goal:'even',lhs:'a + b',given:'a and b are odd',
+  start:{mode:'sum',terms:[{t:'odd',n:'a'},{t:'odd',n:'b'}]},routes:['def','lem','mix'],zero:'a = 1',ex:'3 + 5 = 8 and 7 + 9 = 16',
+  hint:'Three routes exist. The route by earlier results needs the rules from Neighbours and Even + odd.',
+  dist:{def:'Each odd number is pairs plus one loose atom. Put them together, and the two loose atoms bond into a new pair, so nothing is left over.',
+   lem:'Peel the loose atom off one odd number, and what remains is even. Even plus odd is odd, and adding the peeled atom back turns that odd number into an even one.',
+   mix:'Break both numbers into pairs and loose atoms, using what we already know about even numbers. The pairs stay pairs, and the two loose atoms bond into one more, so nothing is left over.'}},
+ {id:'c5',title:'Even × anything',stmt:'If a is even and n is any integer, then a × n is even.',g:2,goal:'even',lhs:'a × n',given:'a is even and n is an integer',
+  start:{mode:'prod',factors:[[{t:'even',n:'a'}],[{t:'int',n:'n'}]]},routes:['def'],zero:'a = 0',ex:'4 × 3 = 12 and 6 × 5 = 30',
+  dist:{def:'An even number is all pairs. Taking it any number of times only gives more pairs, so the product is still made entirely of pairs.'}},
+ {id:'c6',title:'Odd × odd',stmt:'If a and b are odd, then a × b is odd.',g:2,goal:'odd',lhs:'a × b',given:'a and b are odd',
+  start:{mode:'prod',factors:[[{t:'odd',n:'a'}],[{t:'odd',n:'b'}]]},routes:['def','lem','mix'],zero:'a = 1',ex:'3 × 5 = 15 and 7 × 9 = 63',
+  hint:'Expand the product to see every part. The route by earlier results needs the rules from Even + odd and Even × anything.',
+  dist:{def:'Each odd number is pairs plus one loose atom. When you multiply, every part that touches a pair becomes pairs, and only the two loose atoms meet, making one loose atom. So exactly one is left over.',
+   lem:'Peel one atom off the second odd number, leaving an even one. The first number times that even part is even, and what remains is the first number itself, which is odd. Even plus odd is odd.',
+   mix:'Split the product into parts. Every part with an even piece in it is even, and exactly one odd part remains, so the product is odd.'}},
+ {id:'c7',title:'Trina’s trio',stmt:'If a leaves 1 and b leaves 2 when packed in trios, then a + b is a multiple of 3.',g:3,goal:'mult3',lhs:'a + b',given:'a leaves 1 and b leaves 2 in trios',
+  start:{mode:'sum',terms:[{t:'r1',n:'a'},{t:'r2',n:'b'}]},routes:['def'],zero:'a = 1',ex:'4 + 5 = 9 and 7 + 8 = 15',
+  dist:{def:'One number has one atom beyond its full trios, and the other has two. The three extra atoms form one more full trio, so nothing is left over.'}},
+ {id:'c8',title:'Three extras',stmt:'If a, b and c each leave 1 when packed in trios, then a + b + c is a multiple of 3.',g:3,goal:'mult3',lhs:'a + b + c',given:'a, b and c each leave 1 in trios',
+  start:{mode:'sum',terms:[{t:'r1',n:'a'},{t:'r1',n:'b'},{t:'r1',n:'c'}]},routes:['def'],zero:'a = 1',ex:'4 + 7 + 10 = 21',
+  dist:{def:'Each number has one atom beyond its full trios. The three extra atoms form one more full trio, so nothing is left over.'}}];
+const LEMMAS=[
+ {id:'L1',txt:'odd + 1 = even',from:'c1',pat:['1','odd'],out:'even'},
+ {id:'L2',txt:'even + even = even',from:'c2',pat:['even','even'],out:'even'},
+ {id:'L3',txt:'even + odd = odd',from:'c3',pat:['even','odd'],out:'odd'},
+ {id:'L4',txt:'odd + odd = even',from:'c4',pat:['odd','odd'],out:'even'},
+ {id:'L5',txt:'even × integer = even',from:'c5',pat:'mulEven',out:'even'},
+ {id:'L6',txt:'odd × odd = odd',from:'c6',pat:'mulOdd',out:'odd'}];
+const DEF={
+ odd:{ok:'2·(an integer) + 1',bad:[['2·(an integer)','That is the definition of even.'],['(an integer) + 1','Every integer is (an integer) + 1. That says nothing about parity.']],res:l=>[{t:'grp',w:l},{t:'one',v:1}],form:l=>`2${l} + 1`,word:'odd'},
+ even:{ok:'2·(an integer)',bad:[['2·(an integer) + 1','That is the definition of odd.'],['(an integer) + 2','Every integer is (an integer) + 2. That says nothing about parity.']],res:l=>[{t:'grp',w:l}],form:l=>`2${l}`,word:'even'},
+ r1:{ok:'3·(an integer) + 1',bad:[['3·(an integer) + 2','That is one short of a trio, not one extra.'],['3·(an integer)','That is full trios with nothing extra.']],res:l=>[{t:'grp',w:l},{t:'one',v:1}],form:l=>`3${l} + 1`,word:'one extra'},
+ r2:{ok:'3·(an integer) + 2',bad:[['3·(an integer) + 1','That is one extra, not one short.'],['3·(an integer) − 2','Careful: 3k − 2 = 3(k − 1) + 1, which is one extra, not one short.']],res:l=>[{t:'grp',w:l},{t:'one',v:2}],form:l=>`3${l} + 2`,word:'one short'}};
+
+let C,S,hist,sel,LOG,letters,usedLem,usedDef;
+const simple=x=>/^[a-z0-9]+$/.test(x);
+const wrapd=x=>simple(x)||/^\([^()]*\)$/.test(x)?x:`(${x})`;
+const pn=(x,y)=>wrapd(x)+wrapd(y);
+function alg(x){if(x.t==='one')return String(x.v);if(x.t==='grp')return /^[a-z]+$/.test(x.w)?`${C.g}${x.w}`:/^[0-9]+$/.test(x.w)?`${C.g}·${x.w}`:`${C.g}(${x.w})`;return x.n}
+function now(){return C.lhs+' = '+(S.mode==='sum'?S.terms.map(alg).join(' + '):S.factors.map(f=>f.length>1?`(${f.map(alg).join(' + ')})`:alg(f[0])).join(' × '))}
+function snap(){hist.push(JSON.stringify({S,LOG,letters,usedLem,usedDef}))}
+function say(t,c){const e=$('#say');e.textContent=t;e.className='say'+(c?' '+c:'')}
+function setAsk(h){$('#ask').innerHTML=h}
+function proven(id){return P.proven.includes(id)}
+
+function drawClaims(){$('#claims').innerHTML=CLAIMS.map(c=>{const r=P.routes[c.id]||[];return `<button class="claimbtn" data-c="${c.id}" aria-pressed="${C&&C.id===c.id}"><span class="t">${esc(c.title)}</span><span class="s">${esc(c.stmt)}</span><span class="st">${proven(c.id)?`Proven ✓ · routes ${r.length} of ${c.routes.length}`:'Not yet produced'}</span></button>`}).join('')}
+$('#claims').addEventListener('click',e=>{const b=e.target.closest('.claimbtn');if(!b)return;load(b.dataset.c);$('#bench').scrollIntoView({behavior:'smooth',block:'start'})});
+
+function load(id){C=CLAIMS.find(c=>c.id===id);S=JSON.parse(JSON.stringify(C.start));hist=[];sel=[];letters=[];usedLem=false;usedDef=false;LOG=[{s:C.given,r:'Given'}];
+  $('#goal').innerHTML=`<b>Recipe: ${esc(C.title)}.</b> ${esc(C.stmt)}`;$('#hint').textContent=C.hint||'Select one or two flasks, then choose a move.';
+  $('#rep').innerHTML='';setAsk('');say('Select a flask to begin.');draw();drawClaims()}
+
+function termHTML(x){
+  if(x.t==='one')return `<div class="dots">${'<span class="d one"></span>'.repeat(x.v)}</div><span class="tl">${x.v} loose</span>`;
+  if(x.t==='grp'){const c=`<div class="col">${'<span class="d"></span>'.repeat(C.g)}</div>`;return `<div class="dots">${c.repeat(3)}<span class="tl">…</span></div><span class="tl">${esc(x.w)} ${C.g===2?'pairs':'trios'}</span>`}
+  const lab={odd:'odd',even:'even',int:'integer',r1:'1 extra',r2:'1 short',mul:'product'}[x.t];
+  return `<span class="card">${esc(x.n)}</span><span class="tl">${lab}</span>`}
+function draw(){
+  const btn=(x,id)=>`<button class="term" data-id="${id}" aria-pressed="${sel.includes(id)}" aria-label="${esc(alg(x))}, ${x.t==='grp'?'groups':x.t}">${termHTML(x)}</button>`;
+  if(S.mode==='sum')$('#expr').innerHTML=S.terms.map((x,i)=>btn(x,String(i))).join('<span class="plus" aria-hidden="true">+</span>');
+  else $('#expr').innerHTML=S.factors.map((f,fi)=>`<div class="factor" aria-label="Factor ${fi+1}">${f.map((x,i)=>btn(x,fi+':'+i)).join('<span class="plus" aria-hidden="true">+</span>')}</div>`).join('<span class="par" aria-hidden="true">×</span>');
+  const r=P.routes[C.id]||[];$('#badges').innerHTML=C.routes.map(k=>`<span class="badge${r.includes(k)?' on':''}">${RN[k]}${r.includes(k)?' ✓':''}</span>`).join('')}
+$('#expr').addEventListener('click',e=>{const b=e.target.closest('.term');if(!b)return;const id=b.dataset.id;
+  sel=sel.includes(id)?sel.filter(j=>j!==id):sel.concat(id).slice(-2);draw()});
+function get(id){if(S.mode==='sum')return S.terms[+id];const[f,i]=id.split(':').map(Number);return S.factors[f][i]}
+function container(id){return S.mode==='sum'?S.terms:S.factors[+id.split(':')[0]]}
+function idx(id){return S.mode==='sum'?+id:+id.split(':')[1]}
+function replace(ids,news){const arr=container(ids[0]);const is=ids.map(idx).sort((a,b)=>a-b);for(let k=is.length-1;k>=0;k--)arr.splice(is[k],1);arr.splice(is[0],0,...news);sel=[]}
+function need(n,msg){if(sel.length!==n){say(msg,'bad');return false}return true}
+function sameBox(){if(S.mode==='sum')return true;return sel.every(s=>s.split(':')[0]===sel[0].split(':')[0])}
+const shuffle=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
+function log(r){LOG.push({s:now(),r})}
+
+$('#mUnpack').onclick=()=>{if(!need(1,'Select one flask whose label you want to read.'))return;const x=get(sel[0]);
+  if(x.t==='int'){say('Its label only says "integer". There is nothing more to read.','bad');return}
+  const D=DEF[x.t];if(!D){say('That flask is already open.','bad');return}
+  const opts=shuffle([[D.ok,''],...D.bad]);
+  setAsk(`<span class="q">What does the label "${esc(x.n)} is ${D.word}" mean? ${esc(x.n)} = …</span>`+opts.map(([t,m],i)=>`<button data-i="${i}">${esc(t)}</button>`).join(''));
+  say('Choose the definition you are using.');
+  $('#ask').onclick=ev=>{const b=ev.target.closest('button');if(!b)return;const [t,m]=opts[+b.dataset.i];if(m){say(m,'bad');return}
+    setAsk(`<span class="q">Name the integer:</span>`+['k','m','j','p'].map(l=>`<button data-l="${l}">${esc(x.n)} = ${D.form(l)}</button>`).join(''));
+    say('Pick a letter for the number of '+(C.g===2?'pairs.':'trios.'));
+    $('#ask').onclick=ev2=>{const b2=ev2.target.closest('button');if(!b2)return;const l=b2.dataset.l;const id=sel[0];snap();letters.push(l);usedDef=true;replace([id],D.res(l));setAsk('');
+      log(`${x.n} is ${D.word}, so ${x.n} = ${D.form(l)} for some integer ${l} (definition)`);
+      say(`${x.n} = ${D.form(l)}. The dots stand for any number of ${C.g===2?'pairs':'trios'}, even none.`);draw()}}};
+$('#mSplit').onclick=()=>{if(!need(1,'Select one odd flask to split.'))return;const x=get(sel[0]);
+  if(x.t!=='odd'){say('Split off an atom works on an odd flask.','bad');return}
+  snap();usedLem=true;replace([sel[0]],[{t:'even',n:`(${x.n} − 1)`},{t:'one',v:1}]);
+  log(`${x.n} = (${x.n} − 1) + 1, and ${x.n} − 1 is even because ${x.n} is odd`);
+  say(`Peeled one atom off ${x.n}. What remains, ${x.n} − 1, is even.`);draw()};
+$('#mBond').onclick=()=>{if(!need(2,'Select two flasks of loose atoms.'))return;
+  if(!sameBox()||!sel.every(s=>get(s).t==='one')){say('Bond loose atoms needs two flasks of loose atoms, side by side in the same sum.','bad');return}
+  if(S.mode==='prod'){say('Expand the product first: inside one factor there is only one loose flask.','bad');return}
+  const[p,q]=sel.map(get),s=p.v+q.v,g=C.g;let out,eq;
+  if(s<g){out=[{t:'one',v:s}];eq=`${p.v} + ${q.v} = ${s}`}else if(s===g){out=[{t:'grp',w:'1'}];eq=`${p.v} + ${q.v} = ${g}·1`}else{out=[{t:'grp',w:'1'},{t:'one',v:s-g}];eq=`${p.v} + ${q.v} = ${g}·1 + ${s-g}`}
+  snap();usedDef=true;replace(sel,out);log(`Rearrange the sum and bond the loose atoms: ${eq}`);
+  say(s>=g?`The loose atoms bond into one more ${g===2?'pair':'trio'}.`:'The loose atoms share a flask, but they are not a full trio yet.');draw()};
+$('#mPour').onclick=()=>{if(!need(2,'Select two flasks of '+(C.g===2?'pairs.':'trios.')))return;
+  if(S.mode==='prod'){say('Expand the product first.','bad');return}
+  if(!sel.every(s=>get(s).t==='grp')){say('Pour together needs two flasks of '+(C.g===2?'pairs':'trios')+'. A flask labelled even can be opened into pairs first.','bad');return}
+  const[p,q]=sel.map(get);snap();replace(sel,[{t:'grp',w:`${p.w} + ${q.w}`}]);
+  log(`Factor out ${C.g}: ${C.g}x + ${C.g}y = ${C.g}(x + y)`);say(`${C.g===2?'Pairs':'Trios'} poured together are still ${C.g===2?'pairs':'trios'}.`);draw()};
+function mul(u,v){
+  if(u.t==='grp'&&v.t==='grp')return {t:'grp',w:'2'+pn(u.w,v.w)};
+  if(u.t==='grp'&&v.t==='one')return {t:'grp',w:u.w};
+  if(u.t==='one'&&v.t==='grp')return {t:'grp',w:v.w};
+  if(u.t==='grp')return {t:'grp',w:pn(u.w,v.n)};
+  if(v.t==='grp')return {t:'grp',w:pn(u.n,v.w)};
+  if(u.t==='one')return Object.assign({},v);
+  if(v.t==='one')return Object.assign({},u);
+  return {t:'mul',n:pn(u.n,v.n),ev:u.t==='even'||v.t==='even',od:u.t==='odd'&&v.t==='odd'}}
+$('#mExpand').onclick=()=>{if(S.mode!=='prod'){say('There is no product left to expand.','bad');return}
+  const[A,B]=S.factors;const cells=A.map(u=>B.map(v=>mul(u,v)));
+  setAsk(`<span class="q">The distributive law, as a grid: every part of one factor meets every part of the other.</span><table class="grid2"><tr><th>×</th>${B.map(v=>`<th>${esc(alg(v))}</th>`).join('')}</tr>${A.map((u,i)=>`<tr><th>${esc(alg(u))}</th>${cells[i].map(c=>`<td>${esc(alg(c))}</td>`).join('')}</tr>`).join('')}</table>`);
+  snap();S={mode:'sum',terms:cells.flat()};sel=[];log('Expand the product (distributive law)');say('Expanded. Now combine what you see.');draw()};
+function kind(x){if(x.t==='odd')return 'odd';if(x.t==='even'||(x.t==='grp'&&C.g===2))return 'even';if(x.t==='one'&&x.v===1&&C.g===2)return '1';return x.t}
+$('#mRule').onclick=()=>{
+  if(C.g===3){say('The lab has no rules for trios yet. Use the definitions.','bad');return}
+  setAsk(`<span class="q">Which lab rule applies to the flasks you selected?</span>`+LEMMAS.map((L,i)=>`<button data-i="${i}">${esc(L.txt)}${proven(L.from)?'':' (locked)'}</button>`).join(''));
+  say('Pick a rule. Rules unlock when you prove their recipe.');
+  $('#ask').onclick=ev=>{const b=ev.target.closest('button');if(!b)return;const L=LEMMAS[+b.dataset.i];
+    if(L.from===C.id){say('That rule is the recipe you are producing. Using it here would be circular reasoning.','bad');return}
+    if(!proven(L.from)){say(`That rule is not in your lab yet. Prove "${CLAIMS.find(c=>c.id===L.from).title}" first.`,'bad');return}
+    let ids=sel.slice(),out;
+    if(Array.isArray(L.pat)){
+      if(S.mode==='prod'){say('That rule is about sums. Expand the product first.','bad');return}
+      if(ids.length!==2){say('Select the two flasks the rule is about.','bad');return}
+      const ts=ids.map(get),ks=ts.map(kind).sort().join('+');
+      const fit=(k,p)=>k===p||(p==='odd'&&k==='1');const ok=(fit(kind(ts[0]),L.pat[0])&&fit(kind(ts[1]),L.pat[1]))||(fit(kind(ts[1]),L.pat[0])&&fit(kind(ts[0]),L.pat[1]));
+      if(!ok){say(`That rule needs ${L.txt.split(' = ')[0]}, but you selected ${ts.map(kind).join(' + ').replace(/\b1\b/,'1')}.`,'bad');return}
+      out={t:L.out,n:`(${ts.map(alg).join(' + ')})`};
+      snap();usedLem=true;replace(ids,[out]);
+    }else{
+      let target;
+      if(S.mode==='prod'&&S.factors.every(f=>f.length===1&&['odd','even','int'].includes(f[0].t))){const[u,v]=S.factors.map(f=>f[0]);target={t:'mul',n:pn(u.n,v.n),ev:u.t==='even'||v.t==='even',od:u.t==='odd'&&v.t==='odd'}}
+      else if(S.mode==='sum'&&ids.length===1&&get(ids[0]).t==='mul')target=get(ids[0]);
+      else{say('Select one product flask (like a(b − 1)) for this rule.','bad');return}
+      if(L.pat==='mulEven'&&!target.ev){say('This rule needs a product with an even factor.','bad');return}
+      if(L.pat==='mulOdd'&&!target.od){say('This rule needs a product of two odd numbers.','bad');return}
+      out={t:L.out,n:target.n};snap();usedLem=true;
+      if(S.mode==='prod')S={mode:'sum',terms:[out]};else replace(ids,[out]);sel=[];
+    }
+    setAsk('');log(`${out.n} is ${out.t} (lab rule: ${L.txt})`);say('Rule applied.');draw()}};
+const route=()=>usedLem&&usedDef?'mix':usedLem?'lem':'def';
+$('#mClaim').onclick=()=>{
+  if(S.mode==='prod'){say('Expand the product, or use a rule on it, before inspection.','bad');return}
+  const T=S.terms,g=C.g;
+  if(new Set(letters).size<letters.length){say(`Kevin: "You used the same letter twice. That only covers equal numbers, like 7 and 7. What about 7 and 9?" Undo and choose different letters.`,'bad');return}
+  let w=null,shape=null;
+  if(C.goal==='even'){if(T.length===1&&T[0].t==='even')shape='card';else if(T.length===1&&T[0].t==='grp'){shape='grp';w=T[0].w}}
+  if(C.goal==='odd'){if(T.length===1&&T[0].t==='odd')shape='card';else if(T.length===2){const gg=T.find(x=>x.t==='grp'),oo=T.find(x=>x.t==='one'&&x.v===1);if(gg&&oo){shape='grp1';w=gg.w}}}
+  if(C.goal==='mult3'&&T.length===1&&T[0].t==='grp'){shape='grp';w=T[0].w}
+  if(!shape){const want={even:'one flask of pairs, or one flask labelled even',odd:'one flask of pairs plus one loose atom, or one flask labelled odd',mult3:'one flask of trios'}[C.goal];say(`Kevin: "Not ready. I need to see ${want}."`,'bad');return}
+  if(shape==='card'){const last=T[0];inspect({s:`${C.lhs} is ${C.goal}`,r:`${C.lhs} = ${last.n}, which the last step showed is ${C.goal}`});return}
+  const parts=w.split(' + '),drop=parts.length>1?parts.slice(0,-1).join(' + '):(w==='1'?'0':w+' + 1');
+  const opts=shuffle([[w,1],[drop,0],[`${g}(${w})`,0]]);const tail=shape==='grp1'?' + 1':'';
+  setAsk(`<span class="q">Finish the claim: ${esc(C.lhs)} = ${g} × ___${tail}</span>`+opts.map(([t,c],i)=>`<button data-i="${i}">${esc(t)}</button>`).join(''));
+  say('Name exactly what multiplies the '+g+'.');
+  $('#ask').onclick=ev=>{const b=ev.target.closest('button');if(!b)return;if(!opts[+b.dataset.i][1]){say('Count again: every group, including any new one.','bad');return}
+    const word={even:'even',odd:'odd',mult3:'a multiple of 3'}[C.goal],def={even:'definition of even',odd:'definition of odd',mult3:'definition of multiple'}[C.goal];
+    inspect({s:`${C.lhs} is ${word}`,r:`${C.lhs} = ${g}(${w})${tail}, and ${w} is an integer, since sums and products of integers are integers (${def})`})}};
+function inspect(last){
+  setAsk(`<span class="q">Kevin: "Your flasks always show three ${C.g===2?'pairs':'trios'}. Does your proof still work when a number has none, like ${esc(C.zero)}?"</span><button data-y="1">Yes: the letter can be 0, so zero ${C.g===2?'pairs':'trios'} is covered</button><button data-y="0">No: the proof needs at least one</button>`);
+  say('Last safety question.','good');
+  $('#ask').onclick=ev=>{const b=ev.target.closest('button');if(!b)return;
+    if(b.dataset.y==='0'){say(`Try it: ${C.zero}. The letter in the definition can be 0, and the dots stand for any number, including none.`,'bad');return}
+    distil(last)}}
+function distil(last){const r=route();
+  const others=Object.keys(C.dist).filter(k=>k!==r);
+  const fake=`We checked examples like ${C.ex}, and it worked every time, so it must always be true.`;
+  const opts=shuffle([[C.dist[r]||C.dist.def,'ok'],[fake,'ex'],...(others.length?[[C.dist[others[0]],'other']]:[[C.goal==='mult3'?'Numbers that look alike behave alike, so the total must be a multiple of 3.':'Odd numbers end in 1, 3, 5, 7 or 9, and the last digits always work out.','surface']])]);
+  setAsk(`<span class="q">Choose the Distillate: the sentence that captures the essence of <b>your</b> proof.</span>`+opts.map(([t],i)=>`<button data-i="${i}">${esc(t)}</button>`).join(''));
+  say('Kevin passed your inspection. Now distill it.','good');
+  $('#ask').onclick=ev=>{const b=ev.target.closest('button');if(!b)return;const [t,k]=opts[+b.dataset.i];
+    if(k==='ex'){say('Examples are evidence, not proof: they cover a few numbers, and the claim is about all of them.','bad');return}
+    if(k==='other'){say('That is a true Distillate, but of a different route. Look at the moves you actually made.','bad');return}
+    if(k==='surface'){say('That talks about how numbers look, not about why the proof works.','bad');return}
+    finish(r,t,last)}}
+function finish(r,dist,last){
+  if(!P.proven.includes(C.id))P.proven.push(C.id);P.routes[C.id]=Array.from(new Set((P.routes[C.id]||[]).concat(r)));save();
+  setAsk('');draw();drawClaims();
+  const left=C.routes.filter(k=>!(P.routes[C.id]||[]).includes(k));
+  const L=LEMMAS.find(L=>L.from===C.id);
+  say(`Produced! ${L?`New lab rule unlocked: ${L.txt}. `:''}${left.length?`Routes still to find here: ${left.map(k=>RN[k].toLowerCase()).join(', ')}.`:'You found every route for this recipe.'}`,'good');
+  report(r,dist,LOG.concat([last]))}
+function report(r,dist,rows){
+  const concl=`Therefore, ${C.stmt.charAt(0).toLowerCase()+C.stmt.slice(1)}`;
+  $('#rep').innerHTML=`<div class="report"><h3>Lab report: ${esc(C.title)}</h3><p class="sub">${esc(C.stmt)} · ${RN[r]} · ${rows.length} steps</p>
+  <h4>Distillate</h4><p class="distil">${esc(dist)}</p>
+  <h4>Procedure</h4><table><thead><tr><th style="width:32px">#</th><th>Statement</th><th>Reason</th></tr></thead><tbody>${rows.map((x,i)=>`<tr><td class="n">${i+1}</td><td class="s">${esc(i===0?x.s:x.s)}</td><td>${esc(i===0?'Given':x.r)}</td></tr>`).join('')}</tbody></table>
+  <h4>Result</h4><p class="qed">${esc(concl)} ∎</p>
+  <div class="row" style="margin-top:12px"><button id="still" class="primary">Make an image of this report</button></div><div id="stillout"></div>
+  <h4>Your turn: the paragraph</h4><label for="para" class="small">Rewrite the proof as a short paragraph in your own words (English, Spanish or both). It stays in this browser.</label>
+  <textarea id="para">${esc(P.para[C.id+r]||'')}</textarea></div>`;
+  $('#para').addEventListener('input',e=>{P.para[C.id+r]=e.target.value;save()});
+  $('#still').onclick=()=>{const cv=document.createElement('canvas'),W=1200,pad=48,g=cv.getContext('2d');
+    const wrap=(t,w,font)=>{g.font=font;const out=[];let line='';t.split(' ').forEach(wd=>{const tr=line?line+' '+wd:wd;if(g.measureText(tr).width>w&&line){out.push(line);line=wd}else line=tr});out.push(line);return out};
+    const fS='17px "Roboto Mono", monospace',fR='18px Roboto, sans-serif',fD='italic 21px "Roboto Serif", Georgia, serif';
+    const cS=430,cR=W-pad*2-54-cS-24,dl=wrap(dist,W-2*pad,fD),cl=wrap(concl+' ∎',W-2*pad,fR);
+    const lay=rows.map(x=>({s:wrap(x.s,cS,fS),r:wrap(x.r,cR,fR)}));
+    const H=pad+40+34+30+dl.length*30+50+lay.reduce((h,l)=>h+Math.max(l.s.length,l.r.length)*26+18,0)+40+cl.length*26+pad;
+    const paint=(H)=>{cv.width=W;cv.height=H;g.fillStyle='#fffdf8';g.fillRect(0,0,W,H);g.fillStyle='#0c5f73';g.fillRect(0,0,W,8);
+    let y=pad+24;g.fillStyle='#14181b';g.font='700 30px "Roboto Flex", Roboto, sans-serif';g.fillText('Lab report: '+C.title,pad,y);
+    y+=34;g.fillStyle='#5b6168';g.font='17px Roboto, sans-serif';g.fillText(`${C.stmt}  ·  ${RN[r]}  ·  Modular Worlds Proof Lab`,pad,y);
+    const head=t=>{y+=40;g.fillStyle='#9a6b12';g.font='700 18px Roboto, sans-serif';g.fillText(t,pad,y);y+=12};
+    head('Distillate');g.fillStyle='#14181b';g.font=fD;dl.forEach(t=>{y+=30;g.fillText(t,pad,y)});
+    head('Procedure');y+=20;g.fillStyle='#5b6168';g.font='600 15px Roboto, sans-serif';g.fillText('#',pad,y);g.fillText('Statement',pad+54,y);g.fillText('Reason',pad+54+cS+24,y);y+=10;g.fillStyle='#d5d8db';g.fillRect(pad,y,W-2*pad,1);y+=26;
+    lay.forEach((l,i)=>{g.fillStyle='#5b6168';g.font='16px Roboto, sans-serif';g.fillText(String(i+1),pad,y);g.fillStyle='#14181b';g.font=fS;l.s.forEach((t,j)=>g.fillText(t,pad+54,y+j*26));g.font=fR;l.r.forEach((t,j)=>g.fillText(t,pad+54+cS+24,y+j*26));
+      y+=Math.max(l.s.length,l.r.length)*26+18;g.fillStyle='#e6e8ea';g.fillRect(pad,y-24,W-2*pad,1)});
+    y-=10;head('Result');g.fillStyle='#14181b';g.font=fR;cl.forEach(t=>{y+=26;g.fillText(t,pad,y)});return y+pad};paint(paint(H));
+    $('#stillout').innerHTML=`<img alt="Lab report image for ${esc(C.title)}: distillate, ${rows.length}-step procedure and result" src="${cv.toDataURL('image/png')}"><p class="small">Right-click or press and hold the image to save it.</p>`}}
+$('#mUndo').onclick=()=>{if(!hist.length){say('Nothing to undo.');return}const h=JSON.parse(hist.pop());S=h.S;LOG=h.LOG;letters=h.letters;usedLem=h.usedLem;usedDef=h.usedDef;sel=[];setAsk('');say('Step undone.');draw()};
+$('#mReset').onclick=()=>load(C.id);
+load('c4');
+}
+</script>
+</body>
+</html>
