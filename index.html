@@ -32,7 +32,7 @@
 <p>Written for math and computer science majors in a lower-division course. No proofs course is needed: the proof toolkit is built in, one chapter at a time.</p>
 <div class="row" style="margin-top:8px"><a class="btn primary" href="ch0.html">Start with Chapter 0</a><a class="btn" href="ch3.html">Jump to Euclid's Forge</a></div>
 </div>
-<div class="map" role="img" aria-label="Map of the Modular Archipelago: eleven islands joined by a dotted route, from Mojadito to the Return to Earth. Islands 0 to 3 are unlocked."><svg id="mapsvg"></svg></div>
+<div class="map" role="img" aria-label="Map of the Modular Archipelago: eleven islands joined by a dotted route, from Mojadito to the Return to Earth. Islands 0 to 4 are unlocked."><svg id="mapsvg"></svg></div>
 </div></header>
 
 <section class="band" id="map-list"><div class="wrap" id="map">
@@ -75,7 +75,7 @@ const CH=[
  ['Mojadito, Home Port','Divisibility, the division algorithm, conjecture and proof, induction','ch1.html','Week 2'],
  ['Ammonia Bay','Arithmetic progressions, gcd and lcm, when two Books meet','ch2.html','Week 2'],
  ["Euclid's Forge","Euclid's algorithm, Bézout's identity, the smiths' balance",'ch3.html','Week 3'],
- ['Diophantine Delta','Linear Diophantine equations, the Frobenius coin problem','','Week 4'],
+ ['Diophantine Delta','Linear Diophantine equations, the Frobenius coin problem, the Mint Game','ch4.html','Week 4'],
  ['Prime Peaks','Primes, unique factorization, and a world where it fails','','Week 5'],
  ['Clockwork Isles','Congruences, inverses, check digits','','Week 6'],
  ['The Calendar Isles','The Chinese Remainder Theorem and the Maya Calendar Round','','Week 7'],
@@ -94,7 +94,7 @@ function drawMap(){
   for(let k=0;k<26;k++){const x=r()*W,y=r()*H;s+=`<path d="M${x} ${y} q8 -5 16 0 t16 0" fill="none" stroke="${bg}" stroke-opacity=".25" stroke-width="1.5"/>`}
   s+=`<path d="M${pts.map(p=>p.join(' ')).join(' L')}" fill="none" stroke="${bg}" stroke-width="2.5" stroke-dasharray="2 9" stroke-linecap="round" opacity=".9"/>`;
   const R=Math.max(14,Math.min(W,H)*0.055);
-  pts.forEach(([x,y],i)=>{const open=i<4;const rx=R*(1+r()*0.5),ry=R*(0.7+r()*0.3);
+  pts.forEach(([x,y],i)=>{const open=!!CH[i][2];const rx=R*(1+r()*0.5),ry=R*(0.7+r()*0.3);
     s+=`<ellipse cx="${x+3}" cy="${y+5}" rx="${rx}" ry="${ry}" fill="#000" opacity=".18"/>`;
     s+=`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${open?brass:bg}" opacity="${open?1:.55}"/>`;
     s+=`<ellipse cx="${x-rx*0.25}" cy="${y-ry*0.3}" rx="${rx*0.45}" ry="${ry*0.35}" fill="#fff" opacity=".22"/>`;

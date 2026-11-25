@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diophantine Delta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="book.css">
+<style>
+.tolls{display:grid;gap:4px;margin:10px 0}
+.tolls button{min-height:38px;padding:0;font-family:"Roboto Mono",monospace;font-size:14px;border-radius:7px}
+.tolls button.pay{background:var(--sea-soft);border-color:var(--sea);color:var(--ink)}
+.tolls button.no{background:var(--bg);border-style:dashed;color:var(--mute)}
+.tolls button.frob{border:2.5px solid var(--ember);color:var(--ember);font-weight:700}
+.tolls button.stair{box-shadow:inset 0 -4px 0 var(--brass)}
+.tolls button[aria-pressed=true]{outline:3px solid var(--ink);outline-offset:1px}
+.tolls .hd{font-size:12px;color:var(--mute);text-align:center;align-self:end}
+.legend2{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--mute);margin:4px 0 0}
+.legend2 span{display:inline-flex;align-items:center;gap:6px}
+.legend2 i{display:inline-block;width:18px;height:14px;border-radius:4px;border:1px solid var(--sea);background:var(--sea-soft)}
+.legend2 i.no{background:var(--bg);border-style:dashed;border-color:var(--mute)}
+.legend2 i.frob{background:var(--bg);border:2.5px solid var(--ember)}
+.legend2 i.stair{background:var(--sea-soft);box-shadow:inset 0 -4px 0 var(--brass)}
+.coins{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.tile{min-width:56px;min-height:48px;font-family:"Roboto Mono",monospace;font-size:17px;font-weight:700}
+.tile[disabled]{text-decoration:line-through;opacity:.45;cursor:default}
+.minted{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.minted span{font-family:"Roboto Mono",monospace;font-weight:700;background:var(--brass-soft);border:1px solid var(--brass);border-radius:999px;padding:4px 12px}
+.status.st2{white-space:pre-line;text-align:left;font-family:"Roboto Mono",monospace;font-size:15px;font-weight:400;background:var(--code);border-radius:10px;padding:10px 12px}
+.plot{width:100%;aspect-ratio:4/3;background:var(--panel);border-radius:12px;display:block}
+</style>
+</head>
+<body>
+
+<nav class="toc" aria-label="Chapter sections"><div class="wrap">
+<a class="brand" href="index.html">Modular Worlds</a><a href="#landing">Landing</a><a href="#explore">Explore</a><a href="#prophecies">Prophecies</a><a href="#theory">Every solution</a><a href="#tolls">The toll theorem</a><a href="#arena">Arena</a><a href="#culture">Culture</a><a href="#problems">Problems</a><a href="#code">Code quest</a><a href="#logbook">Logbook</a>
+</div></nav>
+
+<header class="band hero" id="landing"><div class="wrap">
+<div>
+<div class="kicker">Modular Worlds · Chapter 4</div>
+<h1>Diophantine Delta</h1>
+<p class="lede">A river splits into a hundred channels, every crossing has a toll, and the ferry never gives change.</p>
+<div class="episode" aria-label="Episode 4 opening scene">
+<p class="stage">Morning fog over a maze of channels. Every ferry flies the same black flag. At the first dock, a painted sign: "Fives and sevens only. NO CHANGE."</p>
+<p><span class="who">Diego:</span> So yesterday we could put weights on both pans. Today money only goes one way.</p>
+<p><span class="who">El Gran Pesado</span> <span class="stage">(stepping off a ferry, counting coins)</span>: The Delta mints two coins: the oxygen five and the nitrogen seven. Pay any toll exactly, and you cross. Overpay, and the river keeps the rest.</p>
+<p><span class="who">Sofía:</span> And if the toll is one?</p>
+<p><span class="who">El Gran Pesado:</span> Then you swim. Some tolls cannot be paid. Most can. I will tell you a secret: there is a <b>last</b> toll nobody can pay. Every toll above it, anyone can pay.</p>
+<p><span class="who">Kevin:</span> A last one? Out of infinitely many numbers?</p>
+<p><span class="who">Ana</span> <span class="stage">(already writing columns of numbers)</span>: Give me five columns and I'll show you where it is.</p>
+</div>
+</div>
+
+<section class="forge" aria-labelledby="tb-h">
+<h3 id="tb-h" style="margin:0 0 4px">The toll board</h3>
+<p class="small" style="margin:0">Each column holds the tolls with the same leftover mod the smaller coin. Press a toll to see how to pay it.</p>
+<div class="ctrl" style="margin-top:8px">
+<div><label for="tpair">Coins</label><select id="tpair"><option value="5,7">5 and 7 (the Delta)</option><option value="3,5">3 and 5</option><option value="4,7">4 and 7</option><option value="3,8">3 and 8</option><option value="5,8">5 and 8</option><option value="6,9">6 and 9</option></select></div>
+</div>
+<div class="tolls" id="tolls" role="group" aria-label="Toll board"></div>
+<div class="legend2"><span><i></i>payable</span><span><i class="no"></i>not payable</span><span><i class="stair"></i>first payable in its column</span><span><i class="frob"></i>the last toll nobody can pay</span></div>
+<div class="status st2" id="tstat" aria-live="polite" style="margin-top:10px"></div>
+</section>
+</div></header>
+
+<section class="band" id="explore"><div class="wrap two">
+<div>
+<h2>Explore: which tolls can you pay?</h2>
+<p>A toll <i class="v">t</i> can be paid with <i class="v">x</i> fives and <i class="v">y</i> sevens when</p>
+<div class="math">t = 5x + 7y,   where now x ≥ 0 and y ≥ 0</div>
+<p>This is the smiths' balance from Euclid's Forge with one rule added: <b>no change</b>, so nothing goes on the other pan.</p>
+<ol>
+<li>Use the toll board. List every toll from 1 to 30 that <b>cannot</b> be paid. How many are there? What is the largest?</li>
+<li>Look down each column. Once a column has one payable toll, why is everything below it payable too?</li>
+<li>Switch to coins 3 and 5, then 4 and 7. Guess a formula for the last unpayable toll in terms of the two coins.</li>
+<li>Now try 6 and 9. What goes wrong, and why does the Forge already know the answer?</li>
+<li>Pick a payable toll, like 70. How many different ways can you pay it?</li>
+</ol>
+</div>
+<aside class="box tool">
+<h3>Proof toolkit: organise by leftovers</h3>
+<p>When a problem mixes a number <i class="v">a</i> with many others, sort everything by its leftover mod <i class="v">a</i>. Adding <i class="v">a</i> never changes the leftover, so each leftover class becomes a single column that you can climb one step at a time.</p>
+<p style="margin:0">That is exactly what the toll board does with the 5-coin. In Chapter 6 these columns get a name: <b>congruence classes</b>.</p>
+</aside>
+</div></section>
+
+<section class="band alt" id="prophecies"><div class="wrap">
+<h2>Prophecies to seal</h2>
+<p>Pick a confidence for each card before you read on. Your choices stay in this browser only. Each card names the section that settles it.</p>
+<div class="cards" id="cards"></div>
+</div></section>
+
+<section class="band" id="theory"><div class="wrap">
+<h2>Every solution of <i class="v">ax</i> + <i class="v">by</i> = <i class="v">c</i></h2>
+<div class="two">
+<div>
+<p>An equation where only integer answers count is called <b>Diophantine</b>. The Forge told us when <i class="v">ax</i> + <i class="v">by</i> = <i class="v">c</i> has a solution: exactly when gcd(<i class="v">a</i>, <i class="v">b</i>) | <i class="v">c</i>. Today we find <b>all</b> of them. First, a lemma that the rest of the course leans on.</p>
+<div class="box thm"><h3>Lemma 4.1 (Euclid's lemma)</h3>
+<p style="margin:0">If <i class="v">a</i> | <i class="v">bc</i> and gcd(<i class="v">a</i>, <i class="v">b</i>) = 1, then <i class="v">a</i> | <i class="v">c</i>.</p></div>
+<div class="pf"><p><b>Proof.</b> By Bézout, <i class="v">ax</i> + <i class="v">by</i> = 1 for some integers <i class="v">x</i>, <i class="v">y</i>. Multiply by <i class="v">c</i>: <i class="v">acx</i> + <i class="v">bcy</i> = <i class="v">c</i>. The number <i class="v">a</i> divides <i class="v">acx</i>, and it divides <i class="v">bcy</i> because <i class="v">a</i> | <i class="v">bc</i>. So <i class="v">a</i> divides their sum, <i class="v">c</i>.</p></div>
+<div class="box thm"><h3>Theorem 4.2 (every solution)</h3>
+<p style="margin:0">Let <i class="v">d</i> = gcd(<i class="v">a</i>, <i class="v">b</i>) and suppose (<i class="v">x</i><sub>0</sub>, <i class="v">y</i><sub>0</sub>) solves <i class="v">ax</i> + <i class="v">by</i> = <i class="v">c</i>. Then the solutions are exactly</p>
+<div class="math" style="margin:8px 0 0">x = x₀ + (b/d)·t,   y = y₀ − (a/d)·t,   t any integer.</div></div>
+<div class="pf"><p><b>Proof.</b> These all work: the extra terms add <i class="v">a</i>(<i class="v">b</i>/<i class="v">d</i>)<i class="v">t</i> − <i class="v">b</i>(<i class="v">a</i>/<i class="v">d</i>)<i class="v">t</i> = 0. Conversely, take any solution (<i class="v">x</i>, <i class="v">y</i>). Subtracting, <i class="v">a</i>(<i class="v">x</i> − <i class="v">x</i><sub>0</sub>) = <i class="v">b</i>(<i class="v">y</i><sub>0</sub> − <i class="v">y</i>). Divide by <i class="v">d</i>: (<i class="v">a</i>/<i class="v">d</i>)(<i class="v">x</i> − <i class="v">x</i><sub>0</sub>) = (<i class="v">b</i>/<i class="v">d</i>)(<i class="v">y</i><sub>0</sub> − <i class="v">y</i>). Now <i class="v">a</i>/<i class="v">d</i> and <i class="v">b</i>/<i class="v">d</i> are coprime, so by Euclid's lemma <i class="v">b</i>/<i class="v">d</i> divides <i class="v">x</i> − <i class="v">x</i><sub>0</sub>. Call the quotient <i class="v">t</i>; substituting back gives <i class="v">y</i> = <i class="v">y</i><sub>0</sub> − (<i class="v">a</i>/<i class="v">d</i>)<i class="v">t</i>.</p></div>
+<p><b>On the Delta:</b> 100 = 5·20 + 7·0, so every way to write 100 is <i class="v">x</i> = 20 + 7<i class="v">t</i>, <i class="v">y</i> = −5<i class="v">t</i>. Paying without change needs <i class="v">x</i>, <i class="v">y</i> ≥ 0, which leaves <i class="v">t</i> = 0, −1, −2: (20, 0), (13, 5) and (6, 10). Three ways, no more.</p>
+</div>
+<div>
+<h3>Try it: solve and see the line</h3>
+<div class="ctrl" style="margin-top:0">
+<div><label for="sa">a</label><input id="sa" type="number" value="5" min="1" max="999"></div>
+<div><label for="sb">b</label><input id="sb" type="number" value="7" min="1" max="999"></div>
+<div><label for="sc">c</label><input id="sc" type="number" value="100" min="0" max="99999"></div>
+<button class="primary" id="srun">Solve</button>
+</div>
+<canvas class="plot" id="plot" role="img" aria-label="Solutions on a line"></canvas>
+<p class="small">Every solution is a lattice point on the line <i class="v">ax</i> + <i class="v">by</i> = <i class="v">c</i>, and neighbouring solutions are evenly spaced. Filled points in the shaded corner (<i class="v">x</i>, <i class="v">y</i> ≥ 0) are ways to pay without change.</p>
+<div class="status st2" id="sres" aria-live="polite"></div>
+<div class="box lab" style="margin-top:16px"><h3>Lab note: balancing reactions</h3>
+<p>Chemists solve Diophantine equations every day. Burning methane: <i class="v">x</i> CH<sub>4</sub> + <i class="v">y</i> O<sub>2</sub> → <i class="v">z</i> CO<sub>2</sub> + <i class="v">w</i> H<sub>2</sub>O. Each element must balance, and you can't burn half a molecule:</p>
+<div class="math">carbon:    x = z
+hydrogen: 4x = 2w
+oxygen:   2y = 2z + w</div>
+<p style="margin:0">The smallest positive solution is <i class="v">x</i> = 1, <i class="v">y</i> = 2, <i class="v">z</i> = 1, <i class="v">w</i> = 2: CH<sub>4</sub> + 2 O<sub>2</sub> → CO<sub>2</sub> + 2 H<sub>2</sub>O. Every other solution is a multiple of it. Try N<sub>2</sub> + H<sub>2</sub> → NH<sub>3</sub>, the reaction behind ammonia fertilizer.</p></div>
+</div>
+</div>
+</div></section>
+
+<section class="band alt" id="tolls"><div class="wrap two">
+<div>
+<h2>The toll theorem</h2>
+<p>From now on the coins <i class="v">a</i>, <i class="v">b</i> are coprime, and a toll is <b>payable</b> if <i class="v">t</i> = <i class="v">ax</i> + <i class="v">by</i> with <i class="v">x</i>, <i class="v">y</i> ≥ 0. Write <i class="v">N</i> = <i class="v">ab</i> − <i class="v">a</i> − <i class="v">b</i>; for the Delta, <i class="v">N</i> = 35 − 5 − 7 = 23.</p>
+<div class="box thm"><h3>Theorem 4.3 (the mirror)</h3>
+<p style="margin:0">For every integer <i class="v">t</i>, exactly one of <i class="v">t</i> and <i class="v">N</i> − <i class="v">t</i> is payable.</p></div>
+<div class="pf"><p><b>Proof.</b> By Theorem 4.2 the solutions of <i class="v">ax</i> + <i class="v">by</i> = <i class="v">t</i> have <i class="v">x</i> going up in steps of <i class="v">b</i>, so exactly one solution has 0 ≤ <i class="v">x</i> ≤ <i class="v">b</i> − 1. Call it the <i>standard</i> solution. Every other solution has a larger <i class="v">x</i> and a smaller <i class="v">y</i>, or a negative <i class="v">x</i>. So <i class="v">t</i> is payable exactly when its standard solution has <i class="v">y</i> ≥ 0.</p>
+<p>Now compute <i class="v">N</i> − <i class="v">t</i> = <i class="v">ab</i> − <i class="v">a</i> − <i class="v">b</i> − <i class="v">ax</i> − <i class="v">by</i> = <i class="v">a</i>(<i class="v">b</i> − 1 − <i class="v">x</i>) + <i class="v">b</i>(−1 − <i class="v">y</i>). Since 0 ≤ <i class="v">b</i> − 1 − <i class="v">x</i> ≤ <i class="v">b</i> − 1, this is the standard solution for <i class="v">N</i> − <i class="v">t</i>. It is payable exactly when −1 − <i class="v">y</i> ≥ 0, that is, when <i class="v">y</i> &lt; 0: exactly when <i class="v">t</i> is not payable.</p></div>
+</div>
+<div>
+<div class="box thm"><h3>Corollary 4.4 (Sylvester's toll theorem)</h3>
+<p style="margin:0">For coprime coins <i class="v">a</i>, <i class="v">b</i>: the largest unpayable toll is <i class="v">ab</i> − <i class="v">a</i> − <i class="v">b</i>, and exactly (<i class="v">a</i> − 1)(<i class="v">b</i> − 1)/2 tolls are unpayable.</p></div>
+<div class="pf"><p><b>Proof.</b> Negative tolls are never payable. So for <i class="v">t</i> &gt; <i class="v">N</i>, the mirror <i class="v">N</i> − <i class="v">t</i> is negative and unpayable, which makes <i class="v">t</i> payable. And <i class="v">N</i> itself is unpayable, because its mirror 0 is payable (pay nothing). So <i class="v">N</i> is the last unpayable toll.</p>
+<p>Every unpayable toll lies in 0, 1, …, <i class="v">N</i>, and the mirror pairs these <i class="v">N</i> + 1 numbers so that each pair has one payable and one unpayable toll. So exactly (<i class="v">N</i> + 1)/2 = (<i class="v">a</i> − 1)(<i class="v">b</i> − 1)/2 are unpayable. For the Delta, that is 4·6/2 = 12.</p></div>
+<p><b>See it on the board.</b> Mirror pairs add up to 23: 1 and 22, 2 and 21, … , 11 and 12. In each pair, one toll is payable and one is not. Check a few on the toll board.</p>
+<div class="box tool"><h3>The columns proof, for your crew</h3>
+<p style="margin:0">Ana's way, with five columns: column <i class="v">r</i> (leftover <i class="v">r</i> mod 5) starts being payable at the first multiple of 7 in it, namely 0, 21, 7, 28, 14. The latest start is 28 = 4·7, so the last gap is just above it: 28 − 5 = 23. Turn this into a proof of <i class="v">ab</i> − <i class="v">a</i> − <i class="v">b</i> for any coprime coins.</p></div>
+</div>
+</div></section>
+
+<section class="band" id="arena"><div class="wrap game">
+<div>
+<h2>Arena: the Mint Game</h2>
+<p>El Gran Pesado runs the Delta mint. The coins on the table make some tolls payable. Players take turns <b>minting a new coin</b>: its value must be a toll that is still unpayable. After each new coin, more tolls become payable. Whoever is forced to mint the 1-coin loses (with a 1-coin, every toll is payable and the mint goes broke).</p>
+<p>You mint first. El Gran Pesado never makes a mistake.</p>
+<div class="ctrl" style="margin-top:6px">
+<div><label for="mstart">Coins on the table</label><select id="mstart"><option value="5,7">5 and 7</option><option value="3,7">3 and 7</option><option value="3,8">3 and 8</option><option value="4,7">4 and 7</option><option value="5,8">5 and 8</option><option value="4,9">4 and 9</option></select></div>
+<button class="primary" id="mnew">New game</button>
+<button id="mhint">Ask Lucía</button>
+</div>
+<div class="box tool" style="margin-top:18px">
+<h3>Strategy question (Cartographer)</h3>
+<p style="margin:0">Here is a surprise: from every starting table, the player who mints first can force a win. Prove it without finding the winning move. Hint: what does minting the <i>largest</i> unpayable toll change? If that move loses, what does that tell you about your opponent's replies? (This argument is called <b>strategy stealing</b>.)</p>
+</div>
+</div>
+<div>
+<p class="small" style="margin:0">Coins minted so far:</p>
+<div class="minted" id="minted" aria-label="Coins minted so far"></div>
+<p class="small" style="margin:10px 0 0">Unpayable tolls you may mint (crossed out once they become payable):</p>
+<div class="coins" id="mtiles"></div>
+<div class="status" id="mstat" aria-live="polite"></div>
+<ol class="log" id="mlog" aria-label="Move history"></ol>
+</div>
+</div></section>
+
+<section class="band alt" id="culture"><div class="wrap two">
+<div>
+<h2>Culture: the oldest word problems</h2>
+<p><b>Alexandria, about 250 CE.</b> Diophantus wrote the <i>Arithmetica</i>, a collection of problems solved in numbers. He looked for rational answers, not only whole ones, but his name stuck to integer equations anyway.</p>
+<p><b>China, 5th century.</b> Zhang Qiujian's <i>Mathematical Manual</i> poses the Hundred Fowls problem: a rooster costs 5 coins, a hen 3, and three chicks cost 1. Buy 100 birds with 100 coins. Counting (roosters, hens, chicks), there are four answers, one of them with no roosters at all: (0, 25, 75), (4, 18, 78), (8, 11, 81), (12, 4, 84).</p>
+<p><b>India, 499 and 628 CE.</b> Āryabhaṭa's <i>kuṭṭaka</i> (the pulverizer) and Brahmagupta's work solve <i class="v">ax</i> + <i class="v">by</i> = <i class="v">c</i> by running Euclid's divisions backwards: the method of Chapter 3.</p>
+<p><b>England, 1884.</b> James Joseph Sylvester published the count (<i class="v">a</i> − 1)(<i class="v">b</i> − 1)/2 as a problem in the <i>Educational Times</i>. Georg Frobenius later asked the same question for any number of coins, which is why the largest unpayable amount is called the <b>Frobenius number</b>.</p>
+</div>
+<aside class="box thm">
+<h3>Discuss with your crew</h3>
+<p>For three or more coins, no simple formula for the Frobenius number is known. A famous example: chicken nuggets once sold in boxes of 6, 9 and 20, and the largest amount you could not buy exactly is 43. Find it with the code quest.</p>
+<p style="margin:0">Where else in daily life do you pay "without change"? Bus fares, stamps, packs of tortillas? Pick one, find its coins, and compute its last unpayable amount.</p>
+</aside>
+</div></section>
+
+<section class="band" id="problems"><div class="wrap">
+<h2>Problems</h2>
+<p>Deckhand problems are for everyone. Navigator and Cartographer problems are where you stretch.</p>
+<div class="tiers">
+<div class="tier"><h3>Deckhand</h3><ol>
+<li>Find every integer solution of 5<i class="v">x</i> + 7<i class="v">y</i> = 100 with <i class="v">x</i>, <i class="v">y</i> ≥ 0.
+<details><summary>Answer</summary>(20, 0), (13, 5), (6, 10).</details></li>
+<li>Can a toll of 47 be paid with fives and sevens? Of 23 + 35 = 58?
+<details><summary>Answer</summary>47 = 5·8 + 7·1. And 58 = 5·10 + 7·1 (every toll above 23 is payable).</details></li>
+<li>Does 6<i class="v">x</i> + 15<i class="v">y</i> = 40 have integer solutions?
+<details><summary>Answer</summary>No: gcd(6, 15) = 3 does not divide 40.</details></li>
+<li>List the unpayable tolls with coins 3 and 5, and check Corollary 4.4.
+<details><summary>Answer</summary>1, 2, 4, 7. The largest is 15 − 3 − 5 = 7, and there are 2·4/2 = 4.</details></li>
+</ol></div>
+<div class="tier"><h3>Navigator</h3><ol>
+<li>Prove directly that <i class="v">ab</i> − <i class="v">a</i> − <i class="v">b</i> is unpayable.
+<details><summary>Hint</summary>If ab − a − b = ax + by with x, y ≥ 0, then a(x + 1) + b(y + 1) = ab. Use Euclid's lemma to show b | x + 1 and a | y + 1.</details></li>
+<li>Show that Euclid's lemma fails without the coprime condition: find <i class="v">a</i> | <i class="v">bc</i> with <i class="v">a</i> ∤ <i class="v">b</i> and <i class="v">a</i> ∤ <i class="v">c</i>.</li>
+<li>Solve the Hundred Fowls problem, and prove there are no other answers.</li>
+<li>Balance N<sub>2</sub> + H<sub>2</sub> → NH<sub>3</sub> and C<sub>3</sub>H<sub>8</sub> + O<sub>2</sub> → CO<sub>2</sub> + H<sub>2</sub>O with the smallest whole numbers.
+<details><summary>Answer</summary>N₂ + 3 H₂ → 2 NH₃; C₃H₈ + 5 O₂ → 3 CO₂ + 4 H₂O.</details></li>
+</ol></div>
+<div class="tier"><h3>Cartographer</h3><ol>
+<li>Prove that the first player always wins the Mint Game (strategy stealing), then find the unique winning first move from 5 and 7 with the code quest.</li>
+<li>Nuggets: with boxes of 6, 9 and 20, find the largest amount you can't buy and prove it. Then explore other triples. Is there a pattern?</li>
+<li>How many ways can you pay a toll <i class="v">n</i> with coins <i class="v">a</i> and <i class="v">b</i>? Show the answer is always ⌊<i class="v">n</i>/<i class="v">ab</i>⌋ or ⌊<i class="v">n</i>/<i class="v">ab</i>⌋ + 1.</li>
+</ol></div>
+</div>
+</div></section>
+
+<section class="band alt" id="code"><div class="wrap">
+<h2>Code quest: the Delta in Python</h2>
+<p>These cells run real Python in your browser. The first run loads Python (about 10 MB, once). Edit anything and run again.</p>
+<div id="cells"></div>
+<p class="small" id="pystat" aria-live="polite"></p>
+</div></section>
+
+<section class="band" id="logbook"><div class="wrap two">
+<div>
+<h2>Logbook</h2>
+<ul class="log2">
+<li><b>Euclid's lemma (4.1):</b> if <i class="v">a</i> | <i class="v">bc</i> and gcd(<i class="v">a</i>, <i class="v">b</i>) = 1, then <i class="v">a</i> | <i class="v">c</i>.</li>
+<li><b>Every solution (4.2):</b> <i class="v">x</i> = <i class="v">x</i><sub>0</sub> + (<i class="v">b</i>/<i class="v">d</i>)<i class="v">t</i>, <i class="v">y</i> = <i class="v">y</i><sub>0</sub> − (<i class="v">a</i>/<i class="v">d</i>)<i class="v">t</i>.</li>
+<li><b>The mirror (4.3):</b> exactly one of <i class="v">t</i> and <i class="v">ab</i> − <i class="v">a</i> − <i class="v">b</i> − <i class="v">t</i> is payable.</li>
+<li><b>Sylvester (4.4):</b> the last unpayable toll is <i class="v">ab</i> − <i class="v">a</i> − <i class="v">b</i>; there are (<i class="v">a</i> − 1)(<i class="v">b</i> − 1)/2 of them.</li>
+</ul>
+</div>
+<div>
+<h3>Prophecies opened in this chapter</h3>
+<ul class="log2">
+<li>"Every toll above 23 can be paid with fives and sevens": <b>fulfilled</b> (Corollary 4.4).</li>
+<li>"Exactly half of the tolls from 0 to 23 can be paid": <b>fulfilled</b> (the mirror pairs them up: 12 of 24).</li>
+<li>"If 5<i class="v">x</i> + 7<i class="v">y</i> = 1 has a solution, it has exactly two": <b>broken</b> (infinitely many, Theorem 4.2).</li>
+<li>"With coins 6 and 9 there is a last unpayable toll": <b>broken</b> (every toll that is not a multiple of 3 is unpayable).</li>
+</ul>
+<p class="stage" style="margin-top:16px">Ana drops two sevens and two fives into El Gran Pesado's palm: 24. "One more than your last toll." The ferry pushes off. Upriver, the channels narrow toward a ring of mountains, each peak a single, unbreakable stone.</p>
+</div>
+</div></section>
+
+<section class="band"><div class="wrap pager"><a href="ch3.html">← Chapter 3: Euclid's Forge</a><a href="index.html">Contents</a><a href="index.html#map">Chapter 5: Prime Peaks (coming) →</a></div></section>
+<footer class="band"><div class="wrap">Modular Worlds, Chapter 4 · draft · UCI Math CEO</div></footer>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js" defer></script>
+<script src="book.js"></script>
+<script>
+{
+const {$,esc,gcd,egcd}=MW;
+const probe=document.createElement('span');probe.style.display='none';document.body.appendChild(probe);
+const col=v=>{probe.style.color=`var(${v})`;return getComputedStyle(probe).color};
+const payableTable=(gens,lim)=>{const r=new Array(lim+1).fill(false);r[0]=true;for(let t=1;t<=lim;t++)r[t]=gens.some(g=>t>=g&&r[t-g]);return r};
+
+/* ---------- toll board ---------- */
+const T={a:5,b:7,sel:-1};
+function ways(t){const out=[];for(let x=0;x*T.a<=t;x++){const r=t-x*T.a;if(r%T.b===0)out.push([x,r/T.b])}return out}
+function drawTolls(){
+  const {a,b}=T,d=gcd(a,b),rows=d===1?b+2:9,lim=a*rows-1,pay=payableTable([a,b],lim);
+  const N=d===1?a*b-a-b:-1;
+  const firstInCol=new Set();if(d===1)for(let r=0;r<a;r++){for(let t=r;t<=lim;t+=a)if(pay[t]){firstInCol.add(t);break}}
+  const box=$('#tolls');box.style.gridTemplateColumns=`repeat(${a},minmax(0,1fr))`;
+  let h=Array.from({length:a},(_,r)=>`<div class="hd">r = ${r}</div>`).join('');
+  for(let t=0;t<=lim;t++){const c=['pay'];if(!pay[t])c[0]='no';if(t===N)c.push('frob');if(firstInCol.has(t)&&t>0)c.push('stair');
+    h+=`<button class="${c.join(' ')}" data-t="${t}" aria-pressed="${t===T.sel}" aria-label="Toll ${t}: ${pay[t]?'payable':'not payable'}${t===N?', the last unpayable toll':''}">${t}</button>`}
+  box.innerHTML=h;
+  const gapsN=pay.filter(v=>!v).length;
+  if(T.sel<0)$('#tstat').textContent=d===1?`Coins ${a} and ${b}: ${gapsN} unpayable tolls, and the last one is ${N} = ${a}·${b} − ${a} − ${b}.`:`Coins ${a} and ${b}: gcd = ${d}, so every toll that is not a multiple of ${d} is unpayable. There is no last unpayable toll.`;
+}
+$('#tolls').addEventListener('click',e=>{const bt=e.target.closest('button');if(!bt)return;T.sel=+bt.dataset.t;const w=ways(T.sel);drawTolls();
+  $('#tstat').textContent=w.length?`Toll ${T.sel}: ${w.length} way${w.length>1?'s':''} to pay. `+w.map(([x,y])=>`${x}×${T.a} + ${y}×${T.b}`).join(';  '):`Toll ${T.sel} cannot be paid with ${T.a}s and ${T.b}s.`+(gcd(T.a,T.b)===1&&T.sel<=T.a*T.b-T.a-T.b?` Its mirror ${T.a*T.b-T.a-T.b-T.sel} can be.`:'')});
+$('#tpair').addEventListener('change',e=>{[T.a,T.b]=e.target.value.split(',').map(Number);T.sel=-1;drawTolls()});
+drawTolls();
+
+/* ---------- prophecies ---------- */
+MW.cards($('#cards'),[
+ {id:'p41',t:'Every toll above 23 can be paid with fives and sevens, without change.',s:'Settled by Corollary 4.4'},
+ {id:'p42',t:'Exactly half of the tolls from 0 to 23 can be paid.',s:'Settled by Theorem 4.3'},
+ {id:'p43',t:'If 5x + 7y = 1 has an integer solution, it has exactly two.',s:'Settled by Theorem 4.2'},
+ {id:'p44',t:'With coins 6 and 9 there is a last toll nobody can pay.',s:'Settled in Explore, question 4'}],'mw-ch4',i=>'Prophecy 4.'+(i+1));
+
+/* ---------- solver + plot ---------- */
+function solve(){
+  const a=parseInt($('#sa').value,10),b=parseInt($('#sb').value,10),c=parseInt($('#sc').value,10);
+  const cv=$('#plot');
+  if(!(a>0&&b>0&&c>=0)){$('#sres').textContent='Enter positive a, b and c ≥ 0.';return}
+  const [d,u,v]=egcd(a,b);
+  const W=cv.clientWidth||480,H=cv.clientHeight||360,dpr=window.devicePixelRatio||1;cv.width=W*dpr;cv.height=H*dpr;const g=cv.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,W,H);
+  if(c%d){$('#sres').textContent=`gcd(${a}, ${b}) = ${d} does not divide ${c}: no integer solutions at all.`;cv.setAttribute('aria-label','No solutions to draw.');return}
+  const k=c/d,x0=u*k,y0=v*k,sb=b/d,sa=a/d;
+  const tStd=Math.floor(-x0/sb)+(((-x0)%sb===0)?0:1); /* smallest t with x >= 0 */
+  const pts=[];for(let t=tStd-3;t<=tStd+Math.max(3,Math.floor(c/(a*sb))+3)&&pts.length<12;t++)pts.push([x0+sb*t,y0-sa*t]);
+  const nonneg=[];for(let t=tStd;;t++){const x=x0+sb*t,y=y0-sa*t;if(y<0)break;nonneg.push([x,y]);if(nonneg.length>40)break}
+  let xs=pts.map(p=>p[0]).concat([0]),ys=pts.map(p=>p[1]).concat([0]);
+  let x1=Math.min(...xs),x2=Math.max(...xs),y1=Math.min(...ys),y2=Math.max(...ys);const px=(x2-x1)*0.08+1,py=(y2-y1)*0.08+1;x1-=px;x2+=px;y1-=py;y2+=py;
+  const sx=x=>(x-x1)/(x2-x1)*(W-30)+15,sy=y=>H-15-(y-y1)/(y2-y1)*(H-30);
+  g.fillStyle=col('--sea-soft');g.fillRect(sx(0),15,W-15-sx(0),sy(0)-15);
+  g.strokeStyle=col('--mute');g.lineWidth=1;g.beginPath();g.moveTo(15,sy(0));g.lineTo(W-15,sy(0));g.moveTo(sx(0),15);g.lineTo(sx(0),H-15);g.stroke();
+  g.fillStyle=col('--mute');g.font='12px Roboto, sans-serif';g.fillText('x',W-24,sy(0)-6);g.fillText('y',sx(0)+6,22);
+  g.strokeStyle=col('--brass');g.lineWidth=2;g.beginPath();g.moveTo(sx(x1),sy((c-a*x1)/b));g.lineTo(sx(x2),sy((c-a*x2)/b));g.stroke();
+  pts.forEach(([x,y])=>{const ok=x>=0&&y>=0;g.beginPath();g.arc(sx(x),sy(y),6,0,7);g.fillStyle=ok?col('--sea'):col('--bg');g.fill();g.strokeStyle=ok?col('--sea'):col('--ember');g.lineWidth=2;g.stroke();
+    g.fillStyle=col('--ink');g.font='12px "Roboto Mono", monospace';{const lb=`(${x<0?'−'+(-x):x}, ${y<0?'−'+(-y):y})`,tw=g.measureText(lb).width;g.fillText(lb,sx(x)+8+tw>W-4?sx(x)-8-tw:sx(x)+8,sy(y)-8)}});
+  const sign=n=>n<0?`− ${-n}`:`+ ${n}`,num=n=>n<0?`−${-n}`:`${n}`;const X0=x0+sb*tStd,Y0=y0-sa*tStd;
+  $('#sres').textContent=`gcd(${a}, ${b}) = ${d}. One solution: (${num(X0)}, ${num(Y0)}).\nAll solutions: x = ${num(X0)} ${sign(sb)}t, y = ${num(Y0)} ${sign(-sa)}t.\n`+(nonneg.length?`With x, y ≥ 0: ${nonneg.length>40?'more than 40':nonneg.length} solution${nonneg.length>1?'s':''}: `+nonneg.slice(0,12).map(p=>`(${p[0]}, ${p[1]})`).join(', ')+(nonneg.length>12?', …':''):`No solution with x, y ≥ 0: ${c} cannot be paid without change.`);
+  cv.setAttribute('aria-label',`Line ${a}x + ${b}y = ${c} with lattice points ${pts.map(p=>'('+p[0]+', '+p[1]+')').join(', ')}. ${nonneg.length} with x and y at least 0.`);
+}
+$('#srun').addEventListener('click',solve);new ResizeObserver(solve).observe($('#plot'));MW.onTheme(solve);
+
+/* ---------- Mint Game (Sylver coinage from a starting table) ---------- */
+const M={start:[5,7],gaps:[],minted:[],over:false,memo:new Map()};
+function maskOf(list){return list.reduce((m,t)=>m|(1<<M.gaps.indexOf(t)),0)}
+function after(rem,t){const R=new Set(rem);return rem.filter(x=>{for(let k=1;k*t<=x;k++){if(!R.has(x-k*t))return false}return true})}
+function winning(rem){ /* rem: still-unpayable tolls; true if the player to move can force a win */
+  const key=maskOf(rem);if(M.memo.has(key))return M.memo.get(key);
+  let w=false;for(const t of rem){if(t!==1&&!winning(after(rem,t))){w=true;break}}
+  M.memo.set(key,w);return w}
+function gapsWith(gens,rem){const lim=Math.max(...rem,1);const p=payableTable(gens,lim);return rem.filter(x=>!p[x])}
+function current(){return gapsWith(M.start.concat(M.minted),M.gaps)}
+function drawM(){
+  const rem=current();
+  $('#minted').innerHTML=M.start.concat(M.minted).map((c,i)=>`<span>${c}</span>`).join('');
+  $('#mtiles').innerHTML=M.gaps.map(t=>`<button class="tile" data-t="${t}" ${rem.includes(t)&&!M.over?'':'disabled'} aria-label="Mint a ${t}-coin${rem.includes(t)?'':' (already payable)'}">${t}</button>`).join('');
+}
+function logM(s){const li=document.createElement('li');li.textContent=s;$('#mlog').appendChild(li);$('#mlog').scrollTop=1e6}
+function mint(t,who){M.minted.push(t);logM(`${who} ${who==='You'?'mint':'mints'} a ${t}-coin.`);const rem=current();
+  if(t===1){M.over=true;$('#mstat').textContent=who==='You'?'You had to mint the 1-coin. El Gran Pesado wins this round.':'El Gran Pesado had to mint the 1-coin. You win the Delta!';}
+  return rem}
+$('#mtiles').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||M.over||b.disabled)return;
+  const rem=mint(+b.dataset.t,'You');drawM();if(M.over)return;
+  $('#mstat').textContent='El Gran Pesado is thinking…';
+  setTimeout(()=>{const opts=rem.filter(t=>t!==1);let pick;
+    if(!opts.length)pick=1;else{pick=opts.find(t=>!winning(after(rem,t)));
+      if(pick===undefined)pick=opts.reduce((best,t)=>{const n=after(rem,t).length;return n>best[1]?[t,n]:best},[opts[0],-1])[0]}
+    const r2=mint(pick,'El Gran Pesado');drawM();if(M.over)return;
+    $('#mstat').textContent=r2.length===1?'Only the 1-coin is left to mint. You must mint it.':'Your move: mint a coin.';},450)});
+$('#mhint').addEventListener('click',()=>{if(M.over){$('#mstat').textContent='Lucía: "Start a new game and I\'ll look at the table."';return}
+  const w=winning(current());$('#mstat').textContent=w?'Lucía: "You can still force a win from here. Some move works. Which one?"':'Lucía: "Against perfect play, every move loses from here. Make him work for it."'});
+function newM(){M.start=$('#mstart').value.split(',').map(Number);const lim=M.start[0]*M.start[1];const p=payableTable(M.start,lim);
+  M.gaps=[];for(let t=1;t<=lim;t++)if(!p[t])M.gaps.push(t);M.minted=[];M.over=false;M.memo=new Map();$('#mlog').innerHTML='';$('#mstat').textContent='Your move: mint a coin.';drawM()}
+$('#mnew').addEventListener('click',newM);newM();
+
+/* ---------- Python cells ---------- */
+const CELLS=[
+{t:'Cell 1 · every solution, and the ones without change',c:`def solve(a, b, c):
+    """All solutions of a*x + b*y == c as (x0, y0, step_x, step_y), or None."""
+    g, x, y = ext_gcd(a, b)
+    if c % g:
+        return None
+    k = c // g
+    return (x * k, y * k, b // g, -(a // g))
+
+def pay_ways(a, b, c):
+    s = solve(a, b, c)
+    if s is None:
+        return []
+    x0, y0, sx, sy = s
+    t = -(x0 // sx)              # smallest t with x >= 0
+    out = []
+    while y0 + sy * t >= 0:
+        out.append((x0 + sx * t, y0 + sy * t))
+        t += 1
+    return out
+
+print(solve(5, 7, 100))
+print(pay_ways(5, 7, 100))
+print(pay_ways(5, 7, 23))`},
+{t:'Cell 2 · test Sylvester on many coin pairs',c:`def unpayable(coins, limit=500):
+    ok = [True] + [False] * limit
+    for t in range(1, limit + 1):
+        ok[t] = any(t >= c and ok[t - c] for c in coins)
+    return [t for t in range(1, limit + 1) if not ok[t]]
+
+for a in range(2, 10):
+    for b in range(a + 1, 14):
+        if gcd(a, b) == 1:
+            u = unpayable([a, b])
+            assert u[-1] == a*b - a - b and len(u) == (a-1)*(b-1)//2
+print("Sylvester checks out for every coprime pair tried.")
+print("coins 5, 7:", unpayable([5, 7]))`},
+{t:'Cell 3 · three coins: nuggets and beyond',c:`print("6, 9, 20:", unpayable([6, 9, 20])[-1])
+
+# Quest: find the triple of coins under 20 with the largest Frobenius number.
+best = (0, None)
+for a in range(2, 20):
+    for b in range(a + 1, 20):
+        for c in range(b + 1, 20):
+            if gcd(gcd(a, b), c) == 1:
+                f = unpayable([a, b, c], 400)
+                if f and f[-1] > best[0]:
+                    best = (f[-1], (a, b, c))
+print(best)`},
+{t:'Cell 4 · the Hundred Fowls',c:`# rooster 5 coins, hen 3 coins, 3 chicks for 1 coin; 100 birds for 100 coins
+for r in range(0, 21):
+    for h in range(0, 34):
+        c = 100 - r - h
+        if c >= 0 and c % 3 == 0 and 5*r + 3*h + c//3 == 100:
+            print("roosters", r, "hens", h, "chicks", c)`}];
+const SETUP=`def gcd(a, b):
+    while b:
+        a, b = b, a % b
+    return abs(a)
+
+def ext_gcd(a, b):
+    if b == 0:
+        return (a, 1, 0)
+    g, x, y = ext_gcd(b, a % b)
+    return (g, y, x - (a // b) * y)
+
+def unpayable(coins, limit=500):
+    ok = [True] + [False] * limit
+    for t in range(1, limit + 1):
+        ok[t] = any(t >= c and ok[t - c] for c in coins)
+    return [t for t in range(1, limit + 1) if not ok[t]]
+`;
+MW.cells($('#cells'),CELLS,{setup:SETUP,status:$('#pystat')});
+}
+</script>
+</body>
+</html>
