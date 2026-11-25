@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="rooms.css">
 <style>
 .piece .wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(18px,3vw,40px);align-items:start}
 @media(max-width:860px){.piece .wrap{grid-template-columns:minmax(0,1fr)}}
@@ -32,7 +33,7 @@ input[type=color]{width:40px;height:40px;border:1px solid var(--line);border-rad
 <body>
 
 <nav class="toc" aria-label="Loom sections"><div class="wrap">
-<a class="brand" href="index.html">Modular Worlds</a><a href="#beads">Bead bracelets</a><a href="#loom">The loom</a><a href="studio.html">The Studio</a>
+<a class="brand" href="index.html">Modular Worlds</a><a href="#beads">Bead bracelets</a><a href="#loom">The loom</a><a href="#khipu">The khipu</a><a href="studio.html">All rooms</a>
 </div></nav>
 
 <header class="band hero"><div class="wrap two">
@@ -81,6 +82,21 @@ input[type=color]{width:40px;height:40px;border:1px solid var(--line);border-rad
 <div class="still" id="l-out"></div>
 <div class="box tool" style="margin:0"><h3>Ask why</h3>
 <p style="margin:0">There is no true satin with <i class="v">n</i> = 4 or <i class="v">n</i> = 6. Prove it. Then explain what goes wrong when gcd(<i class="v">s</i>, <i class="v">n</i>) &gt; 1: look for warp threads that are never lifted, and imagine pulling on them.</p></div>
+</div>
+</div></section>
+
+<section class="band piece" id="khipu"><div class="wrap">
+<div><div class="easel wide"><canvas id="cv-k" role="img" aria-label="A khipu"></canvas></div>
+<p class="note">Cords hang from a main cord. Lowest position: units. Above it: tens, hundreds, thousands. A cluster of single knots shows a digit; in the units place a long knot with that many turns is used instead, and a figure-eight knot means 1. An empty position means 0.</p></div>
+<div class="panel">
+<div><div class="kicker">Chapters 0 and 1 · place value is the division algorithm</div><h2>The khipu</h2>
+<p class="note">In the Inka Empire, record keepers called <i>khipukamayuq</i> stored numbers in knotted cords. Each digit is a leftover: the units digit of <i class="v">n</i> is <i class="v">n</i> mod 10, the tens digit is (<i class="v">n</i> div 10) mod 10, and so on. Tie your own khipu, then read one.</p></div>
+<div class="field"><label class="lbl" for="kn">Numbers to tie (up to 6, separated by commas)</label><input type="text" id="kn" value="352, 1206, 47, 9" class="mono"></div>
+<div class="row"><button class="primary" id="ktie">Tie the khipu</button><button id="kquiz">Read a mystery khipu</button></div>
+<div id="kq" class="row" style="align-items:end"></div>
+<p class="status" id="kinfo" aria-live="polite"></p>
+<div class="row"><button id="kstill">Make a still</button></div>
+<div class="still" id="kout"></div>
 </div>
 </div></section>
 
@@ -140,6 +156,37 @@ function drawL(){const cv=$('#cv-loom'),[g,W]=ctx(cv),T=+lt.value,sw=+lsw.value,
   $('#l-info').textContent=msg;cv.setAttribute('aria-label',`Woven cloth, ${T} by ${T} threads, ${Lm.w} weave${Lm.w==='satin'?` with repeat ${n} and step ${s}`:Lm.w==='twill'?` repeating every ${n} threads`:''}, stripes ${sw} threads wide`)}
 swL();new ResizeObserver(drawL).observe($('#cv-loom'));
 MW.onTheme(()=>{drawB();drawL()});
+}
+</script>
+<script src="rooms.js"></script>
+<script>
+{
+const R=MWR,{$}=R;
+const CC=['#9c2c1c','#e0a019','#0c5f73','#2f7d4f','#7a4f9a','#b5651d','#14181b'];
+let K=[352,1206,47,9],quiz=null;
+function parse(t){return t.split(/[,\s]+/).map(x=>parseInt(x,10)).filter(x=>!isNaN(x)&&x>=0&&x<10000).slice(0,6)}
+function drawK(nums,showSum,labels){const cv=$('#cv-k'),[g,W,H]=R.ctx(cv);g.fillStyle=R.col('--panel');g.fillRect(0,0,W,H);
+  const cords=nums.concat(showSum?[nums.reduce((a,b)=>a+b,0)]:[]),n=cords.length,top=H*0.1,levels=[0.3,0.47,0.64,0.83].map(f=>H*f),dx=W/(n+1),kr=Math.max(4,Math.min(7,W/120));
+  g.strokeStyle='#5c3a1e';g.lineWidth=6;g.lineCap='round';g.beginPath();g.moveTo(W*0.04,top);g.lineTo(W*0.96,top);g.stroke();
+  cords.forEach((v,ci)=>{const x=dx*(ci+1),c=showSum&&ci===n-1?'#14181b':CC[ci%CC.length];
+    g.strokeStyle=c;g.lineWidth=4;g.beginPath();g.moveTo(x,top);g.bezierCurveTo(x-6,H*0.4,x+6,H*0.7,x,H*0.95);g.stroke();
+    const d=[Math.floor(v/1000)%10,Math.floor(v/100)%10,Math.floor(v/10)%10,v%10];
+    d.forEach((k,li)=>{const y=levels[li];if(!k)return;g.fillStyle=c;g.strokeStyle=c;
+      if(li<3){const h=(k-1)*kr*1.9;for(let j=0;j<k;j++){g.beginPath();g.arc(x,y-h/2+j*kr*1.9,kr,0,7);g.fill()}}
+      else if(k===1){g.lineWidth=3;g.beginPath();g.arc(x,y-kr,kr,0,7);g.stroke();g.beginPath();g.arc(x,y+kr,kr,0,7);g.stroke()}
+      else{const h=k*kr*1.15;g.beginPath();g.ellipse(x,y,kr*1.2,h/2+kr*0.4,0,0,7);g.fill();g.strokeStyle=R.col('--panel');g.lineWidth=1.5;for(let j=1;j<k;j++){const yy=y-h/2+j*h/k;g.beginPath();g.moveTo(x-kr*1.1,yy);g.lineTo(x+kr*1.1,yy);g.stroke()}}});
+    if(labels){g.fillStyle=R.col('--ink');g.font='700 14px "Roboto Mono", monospace';g.textAlign='center';g.fillText(showSum&&ci===n-1?`sum ${v}`:String(v),x,H*0.99)}});
+  ['thousands','hundreds','tens','units'].forEach((t,i)=>{g.fillStyle=R.col('--mute');g.font='12px Roboto, sans-serif';g.textAlign='left';g.fillText(t,4,levels[i]+4)});
+  cv.setAttribute('aria-label',labels?`Khipu with cords for ${nums.join(', ')}${showSum?' and a sum cord':''}`:`A mystery khipu with ${nums.length} cords`)}
+function tie(){K=parse($('#kn').value);if(!K.length){$('#kinfo').textContent='Enter whole numbers from 0 to 9999.';return}quiz=null;$('#kq').innerHTML='';drawK(K,true,true);
+  $('#kinfo').textContent=K.map(v=>`${v}: `+[1000,100,10,1].map(p=>Math.floor(v/p)%10).join(' | ')).join('\n')+`\nThe black cord on the right records the sum, ${K.reduce((a,b)=>a+b,0)}. Some real khipus record totals like this.`}
+$('#ktie').onclick=tie;
+$('#kquiz').onclick=()=>{quiz=Array.from({length:3},()=>Math.floor(Math.random()*(Math.random()<0.5?999:9999)));drawK(quiz,false,false);
+  $('#kq').innerHTML=quiz.map((_,i)=>`<div class="field"><label class="lbl" for="kq${i}">Cord ${i+1}</label><input type="number" id="kq${i}" style="width:6.5em"></div>`).join('')+'<button class="primary" id="kcheck">Check</button>';
+  $('#kinfo').textContent='Read each cord from the top down: thousands, hundreds, tens, units.';
+  $('#kcheck').onclick=()=>{const ok=quiz.map((v,i)=>+$('#kq'+i).value===v);$('#kinfo').textContent=ok.every(Boolean)?`All three right: ${quiz.join(', ')}. A true khipukamayuq.`:quiz.map((v,i)=>`Cord ${i+1}: ${ok[i]?'right':'not yet'}`).join('\n')+'\nCount the knots at each level again; an empty level is 0.';if(ok.every(Boolean))drawK(quiz,false,true)}};
+$('#kstill').onclick=()=>R.still('#cv-k','#kout','a khipu');
+tie();new ResizeObserver(()=>quiz?drawK(quiz,false,false):drawK(K,true,true)).observe($('#cv-k'));
 }
 </script>
 </body>

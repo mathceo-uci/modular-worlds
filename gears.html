@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Gear Shop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="rooms.css">
+</head>
+<body>
+<nav class="toc" aria-label="Gear Shop sections"><div class="wrap">
+<a class="brand" href="index.html">Modular Worlds</a><a href="#bench">The bench</a><a href="#why">Why it closes</a><a href="studio.html">All rooms</a>
+</div></nav>
+
+<header class="band hero"><div class="wrap two">
+<div>
+<div class="kicker">Modular Worlds · The Studio rooms · Chapter 3</div>
+<h1>The Gear Shop</h1>
+<p class="lede">In the smiths' quarter of Euclid's Forge, an old clockmaker sells toothed rings and wheels. Put a pen through a hole in a small wheel, roll it around inside a big ring, and a flower appears. How many petals? When does the pen come home? The answers are a gcd and an lcm.</p>
+</div>
+<aside class="box thm"><h3>The gear rule</h3>
+<p style="margin:0">A wheel with <i class="v">r</i> teeth rolling in a ring with <i class="v">R</i> teeth draws a figure with <b><i class="v">R</i> ÷ gcd(<i class="v">R</i>, <i class="v">r</i>)</b> petals, and closes after <b><i class="v">r</i> ÷ gcd(<i class="v">R</i>, <i class="v">r</i>)</b> trips around the ring.</p></aside>
+</div></header>
+
+<section class="band piece" id="bench"><div class="wrap">
+<div><div class="easel"><canvas id="cv" role="img" aria-label="A spirograph drawing"></canvas></div></div>
+<div class="panel">
+<div class="field"><span class="lbl">Clockmaker's favourites</span><div class="seg" id="pre"></div></div>
+<div class="field"><label class="lbl" for="R">Ring teeth R <output id="R-o"></output></label><input type="range" id="R" min="20" max="150" value="96"></div>
+<div class="field"><label class="lbl" for="r">Wheel teeth r <output id="r-o"></output></label><input type="range" id="r" min="5" max="149" value="36"></div>
+<div class="field"><label class="lbl" for="d">Pen hole (how far from the wheel's center) <output id="d-o"></output></label><input type="range" id="d" min="0" max="100" value="80"></div>
+<div class="field"><span class="lbl">The wheel rolls</span><div class="seg" id="side"></div></div>
+<div class="field"><span class="lbl">Colours: first trip, last trip, paper</span><div class="swatches">
+<label>first<input type="color" id="c1" value="#c8401a" aria-label="Colour of the first trip"></label>
+<label>last<input type="color" id="c2" value="#0c5f73" aria-label="Colour of the last trip"></label>
+<label>paper<input type="color" id="c3" value="#fffaf0" aria-label="Paper colour"></label></div></div>
+<div class="field"><label class="lbl" for="w">Pen width <output id="w-o"></output></label><input type="range" id="w" min="0.5" max="4" step="0.5" value="1.5"></div>
+<div class="row"><button class="primary" id="draw">Draw slowly</button><button id="layer" aria-pressed="false">Keep layers</button><button id="clear">Clean the paper</button><button id="still">Make a still</button></div>
+<p class="status" id="info" aria-live="polite"></p>
+<div class="still" id="out"></div>
+</div>
+</div></section>
+
+<section class="band alt" id="why"><div class="wrap two">
+<div>
+<h2>Why it closes: count teeth</h2>
+<p>Each time the wheel rolls one tooth, one tooth of the ring has been used. The pen is back where it started exactly when the wheel has turned a whole number of times <b>and</b> the contact point is back at the start of the ring. So the number of teeth rolled must be a multiple of <i class="v">r</i> and of <i class="v">R</i>: the first time is lcm(<i class="v">R</i>, <i class="v">r</i>) teeth.</p>
+<p>That many teeth is lcm ÷ <i class="v">R</i> trips around the ring, and lcm ÷ <i class="v">r</i> turns of the wheel. Each turn of the wheel draws one petal. Since lcm(<i class="v">R</i>, <i class="v">r</i>) = <i class="v">R</i><i class="v">r</i> ÷ gcd(<i class="v">R</i>, <i class="v">r</i>), you get the gear rule.</p>
+</div>
+<aside class="box tool"><h3>Challenges</h3>
+<ol style="margin:0">
+<li>Find a ring and wheel that make exactly 5 petals. Then find three more pairs that also make 5.</li>
+<li>Which wheel gives the most petals for a ring of 96? Which gives the fewest (other than a full-size wheel)?</li>
+<li>With R = 105 and r = 64, how many trips before the pen comes home? Predict, then press Draw slowly.</li>
+<li>Navigator: prove that the petals for (R, r) and for (R, R − r) are the same number.</li>
+</ol></aside>
+</div></section>
+
+<section class="band"><div class="wrap pager"><a href="juggle.html">← The Juggling Yard</a><a href="observatory.html">The Observatory →</a></div></section>
+<footer class="band"><div class="wrap">Modular Worlds · The Gear Shop · draft · UCI Math CEO</div></footer>
+
+<script src="book.js"></script>
+<script src="rooms.js"></script>
+<script>
+{
+const R=MWR,{$}=R,{gcd}=MW;
+let side='in',keep=false,anim=0,layers=[];
+const Rr=R.range('R',()=>{if(+$('#r').value>=+$('#R').value)R.setR('r',+$('#R').value-1);redraw()}),rr=R.range('r',()=>{if(+$('#r').value>=+$('#R').value&&side==='in')R.setR('r',+$('#R').value-1);redraw()});
+R.range('d',redraw);R.range('w',redraw);['c1','c2','c3'].forEach(id=>$('#'+id).addEventListener('input',redraw));
+R.seg('side',[['in','Inside the ring'],['out','Outside the ring']],'in',v=>{side=v;redraw()});
+const PRE=[[96,36],[105,64],[150,52],[120,100],[84,32],[100,99],[63,24],[144,90]];
+R.seg('pre',PRE.map(([a,b])=>[a+','+b,a+' and '+b]),'96,36',v=>{const[a,b]=v.split(',').map(Number);R.setR('R',a);R.setR('r',b);redraw()});
+$('#layer').onclick=e=>{keep=!keep;e.target.setAttribute('aria-pressed',keep);e.target.textContent=keep?'Layers on':'Keep layers';if(!keep){layers=[];redraw()}};
+$('#clear').onclick=()=>{layers=[];redraw()};
+$('#still').onclick=()=>R.still('#cv','#out','a gear drawing');
+const hex=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+function spec(){const Rv=+$('#R').value,rv=Math.min(+$('#r').value,side==='in'?Rv-1:999),g=gcd(Rv,rv);return {Rv,rv,g,d:+$('#d').value/100,side,petals:Rv/g,trips:rv/g,c1:$('#c1').value,c2:$('#c2').value,w:+$('#w').value}}
+function pts(s,steps){const {Rv,rv,d}=s,a=s.side==='in'?Rv-rv:Rv+rv,k=a/rv,D=d*rv,tmax=2*Math.PI*s.trips,out=[];
+  for(let i=0;i<=steps;i++){const t=tmax*i/steps;out.push(s.side==='in'?[a*Math.cos(t)+D*Math.cos(k*t),a*Math.sin(t)-D*Math.sin(k*t)]:[a*Math.cos(t)-D*Math.cos(k*t),a*Math.sin(t)-D*Math.sin(k*t)])}return out}
+function paint(s,upto,g,W,H){const steps=Math.min(24000,Math.max(1200,s.trips*600)),p=pts(s,steps),ext=s.side==='in'?s.Rv:s.Rv+2*s.rv,sc=(Math.min(W,H)*0.46)/ext,cx=W/2,cy=H/2;
+  const A=hex(s.c1),B=hex(s.c2),n=Math.floor(steps*(upto==null?1:upto));g.lineWidth=s.w;g.lineJoin='round';
+  for(let tr=0;tr<s.trips;tr++){const a=Math.floor(tr*steps/s.trips),b=Math.min(n,Math.floor((tr+1)*steps/s.trips));if(b<=a)break;
+    const f=s.trips>1?tr/(s.trips-1):0;g.strokeStyle=`rgb(${A.map((v,i)=>Math.round(v+(B[i]-v)*f)).join(',')})`;g.beginPath();
+    for(let i=a;i<=b;i++){const[x,y]=p[i];i===a?g.moveTo(cx+x*sc,cy+y*sc):g.lineTo(cx+x*sc,cy+y*sc)}g.stroke()}}
+function base(){const cv=$('#cv'),[g,W,H]=R.ctx(cv);g.fillStyle=$('#c3').value;g.fillRect(0,0,W,H);return[g,W,H]}
+function redraw(){cancelAnimationFrame(anim);const s=spec(),[g,W,H]=base();layers.forEach(L=>paint(L,1,g,W,H));paint(s,1,g,W,H);info(s)}
+function info(s){$('#info').textContent=`R = ${s.Rv}, r = ${s.rv}: gcd = ${s.g}.\nPetals: ${s.Rv} ÷ ${s.g} = ${s.petals}.  Trips around the ring: ${s.rv} ÷ ${s.g} = ${s.trips}.\nlcm(${s.Rv}, ${s.rv}) = ${s.Rv*s.rv/s.g} teeth rolled before the pen comes home.${layers.length?`\nLayers kept: ${layers.length}.`:''}`;
+  $('#cv').setAttribute('aria-label',`Spirograph with ring ${s.Rv} and wheel ${s.rv}: ${s.petals} petals, ${s.trips} trips${layers.length?`, over ${layers.length} earlier layers`:''}`)}
+$('#draw').onclick=()=>{const s=spec();if(keep)layers.push(s);cancelAnimationFrame(anim);
+  if(R.reduce){redraw();return}
+  const t0=performance.now(),dur=Math.min(12000,2500*s.trips);
+  const step=now=>{const u=Math.min(1,(now-t0)/dur),[g,W,H]=base();layers.forEach(L=>{if(L!==s)paint(L,1,g,W,H)});paint(s,u,g,W,H);info(s);if(u<1)anim=requestAnimationFrame(step)};anim=requestAnimationFrame(step)};
+new ResizeObserver(redraw).observe($('#cv'));MW.onTheme(redraw);
+}
+</script>
+</body>
+</html>

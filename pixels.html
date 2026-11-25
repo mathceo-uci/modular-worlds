@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Pixel Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="rooms.css">
+<style>#cv{image-rendering:pixelated}</style>
+</head>
+<body>
+<nav class="toc" aria-label="Pixel Room sections"><div class="wrap">
+<a class="brand" href="index.html">Modular Worlds</a><a href="#scramble">The scrambler</a><a href="#why">Why it comes back</a><a href="studio.html">All rooms</a>
+</div></nav>
+
+<header class="band hero"><div class="wrap two">
+<div>
+<div class="kicker">Modular Worlds · The Studio rooms · Chapter 8</div>
+<h1>The Pixel Room</h1>
+<p class="lede">Kevin swears he can destroy any picture with one simple rule, repeated: move the pixel at (<i class="v">x</i>, <i class="v">y</i>) to (<i class="v">x</i> + <i class="v">y</i>, <i class="v">x</i> + 2<i class="v">y</i>), wrapping around the edges mod <i class="v">N</i>. After a few steps the picture is pure noise. Keep going, and something impossible happens.</p>
+</div>
+<aside class="box thm"><h3>Arnold's cat map</h3>
+<p style="margin:0">The mathematician Vladimir Arnold made this rule famous in the 1960s by scrambling a drawing of a cat. Every step is a shuffle of finitely many pixels, so some power of the shuffle must be the identity: the picture has to come back. The question is when.</p></aside>
+</div></header>
+
+<section class="band piece" id="scramble"><div class="wrap">
+<div><div class="easel"><canvas id="cv" role="img" aria-label="Picture being scrambled"></canvas></div></div>
+<div class="panel">
+<div class="field"><span class="lbl">Picture</span><div class="seg" id="pic"></div></div>
+<div class="field"><label class="lbl" for="up">Or use your own (it stays on your device)</label><input type="file" id="up" accept="image/*"></div>
+<div class="field"><label class="lbl" for="N">Size N × N <output id="N-o"></output></label><input type="range" id="N" min="10" max="200" value="124"></div>
+<div class="field"><span class="lbl">Rule: (x, y) → (a·x + b·y, c·x + d·y) mod N</span>
+<div class="row"><label>a <input type="number" id="ma" value="1" style="width:4.5em"></label><label>b <input type="number" id="mb" value="1" style="width:4.5em"></label><label>c <input type="number" id="mc" value="1" style="width:4.5em"></label><label>d <input type="number" id="md" value="2" style="width:4.5em"></label></div></div>
+<div class="field"><span class="lbl">Rules to try</span><div class="seg" id="rules"></div></div>
+<div class="row"><button class="primary" id="step">One step</button><button id="play" aria-pressed="false">Play</button><button id="reset">Start over</button><button id="still">Make a still</button></div>
+<p class="status" id="info" aria-live="polite"></p>
+<div class="still" id="out"></div>
+</div>
+</div></section>
+
+<section class="band alt" id="why"><div class="wrap two">
+<div>
+<h2>Why it comes back, and when</h2>
+<p>The rule is a matrix acting on pairs mod <i class="v">N</i>. Doing it <i class="v">k</i> times is the matrix to the power <i class="v">k</i>, and the picture is back exactly when that power is the identity mod <i class="v">N</i>. That <i class="v">k</i> is the <b>order</b> of the matrix, the same idea as the order of a number in Chapter 8.</p>
+<p>The cat map's matrix [[1, 1], [1, 2]] is the Fibonacci step [[0, 1], [1, 1]] done twice. So its period is half the Fibonacci tide length from the Poets' Corner: for <i class="v">N</i> = 124 the Fibonacci numbers mod 124 repeat after 30 steps, and the cat comes back after 15.</p>
+<p class="status" id="ptable"></p>
+</div>
+<aside class="box tool"><h3>Challenges</h3>
+<ol style="margin:0">
+<li>Predict: for <i class="v">N</i> = 101, after how many steps? (Check the table.) Why is a big <i class="v">N</i> not always slower?</li>
+<li>Try the rule a = 2, b = 0, c = 0, d = 2 with <i class="v">N</i> = 124. The picture loses pixels and never comes back. Why? (Look at gcd(<i class="v">ad</i> − <i class="v">bc</i>, <i class="v">N</i>).)</li>
+<li>The quarter turn comes back after 4 steps for every <i class="v">N</i>. Find a rule that always comes back after exactly 6. (Hint: a = 0, b = −1, and try small c and d.)</li>
+<li>Cartographer: the cat map stretches in one direction and squeezes in another. Why does that make it look so random in between?</li>
+</ol></aside>
+</div></section>
+
+<section class="band"><div class="wrap pager"><a href="cipher.html">← The Cipher Workshop</a><a href="games.html">The Game Room →</a></div></section>
+<footer class="band"><div class="wrap">Modular Worlds · The Pixel Room · draft · UCI Math CEO</div></footer>
+
+<script src="book.js"></script>
+<script src="rooms.js"></script>
+<script>
+{
+const R=MWR,{$}=R,gcd=MW.gcd,mod=(a,m)=>((a%m)+m)%m;
+let N=124,orig=null,cur=null,steps=0,playing=false,raf=0,pic='harbor',userImg=null;
+function scene(n,kind){const c=document.createElement('canvas');c.width=c.height=n;const g=c.getContext('2d');
+  if(kind==='photo'&&userImg){const s=Math.min(userImg.width,userImg.height);g.drawImage(userImg,(userImg.width-s)/2,(userImg.height-s)/2,s,s,0,0,n,n)}
+  else if(kind==='harbor'){g.fillStyle='#9cd3e0';g.fillRect(0,0,n,n*0.6);g.fillStyle='#0c5f73';g.fillRect(0,n*0.6,n,n*0.4);
+    g.fillStyle='#f2b134';g.beginPath();g.arc(n*0.72,n*0.28,n*0.13,0,7);g.fill();
+    g.fillStyle='#7a3b1a';g.beginPath();g.moveTo(n*0.18,n*0.62);g.lineTo(n*0.62,n*0.62);g.lineTo(n*0.54,n*0.74);g.lineTo(n*0.26,n*0.74);g.fill();
+    g.fillStyle='#f6f1e7';g.beginPath();g.moveTo(n*0.4,n*0.18);g.lineTo(n*0.4,n*0.6);g.lineTo(n*0.2,n*0.6);g.fill();g.fillStyle='#c8401a';g.beginPath();g.moveTo(n*0.42,n*0.22);g.lineTo(n*0.42,n*0.6);g.lineTo(n*0.58,n*0.6);g.fill()}
+  else{const k=Math.max(2,Math.round(n/8));for(let y=0;y<n;y++)for(let x=0;x<n;x++){g.fillStyle=((Math.floor(x/k)+Math.floor(y/k))%2)?'#14181b':'#e0b154';g.fillRect(x,y,1,1)}
+    g.fillStyle='#c8401a';g.font=`900 ${n*0.42}px Roboto, sans-serif`;g.textAlign='center';g.textBaseline='middle';g.fillText('MW',n/2,n/2)}
+  return g.getImageData(0,0,n,n)}
+function M(){return [+$('#ma').value,+$('#mb').value,+$('#mc').value,+$('#md').value].map(v=>isNaN(v)?0:v)}
+function order(m,n){const[a,b,c,d]=m;let x=[mod(a,n),mod(b,n),mod(c,n),mod(d,n)];const id=[1%n,0,0,1%n];for(let k=1;k<=20000;k++){if(x.every((v,i)=>v===id[i]))return k;const[p,q,r,s]=x;x=[mod(p*a+q*c,n),mod(p*b+q*d,n),mod(r*a+s*c,n),mod(r*b+s*d,n)]}return null}
+function stepOnce(){const[a,b,c,d]=M(),src=cur.data,img=new ImageData(N,N),dst=img.data;
+  for(let y=0;y<N;y++)for(let x=0;x<N;x++){const nx=mod(a*x+b*y,N),ny=mod(c*x+d*y,N),i=(y*N+x)*4,j=(ny*N+nx)*4;dst[j]=src[i];dst[j+1]=src[i+1];dst[j+2]=src[i+2];dst[j+3]=255}
+  cur=img;steps++}
+function same(){const a=cur.data,b=orig.data;for(let i=0;i<a.length;i++)if(a[i]!==b[i])return false;return true}
+function show(){const cv=$('#cv'),[g,W,H]=R.ctx(cv),o=document.createElement('canvas');o.width=o.height=N;o.getContext('2d').putImageData(cur,0,0);g.imageSmoothingEnabled=false;g.clearRect(0,0,W,H);g.drawImage(o,0,0,W,H);
+  const m=M(),det=m[0]*m[3]-m[1]*m[2],gd=gcd(Math.abs(det),N),ord=gd===1?order(m,N):null;
+  $('#info').textContent=`N = ${N}. Rule (x, y) → (${m[0]}x + ${m[1]}y, ${m[2]}x + ${m[3]}y) mod ${N}.\nDeterminant ad − bc = ${det}; gcd(${det}, ${N}) = ${gd}. `+(gd===1?`The rule is a true shuffle, and it comes back after ${ord===null?'more than 20,000':ord} steps.`:`Not a shuffle: different pixels land on the same spot, so the picture loses information and can never come back.`)+`\nSteps taken: ${steps}.`+(steps>0&&gd===1&&same()?' The original is back!':'');
+  cv.setAttribute('aria-label',`The picture after ${steps} steps${steps>0&&same()?', back to the original':''}`)}
+function reset(){N=+$('#N').value;orig=scene(N,pic);cur=new ImageData(new Uint8ClampedArray(orig.data),N,N);steps=0;show()}
+R.range('N',reset);
+R.seg('pic',[['harbor','Harbor'],['letters','Checkerboard'],['photo','My photo']],'harbor',v=>{if(v==='photo'&&!userImg){$('#up').click();return}pic=v;reset()});
+$('#up').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const im=new Image();im.onload=()=>{userImg=im;pic='photo';R.pressSeg('pic','photo');reset()};im.src=URL.createObjectURL(f)});
+const RULES=[['1,1,1,2','Cat map'],['2,1,1,1','Cat, other way'],['1,1,0,1','Shear'],['0,-1,1,0','Quarter turn'],['2,0,0,2','Double (broken)'],['3,1,1,2','3, 1, 1, 2']];
+R.seg('rules',RULES,'1,1,1,2',v=>{const[a,b,c,d]=v.split(',');$('#ma').value=a;$('#mb').value=b;$('#mc').value=c;$('#md').value=d;reset()});
+['ma','mb','mc','md'].forEach(id=>$('#'+id).addEventListener('change',reset));
+$('#step').onclick=()=>{stepOnce();show()};
+$('#reset').onclick=reset;
+$('#still').onclick=()=>R.still('#cv','#out','a scrambled picture');
+$('#play').onclick=e=>{playing=!playing;e.target.setAttribute('aria-pressed',playing);e.target.textContent=playing?'Stop':'Play';cancelAnimationFrame(raf);let lt=0;
+  const tick=ts=>{if(!playing)return;if(ts-lt>(R.reduce?900:320)){stepOnce();show();lt=ts;if(same()){playing=false;e.target.setAttribute('aria-pressed','false');e.target.textContent='Play';return}}raf=requestAnimationFrame(tick)};raf=requestAnimationFrame(tick)};
+$('#ptable').textContent='Cat map period for each N:\n'+[10,50,61,64,100,101,124,128,150,199].map(n=>`N = ${n}: ${order([1,1,1,2],n)} steps`).join('\n');
+reset();new ResizeObserver(show).observe($('#cv'));
+}
+</script>
+</body>
+</html>

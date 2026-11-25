@@ -1,0 +1,31 @@
+.piece .wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(18px,3vw,40px);align-items:start}
+@media(max-width:860px){.piece .wrap{grid-template-columns:minmax(0,1fr)}}
+.piece .wrap>div{min-width:0}
+.easel{position:relative;width:100%;aspect-ratio:1;border-radius:14px;overflow:hidden;background:var(--panel)}
+.easel.wide{aspect-ratio:16/10}
+.easel canvas{position:absolute;inset:0;width:100%;height:100%}
+.panel{display:flex;flex-direction:column;gap:14px}
+.field{display:flex;flex-direction:column;gap:4px}
+.field .lbl{display:flex;justify-content:space-between;gap:8px;font-size:15px;color:var(--mute)}
+.field .lbl output{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--sea);height:32px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{min-height:40px}
+.seg button[aria-pressed=true],button.on{background:var(--sea);color:var(--bg);border-color:var(--sea)}
+.note{font-size:15px;color:var(--mute)}
+.status{white-space:pre-line;text-align:left;font-family:"Roboto Mono",monospace;font-size:15px;font-weight:400;background:var(--code);border-radius:10px;padding:10px 12px;margin:0;overflow-wrap:anywhere}
+.still{margin-top:4px}
+.still img{display:block;width:100%;max-width:520px;border-radius:10px;border:1px solid var(--line)}
+.swatches{display:flex;flex-wrap:wrap;gap:6px}
+.swatches label{display:flex;flex-direction:column;align-items:center;font-size:12px;color:var(--mute);gap:2px}
+input[type=color]{width:40px;height:40px;border:1px solid var(--line);border-radius:8px;padding:2px;background:var(--bg);cursor:pointer}
+input[type=text],input[type=number],input[type=date],textarea,select{font:inherit;font-size:16px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);min-height:40px;max-width:100%}
+textarea{width:100%;min-height:90px}
+.mono{font-family:"Roboto Mono",monospace}
+.rooms{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:14px}
+.rooms a.room{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);border-top:5px solid var(--sea);border-radius:12px;padding:14px 16px;background:var(--bg)}
+.rooms a.room:hover,.rooms a.room:focus-visible{border-color:var(--sea)}
+.rooms a.room h3{margin:0 0 4px;font-size:18px}
+.rooms a.room p{margin:0;font-size:15px;color:var(--mute)}
+.rooms a.room .ch{display:block;margin-top:8px;font-size:13px;color:var(--brass);font-weight:700}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}

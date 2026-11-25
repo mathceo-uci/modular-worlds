@@ -39,7 +39,7 @@ fieldset.track .pat{font-family:'Roboto Mono',monospace;font-size:15px;letter-sp
 <body>
 
 <nav class="toc" aria-label="Sound Room sections"><div class="wrap">
-<a class="brand" href="index.html">Modular Worlds</a><a href="#clock">Note clock</a><a href="#drums">Euclid's drum circle</a><a href="#melody">Residue melodies</a><a href="studio.html">The Studio</a>
+<a class="brand" href="index.html">Modular Worlds</a><a href="#multiples">Multiples machine</a><a href="#phase">Phase clapping</a><a href="#clock">Note clock</a><a href="#drums">Euclid's drum circle</a><a href="#melody">Residue melodies</a><a href="studio.html">The Studio</a>
 </div></nav>
 
 <header class="band hero"><div class="wrap two">
@@ -58,6 +58,35 @@ fieldset.track .pat{font-family:'Roboto Mono',monospace;font-size:15px;letter-sp
 <p class="note" style="margin:8px 0 0">Every sound here is made by your browser from the rules on the page: no recordings.</p>
 </aside>
 </div></header>
+
+<section class="band piece" id="multiples"><div class="wrap">
+<div><div class="easel wide"><canvas id="cv-mult" role="img" aria-label="Beats of each voice"></canvas></div>
+<p class="note">Each row is one voice. A dot means that voice plays on that beat. Gold columns: everyone who is on plays together.</p></div>
+<div class="panel">
+<div><div class="kicker">Chapters 0, 1 and 2</div><h2>The multiples machine</h2>
+<p class="note">Each voice plays every <i class="v">a</i> beats, starting on beat <i class="v">b</i>: beats <i class="v">b</i>, <i class="v">b</i> + <i class="v">a</i>, <i class="v">b</i> + 2<i class="v">a</i>, … That is a Book, as a rhythm. Start with even and odd beats, then ask: when do two voices play together?</p></div>
+<div class="field"><span class="lbl">Start with</span><div class="seg" id="mu-pre"></div></div>
+<div id="mu-tracks" class="panel" style="gap:10px"></div>
+<div class="field"><label class="lbl" for="mu-sp">Speed (beats per minute) <output id="mu-sp-o"></output></label><input type="range" id="mu-sp" min="60" max="400" step="10" value="200"></div>
+<div class="row"><button class="primary" id="mu-play">Play the machine</button></div>
+<p class="status" id="mu-info" aria-live="polite"></p>
+</div>
+</div></section>
+
+<section class="band alt piece" id="phase"><div class="wrap">
+<div><div class="easel wide"><canvas id="cv-phase" role="img" aria-label="Two clappers"></canvas></div>
+<p class="note">Top row: clapper A, who never changes. Bottom row: clapper B, who slides one beat ahead every few rounds.</p></div>
+<div class="panel">
+<div><div class="kicker">Chapters 1 and 2</div><h2>Phase clapping</h2>
+<p class="note">Two people clap the same 12-beat rhythm. Every few rounds, clapper B jumps one beat ahead. The rhythms tangle into new patterns, and after 12 jumps they are together again. Composer Steve Reich built a famous piece, <i>Clapping Music</i> (1972), on this idea; here you make your own.</p></div>
+<div class="field"><span class="lbl">Your 12-beat rhythm (press beats to change it)</span><div class="seg" id="ph-pat" role="group" aria-label="Rhythm beats"></div></div>
+<div class="field"><label class="lbl" for="ph-reps">Rounds before each jump <output id="ph-reps-o"></output></label><input type="range" id="ph-reps" min="1" max="6" value="2"></div>
+<div class="field"><label class="lbl" for="ph-sp">Speed (beats per minute) <output id="ph-sp-o"></output></label><input type="range" id="ph-sp" min="120" max="480" step="10" value="300"></div>
+<div class="row"><button class="primary" id="ph-play">Clap</button></div>
+<p class="status" id="ph-info" aria-live="polite"></p>
+<div class="box tool" style="margin:0"><h3>Ask why</h3><p style="margin:0">After <i class="v">s</i> jumps, clapper B plays the rhythm shifted by <i class="v">s</i> mod 12. Why are they back together after 12 jumps, and never before (for most rhythms)? Find a rhythm that comes back together after only 4 jumps. What is special about it?</p></div>
+</div>
+</div></section>
 
 <section class="band piece" id="clock"><div class="wrap">
 <div><div class="easel"><canvas id="cv-clock" role="img" aria-label="A clock of 12 musical notes"></canvas></div></div>
@@ -256,6 +285,62 @@ melSeq.onVis=i=>{M.now=i%melSeq_().length;drawMel()};
 $('#mel-rand').addEventListener('click',()=>{const m=2+Math.floor(Math.random()*15),a=Math.floor(Math.random()*16),b=Math.floor(Math.random()*m);mEl.value=m;aEl.value=a;bEl.max=m-1;bEl.value=b;['mel-m','mel-a','mel-b'].forEach(id=>$('#'+id+'-o').textContent=$('#'+id).value);melInfo();drawMel()});
 melInfo();new ResizeObserver(drawMel).observe($('#cv-mel'));
 MW.onTheme(()=>{drawClock();drawDrums();drawMel()});
+/* ---------- multiples machine ---------- */
+let MU=[];
+const MPRE={evenodd:{label:'Even and odd',t:[[2,0,'low'],[2,1,'clap'],[3,0,'bell',false]]},
+ twothree:{label:'Every 2 and every 3',t:[[2,0,'low'],[3,0,'clap'],[5,0,'bell',false]]},
+ fizz:{label:'Every 3 and every 5',t:[[3,0,'clap'],[5,0,'low'],[2,0,'shaker',false]]},
+ three:{label:'2, 3 and 5 together',t:[[2,0,'low'],[3,0,'clap'],[5,0,'bell']]},
+ books:{label:'Water and ammonia Books',t:[[4,1,'bell'],[6,1,'wood'],[2,0,'shaker',false]]},
+ never:{label:'Books that never meet',t:[[4,1,'bell'],[6,2,'wood'],[2,0,'shaker',false]]}};
+seg('mu-pre',Object.entries(MPRE).map(([k,v])=>[k,v.label]),'evenodd',v=>muLoad(v));
+function muLoad(k){MU=MPRE[k].t.map(([a,b,voice,on])=>({a,b,voice,on:on!==false}));muBuild();muInfo();drawMu()}
+function muBuild(){$('#mu-tracks').innerHTML=MU.map((T,i)=>`<fieldset class="track"><legend><label><input type="checkbox" data-i="${i}" data-f="on" ${T.on?'checked':''}> Voice ${i+1}</label></legend>
+<div class="field"><label class="lbl" for="ma${i}">Every a beats <output id="ma${i}-o">${T.a}</output></label><input type="range" id="ma${i}" data-i="${i}" data-f="a" min="1" max="12" value="${T.a}"></div>
+<div class="field"><label class="lbl" for="mb${i}">Starting on beat b <output id="mb${i}-o">${T.b}</output></label><input type="range" id="mb${i}" data-i="${i}" data-f="b" min="0" max="${T.a-1}" value="${T.b}"></div>
+<div class="field"><label class="lbl" for="mv${i}">Sound</label><select id="mv${i}" data-i="${i}" data-f="voice">${Object.entries(VOICES).map(([k,v])=>`<option value="${k}" ${k===T.voice?'selected':''}>${v.name}</option>`).join('')}</select></div></fieldset>`).join('')}
+$('#mu-tracks').addEventListener('input',e=>{const el=e.target,i=+el.dataset.i,f=el.dataset.f;if(!f)return;const T=MU[i];
+  if(f==='on')T.on=el.checked;else if(f==='voice')T.voice=el.value;else{T[f]=+el.value;$('#'+el.id+'-o').textContent=el.value}
+  if(f==='a'){T.b=Math.min(T.b,T.a-1);const b=$('#mb'+i);b.max=T.a-1;b.value=T.b;$('#mb'+i+'-o').textContent=T.b}
+  muInfo();drawMu()});
+const plays=(T,t)=>T.on&&t>=T.b&&(t-T.b)%T.a===0;
+const muAct=()=>MU.filter(T=>T.on);
+function muCycle(){const act=muAct();return act.length?act.map(T=>T.a).reduce((x,y)=>x/MW.gcd(x,y)*y):1}
+function muInfo(){const act=muAct(),lines=[];
+  act.forEach(T=>lines.push(`Voice ${MU.indexOf(T)+1}: beats ${T.b}, ${T.b+T.a}, ${T.b+2*T.a}, … (${T.a === 1 ? 'every beat' : T.a + 'n + ' + T.b})`));
+  for(let i=0;i<act.length;i++)for(let j=i+1;j<act.length;j++){const P=act[i],Q=act[j],g=MW.gcd(P.a,Q.a),L=P.a/g*Q.a;let first=null;for(let t=Math.max(P.b,Q.b);t<Math.max(P.b,Q.b)+L;t++)if(plays(P,t)&&plays(Q,t)){first=t;break}
+    lines.push(first===null?`Voices ${MU.indexOf(P)+1} and ${MU.indexOf(Q)+1} never play together: gcd(${P.a}, ${Q.a}) = ${g} does not divide ${Q.b} − ${P.b} = ${Q.b-P.b}.`:`Voices ${MU.indexOf(P)+1} and ${MU.indexOf(Q)+1} play together on beat ${first}, then every lcm(${P.a}, ${Q.a}) = ${L} beats.`)}
+  lines.push(`The whole machine repeats every ${muCycle()} beats.`);$('#mu-info').textContent=lines.join('\n')}
+let muT=-1;
+function drawMu(){const cv=$('#cv-mult'),[g,W,H]=ctx(cv),N=Math.min(48,Math.max(24,muCycle()+1)),bw=(W-30)/N,rows=MU.length,rh=(H-30)/rows,cols=[col('--ember'),col('--sea'),col('--brass')];g.clearRect(0,0,W,H);
+  for(let t=0;t<N;t++){const on=muAct(),all=on.length>1&&on.every(T=>plays(T,t));if(all){g.fillStyle=col('--brass-soft');g.fillRect(24+t*bw,4,bw,H-26)}
+    if(t===muT%Math.max(1,muCycle())){g.fillStyle=col('--line');g.fillRect(24+t*bw,4,bw,H-26)}
+    g.fillStyle=col('--mute');g.font=`${Math.min(11,bw*0.8)}px Roboto, sans-serif`;g.textAlign='center';if(bw>14||t%2===0)g.fillText(t,24+t*bw+bw/2,H-8)}
+  MU.forEach((T,i)=>{g.globalAlpha=T.on?1:0.25;for(let t=0;t<N;t++){const y=8+i*rh+rh/2,x=24+t*bw+bw/2;g.beginPath();g.arc(x,y,Math.min(bw,rh)*0.3,0,7);if(plays(Object.assign({},T,{on:true}),t)){g.fillStyle=cols[i];g.fill()}else{g.strokeStyle=col('--line');g.lineWidth=1;g.stroke()}}g.globalAlpha=1;
+    g.fillStyle=cols[i];g.font='700 12px Roboto, sans-serif';g.textAlign='left';g.fillText(i+1,6,8+i*rh+rh/2+4)});
+  cv.setAttribute('aria-label','Multiples machine: '+muAct().map(T=>`every ${T.a} from ${T.b}`).join('; '))}
+const muSeq=Seq(()=>60/+$('#mu-sp').value,(i,t)=>{const L=muCycle(),b=i%L;MU.forEach(T=>{if(plays(T,b)||(b<T.b?false:false))VOICES[T.voice].play(t)})},()=>{muT=-1;drawMu()},$('#mu-play'),'Play the machine');
+muSeq.onVis=i=>{muT=i;drawMu()};
+range('mu-sp');muLoad('evenodd');new ResizeObserver(drawMu).observe($('#cv-mult'));
+
+/* ---------- phase clapping ---------- */
+let PH=[1,0,1,1,0,1,0,1,1,0,1,0],phShift=0,phPos=-1;
+function phBuild(){$('#ph-pat').innerHTML=PH.map((v,i)=>`<button type="button" data-i="${i}" aria-pressed="${!!v}" aria-label="Beat ${i+1}: ${v?'clap':'rest'}">${i+1}</button>`).join('')}
+$('#ph-pat').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const i=+b.dataset.i;PH[i]=PH[i]?0:1;phBuild();phInfo();drawPh()});
+function phBack(){for(let s=1;s<=12;s++){if(PH.every((v,i)=>v===PH[(i+s)%12]))return s}return 12}
+function phInfo(){const both=PH.filter((v,i)=>v&&PH[(i+phShift)%12]).length;$('#ph-info').textContent=`Clapper B is ${phShift} beat${phShift===1?'':'s'} ahead (shift ${phShift} mod 12). Claps together this round: ${both} of ${PH.filter(v=>v).length}.\nThis rhythm lines up with itself again after ${phBack()} jump${phBack()===1?'':'s'}.`}
+function drawPh(){const cv=$('#cv-phase'),[g,W,H]=ctx(cv),bw=(W-20)/12,rh=(H-20)/2;g.clearRect(0,0,W,H);
+  [0,1].forEach(r=>{for(let i=0;i<12;i++){const v=r===0?PH[i]:PH[(i+phShift)%12],x=10+i*bw,y=10+r*rh;g.fillStyle=i===phPos?col('--line'):col('--bg');g.fillRect(x+2,y+2,bw-4,rh-4);
+    if(v){g.fillStyle=r===0?col('--ember'):col('--sea');g.beginPath();g.arc(x+bw/2,y+rh/2,Math.min(bw,rh)*0.32,0,7);g.fill()}
+    if(PH[i]&&PH[(i+phShift)%12]&&r===1){g.strokeStyle=col('--brass');g.lineWidth=3;g.strokeRect(x+3,10+3,bw-6,2*rh-6)}}});
+  cv.setAttribute('aria-label',`Clapper A and clapper B, B shifted by ${phShift}`)}
+const phSeq=Seq(()=>60/+$('#ph-sp').value,(i,t)=>{const reps=+$('#ph-reps').value,round=Math.floor(i/12),s=Math.floor(round/reps)%12,b=i%12;
+    if(PH[b])VOICES.clap.play(t);if(PH[(b+s)%12])VOICES.wood.play(t+0.004);
+    return round<reps*13},()=>{phPos=-1;phShift=0;drawPh();phInfo()},$('#ph-play'),'Clap');
+phSeq.onVis=i=>{const reps=+$('#ph-reps').value;phPos=i%12;const s=Math.floor(Math.floor(i/12)/reps)%12;if(s!==phShift){phShift=s;phInfo()}drawPh()};
+range('ph-reps');range('ph-sp');phBuild();phInfo();new ResizeObserver(drawPh).observe($('#cv-phase'));
+MW.onTheme(()=>{drawMu();drawPh()});
+
 }
 </script>
 </body>

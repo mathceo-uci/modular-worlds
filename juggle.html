@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Juggling Yard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="rooms.css">
+</head>
+<body>
+<nav class="toc" aria-label="Juggling Yard sections"><div class="wrap">
+<a class="brand" href="index.html">Modular Worlds</a><a href="#yard">The yard</a><a href="#ladder">The ladder</a><a href="#finder">Pattern finder</a><a href="studio.html">All rooms</a>
+</div></nav>
+
+<header class="band hero"><div class="wrap two">
+<div>
+<div class="kicker">Modular Worlds · The Studio rooms</div>
+<h1>The Juggling Yard</h1>
+<p class="lede">Every evening on deck, Mateo juggles whatever is lying around: limes, corks, the occasional copper flask. Jugglers write their tricks as strings of numbers called <b>siteswaps</b>, and whether a trick works at all is a question about leftovers.</p>
+<p>A siteswap like <span class="mono">441</span> means: on each beat, throw the ball in your hand so that it lands that many beats later. Hands take turns, right, left, right, left. The pattern repeats forever.</p>
+</div>
+<aside class="box thm"><h3>The two rules of the yard</h3>
+<p><b>Odd throws cross, even throws come back.</b> A ball thrown on beat <i class="v">i</i> lands on beat <i class="v">i</i> + <i class="v">t</i>, in the hand of that beat, so it changes hands exactly when <i class="v">t</i> is odd. Parity, from Chapter 0.</p>
+<p style="margin:0"><b>No two balls land together.</b> For a pattern of length <i class="v">p</i>, the landing beats <i class="v">i</i> + <i class="v">t<sub>i</sub></i> must all be different mod <i class="v">p</i>. Congruences, from Chapter 6.</p></aside>
+</div></header>
+
+<section class="band piece" id="yard"><div class="wrap">
+<div><div class="easel"><canvas id="cv-j" role="img" aria-label="A juggler"></canvas></div></div>
+<div class="panel">
+<div><h2>Try a siteswap</h2><p class="note">Type digits (0 to 9). Throw 0 is an empty hand, 1 passes straight across, 2 is a little hop in the same hand, 3 is the basic three-ball throw.</p></div>
+<div class="row" style="align-items:end"><div class="field" style="flex:1"><label class="lbl" for="ss">Siteswap</label><input type="text" id="ss" value="441" inputmode="numeric" autocomplete="off" class="mono" style="font-size:22px;letter-spacing:.1em"></div><button class="primary" id="go">Juggle it</button></div>
+<div class="field"><span class="lbl">Famous patterns</span><div class="seg" id="pre"></div></div>
+<div class="field"><label class="lbl" for="sp">Speed (beats per second) <output id="sp-o"></output></label><input type="range" id="sp" min="1" max="6" step="0.5" value="3"></div>
+<div class="row"><button id="pause" aria-pressed="false">Pause</button><button id="j-still">Make a still</button></div>
+<p class="status" id="info" aria-live="polite"></p>
+<div class="still" id="j-out"></div>
+</div>
+</div></section>
+
+<section class="band alt piece" id="ladder"><div class="wrap">
+<div><div class="easel wide"><canvas id="cv-l" role="img" aria-label="Ladder diagram"></canvas></div>
+<p class="note">The ladder diagram: dots are beats (right hand on top, left hand below), and each arc is one throw. A juggler reads it like sheet music.</p></div>
+<div class="panel">
+<h2>Why the average is the number of balls</h2>
+<p>In <span class="mono">441</span> the average is (4 + 4 + 1) ÷ 3 = 3, and the trick uses 3 balls. In <span class="mono">5551</span> it is 16 ÷ 4 = 4 balls. This always works, and a pattern whose average is not a whole number can never be juggled.</p>
+<div class="box tool" style="margin:0"><h3>Prove it (Navigator)</h3>
+<p style="margin:0">Once the pattern is running, every ball is always on exactly one arc of the ladder: the stretch from its last throw to its next one. Count the pairs (ball, beat) over one period of <i class="v">p</i> beats in two ways. By beats: on each beat all <i class="v">n</i> balls are on arcs, giving <i class="v">p</i> × <i class="v">n</i>. By throws: throw <i class="v">t<sub>i</sub></i> covers <i class="v">t<sub>i</sub></i> beats, giving <i class="v">t</i><sub>1</sub> + … + <i class="v">t<sub>p</sub></i>. So the sum is <i class="v">p</i> × <i class="v">n</i>.</p></div>
+<div class="box thm" style="margin:0"><h3>Average is not enough</h3>
+<p style="margin:0">Try <span class="mono">432</span>: its average is 3, but the landing beats 0 + 4, 1 + 3, 2 + 2 are 4, 4, 4. Mod 3, all three balls land on the same beat. Crash.</p></div>
+</div>
+</div></section>
+
+<section class="band" id="finder"><div class="wrap two">
+<div>
+<h2>Pattern finder</h2>
+<p>How many siteswaps are there? Choose a length and a largest throw, and the finder lists every valid one, grouped by number of balls.</p>
+<div class="row" style="align-items:end">
+<div class="field"><label class="lbl" for="fp">Length p <output id="fp-o"></output></label><input type="range" id="fp" min="1" max="5" value="3"></div>
+<div class="field"><label class="lbl" for="fb">Fewer than b balls <output id="fb-o"></output></label><input type="range" id="fb" min="1" max="6" value="3"></div>
+</div>
+<p class="status" id="fres" aria-live="polite"></p>
+</div>
+<aside class="box tool"><h3>A theorem from 1994 (Cartographer)</h3>
+<p>Count the siteswaps of length <i class="v">p</i> that use fewer than <i class="v">b</i> balls (counting rotations like 441, 414 and 144 separately). Use the finder for several <i class="v">p</i> and <i class="v">b</i>, and guess the formula before you open the hint.</p>
+<details><summary>Hint</summary><p style="margin:0">The answer is a power. Buhler, Eisenbud, Graham and Wright proved it in "Juggling drops and descents" (1994). Mathematician Ron Graham was also a serious juggler.</p></details>
+<p style="margin:12px 0 0">Click any pattern in the list to juggle it.</p></aside>
+</div></section>
+
+<section class="band alt"><div class="wrap pager"><a href="studio.html">← All rooms</a><a href="gears.html">The Gear Shop →</a></div></section>
+<footer class="band"><div class="wrap">Modular Worlds · The Juggling Yard · draft · UCI Math CEO</div></footer>
+
+<script src="book.js"></script>
+<script src="rooms.js"></script>
+<script>
+{
+const R=MWR,{$}=R;
+const val=c=>/[0-9]/.test(c)?+c:c.charCodeAt(0)-87;
+const COLS=['#c8401a','#0c5f73','#9a6b12','#7a4f9a','#2f7d4f','#d81159','#1d6fa5','#e0a019','#4b5563','#b4549a'];
+let P=[4,4,1],balls=[],T=0,last=0,paused=false,raf=0;
+function check(s){const p=s.length,sum=s.reduce((a,b)=>a+b,0),land=s.map((t,i)=>(i+t)%p);
+  const counts={};land.forEach(x=>counts[x]=(counts[x]||0)+1);
+  return {p,sum,avgOK:sum%p===0,n:sum/p,land,ok:sum%p===0&&new Set(land).size===p,dup:Object.keys(counts).filter(k=>counts[k]>1).map(Number)}}
+function simulate(s){const n=s.reduce((a,b)=>a+b,0)/s.length,landAt={},bs=[];
+  for(let i=0;i<400;i++){const t=s[i%s.length];if(t===0)continue;let b=landAt[i];if(b===undefined){b=bs.length;bs.push({segs:[],born:i})}delete landAt[i];bs[b].segs.push({i,t});landAt[i+t]=b}
+  return bs}
+function load(str){str=(str||'').toLowerCase().replace(/[^0-9a-z]/g,'');if(!str){$('#info').textContent='Type a siteswap, like 3 or 441.';return}
+  const s=[...str].map(val),c=check(s);P=s;
+  const landTxt=s.map((t,i)=>`${i}+${t}`).join(', ');
+  let msg=`Pattern ${str}, length ${c.p}. Sum ${c.sum}, average ${+(c.sum/c.p).toFixed(2)}.\n`;
+  if(!c.avgOK)msg+=`The average is not a whole number, so no number of balls can do it.`;
+  else{msg+=`Landing beats (${landTxt}) mod ${c.p} = ${c.land.join(', ')}.\n`;
+    const od=s.filter(t=>t%2).length;msg+=c.ok?`All different: it works, with ${c.n} ball${c.n===1?'':'s'}. ${od} odd throw${od===1?' crosses':'s cross'} hands in each round.`:`${c.dup.length>1?'Beats':'Beat'} ${c.dup.join(', ')} ${c.dup.length>1?'get':'gets'} two balls at once: collision. The average says ${c.n} balls, but the trick cannot be juggled.`}
+  $('#info').textContent=msg;
+  balls=c.ok?simulate(s):[];T=0;drawLadder(s,c);
+  $('#cv-j').setAttribute('aria-label',c.ok?`A juggler doing ${str} with ${c.n} balls`:`Pattern ${str} cannot be juggled`);
+  if(!c.ok)drawJ()}
+const PRE=['3','4','5','441','531','51','423','534','633','55500','7441','432','543','45'];
+R.seg('pre',PRE.map(p=>[p,p]),'441',v=>{$('#ss').value=v;load(v)});
+$('#go').onclick=()=>{R.pressSeg('pre',$('#ss').value);load($('#ss').value)};
+$('#ss').addEventListener('keydown',e=>{if(e.key==='Enter')$('#go').click()});
+R.range('sp');
+$('#pause').onclick=e=>{paused=!paused;e.target.setAttribute('aria-pressed',paused);e.target.textContent=paused?'Play':'Pause'};
+$('#j-still').onclick=()=>R.still('#cv-j','#j-out','a juggling pattern');
+
+function drawJ(){const cv=$('#cv-j'),[g,W,H]=R.ctx(cv);g.clearRect(0,0,W,H);
+  const hy=H*0.8,hx=W*0.2,cx=W/2,hand=k=>cx+(k?-1:1)*hx;
+  g.strokeStyle=R.col('--mute');g.lineWidth=5;g.lineCap='round';
+  g.beginPath();g.arc(cx,H*0.62,W*0.05,0,7);g.stroke();
+  g.beginPath();g.moveTo(cx,H*0.67);g.lineTo(cx,H*0.95);g.moveTo(cx,H*0.72);g.lineTo(hand(0),hy+6);g.moveTo(cx,H*0.72);g.lineTo(hand(1),hy+6);g.stroke();
+  [0,1].forEach(k=>{g.fillStyle=R.col('--brass');g.beginPath();g.ellipse(hand(k),hy+8,W*0.04,W*0.018,0,0,7);g.fill()});
+  if(!balls.length){g.fillStyle=R.col('--ember');g.font=`700 ${W*0.05}px Roboto, sans-serif`;g.textAlign='center';g.fillText('Crash!',cx,H*0.3);return}
+  const maxT=Math.max(...P),top=hy-H*0.08,scale=(H*0.68)/Math.pow(Math.max(maxT-0.5,1),2);
+  balls.forEach((b,bi)=>{let pos=null;
+    for(const sg of b.segs){const fl=sg.t===1?0.5:sg.t-0.5;
+      if(T>=sg.i&&T<sg.i+sg.t){const s=(T-sg.i)/fl,from=hand(sg.i%2),to=hand((sg.i+sg.t)%2);
+        if(s<=1){const x=from+(to-from)*s,h=sg.t<=1?H*0.02:scale*fl*fl/4*1.0;pos=[x,top-4*h*s*(1-s)]}else pos=[to,top];break}}
+    if(!pos&&T>=b.born-0.6&&T<b.born)pos=[hand(b.born%2),top];
+    if(pos){g.fillStyle=COLS[bi%COLS.length];g.beginPath();g.arc(pos[0],pos[1],W*0.025,0,7);g.fill();g.strokeStyle='rgba(0,0,0,.3)';g.lineWidth=1.5;g.stroke()}})}
+function loop(ts){const dt=last?(ts-last)/1000:0;last=ts;if(!paused&&balls.length&&!R.reduce)T+=dt*+$('#sp').value;if(T>380)T=0;drawJ();raf=requestAnimationFrame(loop)}
+if(R.reduce){$('#pause').textContent='Step';$('#pause').onclick=()=>{T+=0.25;drawJ()}}
+raf=requestAnimationFrame(loop);
+
+function drawLadder(s,c){const cv=$('#cv-l'),[g,W,H]=R.ctx(cv);g.clearRect(0,0,W,H);
+  const beats=Math.max(12,s.length*3),dx=(W-40)/beats,x=i=>20+i*dx+dx/2,yR=H*0.3,yL=H*0.75,y=i=>i%2?yL:yR;
+  g.fillStyle=R.col('--mute');g.font='13px Roboto, sans-serif';g.fillText('right',4,yR-14);g.fillText('left',4,yL+24);
+  const landCount={};
+  for(let i=0;i<beats;i++){const t=s[i%s.length];if(!t)continue;const j=i+t;landCount[j]=(landCount[j]||0)+1;
+    const x1=x(i),x2=x(j),y1=y(i),y2=y(j);g.strokeStyle=COLS[(i%s.length)%COLS.length];g.lineWidth=2;g.beginPath();
+    const mx=(x1+x2)/2,lift=Math.min(H*0.25,dx*t*0.35)*(y1===y2?(y1===yR?-1:1):0);
+    g.moveTo(x1,y1);g.quadraticCurveTo(mx,(y1+y2)/2+lift,Math.min(x2,W-4),x2>W?y1+(y2-y1)*((W-4-x1)/(x2-x1)):y2);g.stroke()}
+  for(let i=0;i<beats;i++){const bad=(landCount[i]||0)>1;g.beginPath();g.arc(x(i),y(i),bad?8:5,0,7);g.fillStyle=bad?R.col('--ember'):R.col('--ink');g.fill();
+    g.fillStyle=R.col('--mute');g.font='12px "Roboto Mono", monospace';g.textAlign='center';g.fillText(String(s[i%s.length]),x(i),y(i)+(i%2?-12:20))}
+  g.textAlign='left';
+  cv.setAttribute('aria-label',`Ladder diagram for ${s.join('')}: ${c.ok?'no collisions':'collisions at beats marked large'}`)}
+
+function finder(){const p=+$('#fp').value,b=+$('#fb').value,maxT=p*b,found={};let total=0;
+  const rec=(arr)=>{if(arr.length===p){const c=check(arr);if(c.ok&&c.n<b){total++;(found[c.n]=found[c.n]||[]).push(arr.map(t=>t<10?t:String.fromCharCode(87+t)).join(''))}return}
+    for(let t=0;t<=maxT;t++){arr.push(t);rec(arr);arr.pop()}};
+  rec([]);
+  $('#fres').innerHTML=`Length ${p}, fewer than ${b} balls: <b>${total}</b> patterns.\n`+Object.keys(found).map(n=>`${n} ball${n==='1'?'':'s'}: `+found[n].slice(0,60).map(s=>`<button type="button" class="ssb" data-s="${s}" style="min-height:32px;padding:2px 8px;margin:2px">${s}</button>`).join('')+(found[n].length>60?' …':'')).join('\n')}
+R.range('fp',finder);R.range('fb',finder);
+$('#fres').addEventListener('click',e=>{const b=e.target.closest('.ssb');if(!b)return;$('#ss').value=b.dataset.s;load(b.dataset.s);$('#yard').scrollIntoView({behavior:'smooth'})});
+load('441');finder();
+new ResizeObserver(()=>{drawLadder(P,check(P))}).observe($('#cv-l'));
+MW.onTheme(()=>{drawLadder(P,check(P))});
+}
+</script>
+</body>
+</html>

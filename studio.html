@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="rooms.css">
 <style>
 .piece .wrap{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(18px,3vw,40px);align-items:start}
 @media(max-width:860px){.piece .wrap{grid-template-columns:minmax(0,1fr)}}
@@ -34,7 +35,7 @@ input[type=color]{width:40px;height:40px;border:1px solid var(--line);border-rad
 <body>
 
 <nav class="toc" aria-label="Studio sections"><div class="wrap">
-<a class="brand" href="index.html">Modular Worlds</a><a href="#weave">Residue weave</a><a href="#pascal">Pascal's carpet</a><a href="#circle">Times-table circle</a><a href="#quilt">Euclid's quilt</a><a href="#spiral">Number spiral</a><a href="sound.html">Sound Room</a><a href="poets.html">Poets' Corner</a><a href="loom.html">Loom</a>
+<a class="brand" href="index.html">Modular Worlds</a><a href="#rooms">All rooms</a><a href="#weave">Residue weave</a><a href="#pascal">Pascal's carpet</a><a href="#circle">Times-table circle</a><a href="#quilt">Euclid's quilt</a><a href="#spiral">Number spiral</a><a href="#power">Power tables</a><a href="#gauss">Gaussian primes</a>
 </div></nav>
 
 <header class="band hero"><div class="wrap two">
@@ -49,6 +50,25 @@ input[type=color]{width:40px;height:40px;border:1px solid var(--line);border-rad
 <p style="margin:0">Press <b>Make a still</b> under any canvas. The picture appears below the controls: right-click it (or press and hold on a phone) to save it. Share your best ones with your crew, along with the settings that made them.</p>
 </aside>
 </div></header>
+
+<section class="band alt" id="rooms"><div class="wrap">
+<h2>The rooms</h2>
+<p>Every room turns the arithmetic of the voyage into something you can see, hear, write, wear or play. Each one says which chapters it goes with; the earliest rooms need nothing beyond Chapter 0.</p>
+<div class="rooms">
+<a class="room" href="studio.html#weave"><h3>The Studio canvases</h3><p>Residue weave, Pascal’s carpet, times-table circle, Euclid’s quilt, number spiral, power tables, Gaussian primes.</p><span class="ch">Chapters 0–10</span></a>
+<a class="room" href="sound.html"><h3>The Sound Room</h3><p>Even and odd beats, the multiples machine, phase clapping, the note clock, Euclid’s drum circle, residue melodies.</p><span class="ch">Starts in Chapter 0</span></a>
+<a class="room" href="poets.html"><h3>The Poets’ Corner</h3><p>Poems for two voices, stanza crates, the pantoum, a hundred thousand billion poems, the sestina, Fibonacci tides.</p><span class="ch">Starts in Chapter 0</span></a>
+<a class="room" href="loom.html"><h3>The Loom</h3><p>Bead bracelets, the loom and satin weaves, and the Andean khipu.</p><span class="ch">Chapters 1–4</span></a>
+<a class="room" href="juggle.html"><h3>The Juggling Yard</h3><p>Siteswap juggling: odd throws cross, even throws come back, and no two balls may land together.</p><span class="ch">Chapters 0 and 6</span></a>
+<a class="room" href="gears.html"><h3>The Gear Shop</h3><p>Spirographs: the petals are a gcd, the trip home is an lcm.</p><span class="ch">Chapter 3</span></a>
+<a class="room" href="observatory.html"><h3>The Observatory</h3><p>Maya calendar wheels, your birthday in the Calendar Round, and the week as a wheel.</p><span class="ch">Chapter 7</span></a>
+<a class="room" href="cipher.html"><h3>The Cipher Workshop</h3><p>Caesar and affine ciphers in English and Spanish, a cracking station, toy RSA, puzzle cards.</p><span class="ch">Chapters 6 and 9</span></a>
+<a class="room" href="pixels.html"><h3>The Pixel Room</h3><p>Arnold’s cat map scrambles a picture until it comes back.</p><span class="ch">Chapter 8</span></a>
+<a class="room" href="games.html"><h3>The Game Room</h3><p>Mancala against the computer, and the hot potato circle.</p><span class="ch">Chapters 1 and 6</span></a>
+<a class="room" href="lab.html"><h3>The Proof Lab</h3><p>Produce proofs step by step, with lab reports and Kevin’s casebook of broken proofs.</p><span class="ch">Chapters 0–4</span></a>
+<a class="room" href="gallery.html"><h3>The Gallery</h3><p>Turn your best piece into a gallery card for your crew’s show.</p><span class="ch">Any week</span></a>
+</div>
+</div></section>
 
 <section class="band piece" id="weave"><div class="wrap">
 <div><div class="easel"><canvas id="cv-weave" role="img"></canvas></div></div>
@@ -127,13 +147,33 @@ input[type=color]{width:40px;height:40px;border:1px solid var(--line);border-rad
 </div>
 </div></section>
 
-<section class="band alt" id="next"><div class="wrap">
-<h2>More rooms</h2>
-<p>The Studio has three more rooms, each with its own art form:</p>
-<div class="ideas">
-<div><h3>The Sound Room: open now</h3><p>The 12 notes of a piano octave are the integers mod 12, and Euclid's algorithm keeps the beat for the tresillo, the cumbia and the bossa nova. <a class="btn" href="sound.html">Enter the Sound Room</a></p></div>
-<div><h3>The Poets' Corner: open now</h3><p>The sestina moves six end-words by one fixed shuffle, and Fibonacci poems rise and fall like tides mod m. Write within the rule. <a class="btn" href="poets.html">Enter the Poets' Corner</a></p></div>
-<div><h3>The Loom: open now</h3><p>Will a bracelet's pattern close up, and after how many laps? Which satin weaves hold together? Beads, cloth, lcm and gcd. <a class="btn" href="loom.html">Enter the Loom</a></p></div>
+<section class="band piece" id="power"><div class="wrap">
+<div><div class="easel"><canvas id="cv-power" role="img"></canvas></div></div>
+<div class="panel">
+<div><div class="kicker">Chapter 8, Fermat's Lighthouse</div><h2>Power tables</h2>
+<p class="note">Row <i class="v">a</i>, column <i class="v">k</i>: the colour of <i class="v">a</i><sup><i class="v">k</i></sup> mod <i class="v">n</i>. Every row is a cycle. When <i class="v">n</i> is prime, look at the last column; then look for rows that use every colour before repeating.</p></div>
+<div class="field"><label class="lbl" for="pw-n">Modulus n <output id="pw-n-o"></output></label><input type="range" id="pw-n" min="3" max="41" value="11"></div>
+<div class="field"><span class="lbl">Colouring</span><div class="seg" id="pw-mode"></div></div>
+<div class="row"><button class="primary" id="pw-still">Make a still</button></div>
+<p class="status" id="pw-info" aria-live="polite"></p>
+<div class="still" id="pw-out"></div>
+</div>
+</div></section>
+
+<section class="band alt piece" id="gauss"><div class="wrap">
+<div><div class="easel"><canvas id="cv-gauss" role="img"></canvas></div></div>
+<div class="panel">
+<div><div class="kicker">Chapter 10, Return to Earth</div><h2>Gaussian primes</h2>
+<p class="note">Each point <i class="v">a</i> + <i class="v">b</i>i is a Gaussian integer. The lit points are the Gaussian primes: they cannot be split into smaller Gaussian integers. A prime like 13 = (3 + 2i)(3 − 2i) splits; 7 does not. Which primes split? The ones in water's Book.</p></div>
+<div class="field"><label class="lbl" for="gs-r">Radius <output id="gs-r-o"></output></label><input type="range" id="gs-r" min="5" max="90" value="30"></div>
+<div class="field"><span class="lbl">Colours</span><div class="swatches">
+<label>primes<input type="color" id="gs-c1" value="#0c5f73" aria-label="Colour of the Gaussian primes"></label>
+<label>on the axes<input type="color" id="gs-c2" value="#c8401a" aria-label="Colour of the primes on the axes"></label>
+<label>paper<input type="color" id="gs-c3" value="#fffaf0" aria-label="Paper colour"></label></div></div>
+<div class="field"><span class="lbl">Shape</span><div class="seg" id="gs-shape"></div></div>
+<div class="row"><button class="primary" id="gs-still">Make a still</button></div>
+<p class="status" id="gs-info" aria-live="polite"></p>
+<div class="still" id="gs-out"></div>
 </div>
 </div></section>
 
@@ -247,6 +287,43 @@ setup('spiral',{pal:'Coral reef',ranges:['m','s'],segs:[['hi',[['none','Nothing'
    g.globalAlpha=1;
    P.cv.setAttribute('aria-label',`Number spiral of ${s*s} numbers coloured mod ${m}${hi==='none'?'':', highlighting '+$('#spiral-hi [aria-pressed=true]').textContent}`)}});
 MW.onTheme(()=>Object.values(pieces).forEach(render));
+}
+</script>
+<script src="rooms.js"></script>
+<script>
+{
+const R=MWR,{$}=R,gcd=MW.gcd;
+let pwMode='value';
+R.seg('pw-mode',[['value','By value'],['order','Mark primitive roots']],'value',v=>{pwMode=v;drawPow()});
+R.range('pw-n',drawPow);
+const hue=(v,n)=>`hsl(${Math.round(360*v/n)},62%,${v===1?38:56}%)`;
+function drawPow(){const cv=$('#cv-power'),[g,W,H]=R.ctx(cv),n=+$('#pw-n').value,m=n-1,c=Math.min((W-30)/m,(H-30)/m),ox=26,oy=22;g.clearRect(0,0,W,H);
+  const orders=[],prims=[];let phi=0;
+  for(let a=1;a<n;a++){let x=1,ord=null;for(let k=1;k<=m;k++){x=x*a%n;if(x===1&&ord===null)ord=k;g.fillStyle=x===0?'#14181b':hue(x,n);g.fillRect(ox+(k-1)*c,oy+(a-1)*c,c+0.5,c+0.5)}
+    if(gcd(a,n)===1){phi++;orders.push([a,ord])}}
+  orders.forEach(([a,o])=>{if(o===phi)prims.push(a)});
+  if(pwMode==='order')prims.forEach(a=>{g.strokeStyle=R.col('--ink');g.lineWidth=2.5;g.strokeRect(ox,oy+(a-1)*c,m*c,c)});
+  g.fillStyle=R.col('--mute');g.font=`${Math.max(9,Math.min(12,c*0.7))}px Roboto, sans-serif`;g.textAlign='right';g.textBaseline='middle';
+  for(let a=1;a<n;a++)if(m<=24||a%5===0||a===1)g.fillText(a,ox-4,oy+(a-0.5)*c);
+  g.textAlign='center';for(let k=1;k<=m;k++)if(m<=24||k%5===0||k===1)g.fillText(k,ox+(k-0.5)*c,oy-9);
+  const isPrime=phi===m;
+  $('#pw-info').textContent=`n = ${n}${isPrime?' (prime)':''}. Rows coprime to ${n}: ${phi}.\n`+(isPrime?`Last column: every row is 1 there, because a^${m} ≡ 1 (mod ${n}) (Fermat).\n`:'')+(prims.length?`Primitive roots (rows that use all ${phi} values before repeating): ${prims.join(', ')}.`:`No primitive roots mod ${n}: no row reaches all ${phi} values.`);
+  cv.setAttribute('aria-label',`Power table mod ${n}: rows a from 1 to ${m}, columns k from 1 to ${m}, coloured by a to the k mod ${n}. Primitive roots: ${prims.join(', ')||'none'}`)}
+$('#pw-still').onclick=()=>R.still('#cv-power','#pw-out','a power table');
+
+let shape='disc';
+R.seg('gs-shape',[['disc','Disc'],['square','Square']],'disc',v=>{shape=v;drawGauss()});
+R.range('gs-r',drawGauss);['gs-c1','gs-c2','gs-c3'].forEach(id=>$('#'+id).addEventListener('input',drawGauss));
+const isP=n=>{if(n<2)return false;for(let d=2;d*d<=n;d++)if(n%d===0)return false;return true};
+const gp=(a,b)=>{a=Math.abs(a);b=Math.abs(b);if(a&&b)return isP(a*a+b*b);const c=a||b;return isP(c)&&c%4===3};
+function drawGauss(){const cv=$('#cv-gauss'),[g,W,H]=R.ctx(cv),r=+$('#gs-r').value,s=Math.min(W,H)/(2*r+2),cx=W/2,cy=H/2;g.fillStyle=$('#gs-c3').value;g.fillRect(0,0,W,H);
+  let count=0;for(let a=-r;a<=r;a++)for(let b=-r;b<=r;b++){if(shape==='disc'&&a*a+b*b>r*r)continue;if(!gp(a,b))continue;count++;
+    g.fillStyle=(a===0||b===0)?$('#gs-c2').value:$('#gs-c1').value;g.fillRect(cx+a*s-s*0.42,cy-b*s-s*0.42,s*0.84,s*0.84)}
+  const split=[5,13,17,29,37,41].map(p=>{for(let x=1;x*x<p;x++){const y=Math.round(Math.sqrt(p-x*x));if(x*x+y*y===p)return `${p} = (${x} + ${y}i)(${x} − ${y}i)`}}).join('\n');
+  $('#gs-info').textContent=`${count} Gaussian primes shown.\nPrimes in water's Book split into two Gaussian primes:\n${split}\nPrimes 3, 7, 11, 19, … stay prime: they sit on the axes.`;
+  cv.setAttribute('aria-label',`Gaussian primes within radius ${r}: ${count} points, with eightfold symmetry`)}
+$('#gs-still').onclick=()=>R.still('#cv-gauss','#gs-out','Gaussian primes');
+drawPow();drawGauss();new ResizeObserver(()=>{drawPow();drawGauss()}).observe($('#cv-power'));MW.onTheme(()=>{drawPow();drawGauss()});
 }
 </script>
 </body>

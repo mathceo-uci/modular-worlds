@@ -66,7 +66,7 @@
 <body>
 
 <nav class="toc" aria-label="Proof Lab sections"><div class="wrap">
-<a class="brand" href="index.html">Modular Worlds</a><a href="#recipes">Recipes</a><a href="#bench">The bench</a><a href="#how">How the lab works</a><a href="ch0.html">Chapter 0</a>
+<a class="brand" href="index.html">Modular Worlds</a><a href="#recipes">Recipes</a><a href="#bench">The bench</a><a href="#casebook">Kevin's casebook</a><a href="#how">How the lab works</a><a href="ch0.html">Chapter 0</a>
 </div></nav>
 
 <header class="band hero"><div class="wrap two">
@@ -112,6 +112,19 @@
 <div class="badges" id="badges"></div>
 </div>
 <div id="rep"></div>
+</div></section>
+
+<section class="band" id="casebook"><div class="wrap">
+<h2>Kevin's casebook</h2>
+<p>Kevin keeps a notebook of proofs that look right and are not. Each case has exactly one broken idea. Find the line where it breaks, then name what went wrong. <span id="cb-score"></span></p>
+<div class="seg" id="cb-cases" style="margin:10px 0"></div>
+<div class="bench">
+<p class="goal" id="cb-claim"></p>
+<p class="small" style="margin:0 0 8px">Step 1: press the line where the proof breaks.</p>
+<div id="cb-lines" class="ask" style="flex-direction:column;align-items:stretch"></div>
+<div id="cb-why" class="ask"></div>
+<div class="say" id="cb-say" aria-live="polite">Pick a case.</div>
+</div>
 </div></section>
 
 <section class="band" id="how"><div class="wrap two">
@@ -422,6 +435,39 @@ function report(r,dist,rows){
 $('#mUndo').onclick=()=>{if(!hist.length){say('Nothing to undo.');return}const h=JSON.parse(hist.pop());S=h.S;LOG=h.LOG;letters=h.letters;usedLem=h.usedLem;usedDef=h.usedDef;sel=[];setAsk('');say('Step undone.');draw()};
 $('#mReset').onclick=()=>load(C.id);
 load('c4');
+}
+</script>
+<script>
+{
+const {$,esc}=MW;
+const TYPES={A:'Uses one letter for two different numbers',B:'Checks examples instead of proving it for every number',C:'Proves the statement backwards (the converse)',D:'Divides by something that could be zero',E:'Concludes more than it showed: divides is not equals',F:'Calls it a contradiction without the assumption that makes it one'};
+const CASES=[
+ {t:'Odd + odd',claim:'If a and b are odd, then a + b is even.',lines:['Let a and b be odd.','Then a = 2k + 1 and b = 2k + 1 for some integer k.','So a + b = 4k + 2 = 2(2k + 1).','So a + b is even. ∎'],bad:[1],type:'A',opts:['A','B','C','E'],why:'Using k twice forces a = b, so this only covers sums like 7 + 7. Write b = 2m + 1 with a new letter; then a + b = 2(k + m + 1).'},
+ {t:'The prime machine',claim:'For every whole number n, n² + n + 41 is prime.',lines:['n = 0 gives 41, which is prime.','n = 1 gives 43, which is prime.','We checked every n up to 39: all prime.','So n² + n + 41 is always prime. ∎'],bad:[3],type:'B',opts:['B','A','D','F'],why:'Forty examples are not a proof. At n = 40 the value is 1681 = 41 × 41. Euler studied this polynomial; its long run of primes fools almost everyone.'},
+ {t:'Squares and evens',claim:'If n² is even, then n is even.',lines:['Suppose n is even, so n = 2k.','Then n² = 4k² = 2(2k²).','So n² is even.','Therefore, if n² is even, then n is even. ∎'],bad:[0,3],type:'C',opts:['C','B','E','A'],why:'This proves "if n is even, then n² is even", the other direction. Prove the contrapositive instead: if n is odd, n = 2k + 1, then n² = 2(2k² + 2k) + 1 is odd.'},
+ {t:'Canceling',claim:'If ac = bc, then a = b.',lines:['Start with ac = bc.','Divide both sides by c.','So a = b. ∎'],bad:[1],type:'D',opts:['D','C','E','B'],why:'If c = 0, then 3 · 0 = 5 · 0 but 3 ≠ 5. The claim is false as stated; it needs c ≠ 0.'},
+ {t:'The gcd and the difference',claim:'gcd(a, b) divides a − b.',lines:['Let d = gcd(a, b).','Then a = dk and b = dm for some integers k and m.','So a − b = dk − dm = d(k − m).','Therefore d = a − b. ∎'],bad:[3],type:'E',opts:['E','A','C','F'],why:'Line 3 already proves the claim: a − b is d times an integer. Line 4 claims much more, and it is false: gcd(15, 6) = 3, but 15 − 6 = 9.'},
+ {t:'The diagonal',claim:'√2 is not a fraction.',lines:['Suppose √2 = p/q with p and q whole numbers.','Then 2q² = p², so p² is even, so p is even: p = 2r.','Then 2q² = 4r², so q² = 2r², so q is even too.','Both p and q are even. That is a contradiction. ∎'],bad:[0,3],type:'F',opts:['F','B','C','D'],why:'Both even is no contradiction: 4/2 has both even. The proof must start "suppose √2 = p/q in lowest terms". With that assumption in line 1, line 4 really is a contradiction.'},
+ {t:'The market legend',claim:'If a divides bc, then a divides b or a divides c.',lines:['2 divides 3 × 4, and 2 divides 4.','3 divides 2 × 9, and 3 divides 9.','5 divides 5 × 7, and 5 divides 5.','It works every time, so it is true. ∎'],bad:[3],type:'B',opts:['B','A','E','D'],why:'Examples can only support a claim, and here the claim is false: 6 divides 4 × 9 = 36, but 6 divides neither 4 nor 9. It is true when a is prime (Chapter 5).'}];
+const KEY='mw-casebook';let done={};try{done=JSON.parse(localStorage.getItem(KEY))||{}}catch(e){}
+let C=null,line=null;
+const score=()=>{$('#cb-score').textContent=`Cases closed: ${Object.keys(done).length} of ${CASES.length}.`};
+$('#cb-cases').innerHTML=CASES.map((c,i)=>`<button type="button" data-i="${i}" aria-pressed="false">${esc(c.t)}${done[i]?' ✓':''}</button>`).join('');
+$('#cb-cases').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;open(+b.dataset.i)});
+function open(i){C=i;line=null;const c=CASES[i];document.querySelectorAll('#cb-cases button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.i==i));
+  $('#cb-claim').innerHTML=`<b>Claim:</b> ${esc(c.claim)}`;$('#cb-why').innerHTML='';
+  $('#cb-lines').innerHTML=c.lines.map((t,j)=>`<button type="button" data-j="${j}" style="text-align:left;font-family:'Roboto Mono',monospace;font-size:15px">${j+1}. ${esc(t)}</button>`).join('');
+  $('#cb-say').textContent='Which line breaks the proof?';$('#cb-say').className='say'}
+$('#cb-lines').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||C===null)return;const j=+b.dataset.j,c=CASES[C];
+  if(!c.bad.includes(j)){$('#cb-say').textContent=`Line ${j+1} is fine on its own. Look for the line that claims something it has not earned.`;$('#cb-say').className='say bad';return}
+  line=j;$('#cb-say').textContent=`Yes, line ${j+1}. Now: what went wrong?`;$('#cb-say').className='say good';
+  $('#cb-why').innerHTML=c.opts.map(k=>`<button type="button" data-k="${k}">${esc(TYPES[k])}</button>`).join('')});
+$('#cb-why').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||C===null||line===null)return;const c=CASES[C];
+  if(b.dataset.k!==c.type){$('#cb-say').textContent='Not that. Read the line again and ask: what would Kevin say to it?';$('#cb-say').className='say bad';return}
+  done[C]=1;try{localStorage.setItem(KEY,JSON.stringify(done))}catch(e){}score();
+  document.querySelector(`#cb-cases button[data-i="${C}"]`).textContent=c.t+' ✓';
+  $('#cb-say').textContent='Case closed. '+c.why;$('#cb-say').className='say good';$('#cb-why').innerHTML=''});
+score();
 }
 </script>
 </body>

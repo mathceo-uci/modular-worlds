@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&family=Roboto+Serif:ital,opsz,wght@0,8..144,400;1,8..144,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="rooms.css">
 <style>
 .field{display:flex;flex-direction:column;gap:4px}
 .field .lbl{display:flex;justify-content:space-between;gap:8px;font-size:15px;color:var(--mute)}
@@ -36,12 +37,19 @@ input[type=range]{width:100%;accent-color:var(--sea);height:32px}
 .two2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(18px,3vw,40px);align-items:start}
 @media(max-width:860px){.two2{grid-template-columns:minmax(0,1fr)}}
 .two2>div{min-width:0}
+.vgrid{display:grid;gap:10px;margin-bottom:16px}
+.vgrid .vc{background:var(--panel);border-radius:12px;padding:10px 14px;font-family:"Roboto Serif",Georgia,serif;font-size:16px;line-height:1.5}
+.vgrid .vc h4{font-family:Roboto,sans-serif;font-size:14px;margin:0 0 6px;color:var(--brass)}
+.vgrid .ln{color:var(--mute);font-family:"Roboto Mono",monospace;font-size:12px;margin-right:6px}
+.coda{border-top:2px dashed var(--ember);margin-top:10px;padding-top:6px}
+#pinputs input,#qgrid input{width:100%;margin:3px 0;font-family:"Roboto Serif",Georgia,serif}
+#qgrid fieldset{border:1px solid var(--line);border-radius:10px;margin:0 0 8px;padding:6px 10px}
 </style>
 </head>
 <body>
 
 <nav class="toc" aria-label="Poets' Corner sections"><div class="wrap">
-<a class="brand" href="index.html">Modular Worlds</a><a href="#sestina">The sestina machine</a><a href="#write-s">Write a sestina</a><a href="#fib">Fibonacci tides</a><a href="studio.html">The Studio</a>
+<a class="brand" href="index.html">Modular Worlds</a><a href="#voices">Two voices</a><a href="#stanzas">Stanza crates</a><a href="#sestina">The sestina machine</a><a href="#write-s">Write a sestina</a><a href="#fib">Fibonacci tides</a><a href="#pantoum">Pantoum</a><a href="#queneau">100 trillion poems</a><a href="studio.html">All rooms</a>
 </div></nav>
 
 <header class="band hero"><div class="wrap two">
@@ -56,6 +64,33 @@ input[type=range]{width:100%;accent-color:var(--sea);height:32px}
 <p style="margin:0">A form is a constraint, and constraints are where ideas come from. The math tells you <i>where</i> each word must land. What the poem says is all yours.</p>
 </aside>
 </div></header>
+
+<section class="band alt" id="voices"><div class="wrap two2">
+<div>
+<div class="kicker">Chapter 0 · even and odd</div>
+<h2>A poem for two voices</h2>
+<p>Two readers share one poem: the first reads the odd lines, the second the even ones. Line <i class="v">n</i> goes to the voice given by its leftover, <i class="v">n</i> mod 2. With three voices, use <i class="v">n</i> mod 3, like Doña Trina's trios.</p>
+<div class="field"><span class="lbl">Voices</span><div class="seg" id="vk"></div></div>
+<div class="field"><label class="lbl" for="vtext">Your poem, one line per line</label><textarea id="vtext" style="width:100%;min-height:190px;font-family:'Roboto Serif',Georgia,serif;font-size:16px;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)"></textarea></div>
+<div class="row" style="align-items:end"><div class="field"><label class="lbl" for="vq">Which voice reads line…</label><input type="number" id="vq" value="100" min="1" style="width:7em"></div><button id="vgo">Tell me</button></div>
+<p class="status" id="vans" aria-live="polite"></p>
+</div>
+<div><div id="vgrid" class="vgrid" aria-label="The poem split into voices"></div>
+<div class="box tool"><h3>Perform it</h3><p style="margin:0">Split your crew into voices and read it aloud. Then predict without counting: in a 25-line poem, who reads the last line? Who reads more lines, and how many more? Try 3 voices with 25 lines.</p></div></div>
+</div></section>
+
+<section class="band" id="stanzas"><div class="wrap two2">
+<div>
+<div class="kicker">Chapters 0 and 1 · divisors and the division algorithm</div>
+<h2>Stanza crates</h2>
+<p>Pack a poem's lines into stanzas of equal size, like the Crate Market packs lanterns. If the size divides the number of lines, every stanza is full. If not, the lines left over become a short <b>coda</b> at the end: <i class="v">n</i> = <i class="v">q</i> × <i class="v">d</i> + <i class="v">r</i>.</p>
+<div class="field"><label class="lbl" for="stext">Your poem</label><textarea id="stext" style="width:100%;min-height:190px;font-family:'Roboto Serif',Georgia,serif;font-size:16px;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)"></textarea></div>
+<div class="field"><label class="lbl" for="sd">Lines per stanza d <output id="sd-o"></output></label><input type="range" id="sd" min="1" max="12" value="4"></div>
+<p class="status" id="sinfo" aria-live="polite"></p>
+</div>
+<div><div id="sout" class="poem" aria-live="polite"></div>
+<div class="box tool"><h3>Ask why</h3><p style="margin:0">A 12-line poem can be packed 6 ways with no coda. A 13-line poem only 2 ways. Which line counts up to 30 have the most ways? Which have the fewest? Name them.</p></div></div>
+</div></section>
 
 <section class="band" id="sestina"><div class="wrap two2">
 <div>
@@ -100,6 +135,35 @@ input[type=range]{width:100%;accent-color:var(--sea);height:32px}
 <div id="out-f" aria-live="polite"></div>
 <div class="box tool"><h3>Why does the tide return?</h3>
 <p style="margin:0">There are only <i class="v">m</i>² possible pairs of neighbours mod <i class="v">m</i>, so some pair must repeat. Each pair decides the next number, and it also decides the one before (subtract!). Use that to prove the tide comes back to 1, 1, and not just to some later pair.</p></div>
+</div>
+</div></section>
+
+<section class="band alt" id="pantoum"><div class="wrap two2">
+<div>
+<div class="kicker">Patterns that loop</div>
+<h2>The pantoum</h2>
+<p>A pantoum comes from Malay poetry (the pantun). Lines 2 and 4 of each stanza come back as lines 1 and 3 of the next, and the last stanza brings back the first stanza's lines 3 and 1, so the poem ends where it began. You only write the new lines.</p>
+<div class="field"><label class="lbl" for="pans">Stanzas <output id="pans-o"></output></label><input type="range" id="pans" min="3" max="6" value="4"></div>
+<div id="pinputs"></div>
+</div>
+<div><div id="pout" class="poem" aria-live="polite"></div>
+<p class="status" id="pinfo"></p>
+<div class="box tool"><h3>Count it</h3><p style="margin:0">A pantoum with <i class="v">s</i> stanzas has 4<i class="v">s</i> lines but only 2<i class="v">s</i> different ones, and every line appears exactly twice. Prove it by counting the new lines in each stanza.</p></div></div>
+</div></section>
+
+<section class="band" id="queneau"><div class="wrap two2">
+<div>
+<div class="kicker">Counting and place value</div>
+<h2>A hundred thousand billion poems</h2>
+<p>In 1961 Raymond Queneau published ten sonnets of 14 lines, cut into strips so that any line can be swapped for the same line of another sonnet. That makes 10<sup>14</sup> poems, a hundred thousand billion. Here is a small version: write several versions of each line.</p>
+<div class="field"><label class="lbl" for="qv">Versions of each line <output id="qv-o"></output></label><input type="range" id="qv" min="2" max="6" value="4"></div>
+<div id="qgrid"></div>
+</div>
+<div>
+<div class="row" style="align-items:end"><button class="primary" id="qgo">Surprise me</button><div class="field"><label class="lbl" for="qn">Poem number</label><input type="number" id="qn" min="0" value="0" style="width:8em"></div><button id="qshow">Show it</button></div>
+<div id="qout" class="poem" aria-live="polite"></div>
+<p class="status" id="qinfo"></p>
+<div class="box tool"><h3>Poem numbers are place value</h3><p style="margin:0">With 4 versions of each of 4 lines, write the poem number in base 4: its digits say which version of each line to use. Poem 0 is all first versions; poem 255 is all last versions. Why does base 4 give exactly one poem for each number from 0 to 255?</p></div>
 </div>
 </div></section>
 
@@ -175,6 +239,66 @@ $('#flines').addEventListener('input',e=>{const i=+e.target.dataset.i;S.fl[fkey(
 $('#show-f').addEventListener('click',()=>{const t=counts().map((_,i)=>S.fl[fkey(i)]||'');$('#out-f').innerHTML=`<div class="poem">${esc(t.join('\n'))}</div><p class="note">Select the text to copy it.</p>`});
 $('#clear-f').addEventListener('click',()=>{counts().forEach((_,i)=>delete S.fl[fkey(i)]);save();buildFib();$('#out-f').innerHTML=''});
 buildFib();
+}
+</script>
+<script src="rooms.js"></script>
+<script>
+{
+const R=MWR,{$}=R,{esc}=MW,mod=(a,m)=>((a%m)+m)%m;
+const KEY='mw-poets2';let Q={};try{Q=JSON.parse(localStorage.getItem(KEY))||{}}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(Q))}catch(e){}};
+/* two voices */
+const V0=`The tide goes out at night,\nla marea vuelve al alba.\nOne wave, then another,\nuna ola, y otra más.\nCount them two by two,\ncuéntalas de dos en dos:\nthere is always one left over,\ny esa ola canta sola.`;
+let VK=2;$('#vtext').value=Q.v||V0;
+R.seg('vk',[['2','Two voices'],['3','Three voices'],['4','Four voices']],'2',v=>{VK=+v;drawV()});
+const vname=r=>VK===2?(r===1?'Voice 1: odd lines (leftover 1)':'Voice 2: even lines (leftover 0)'):`Voice ${r===0?VK:r}: leftover ${r}`;
+function drawV(){const L=$('#vtext').value.split('\n');Q.v=$('#vtext').value;save();const order=[...Array(VK).keys()].map(i=>(i+1)%VK);
+  $('#vgrid').style.gridTemplateColumns=`repeat(${Math.min(VK,2)},minmax(0,1fr))`;
+  $('#vgrid').innerHTML=order.map(r=>`<div class="vc"><h4>${vname(r)}</h4>${L.map((t,i)=>(i+1)%VK===r?`<div><span class="ln">${i+1}</span>${esc(t)||'&nbsp;'}</div>`:'').join('')}</div>`).join('')}
+$('#vtext').addEventListener('input',drawV);
+$('#vgo').onclick=()=>{const n=parseInt($('#vq').value,10);if(!(n>=1)){$('#vans').textContent='Enter a line number, 1 or more.';return}const r=n%VK,q=Math.floor(n/VK);
+  $('#vans').textContent=`${n} = ${VK} × ${q} + ${r}, so line ${n} has leftover ${r}: ${vname(r).split(':')[0]} reads it.`};
+drawV();
+/* stanza crates */
+const S0=`We left the harbor before the bells,\nwith salt on our hands and maps in our shells.\nThe sea had numbers in every wave,\nthe gulls kept time, the wind was brave.\nWe counted crates and counted stars,\nwe counted scars on the old ship's spars.\nSome piles split even, some left one,\nsome left two when the day was done.\nWe learned that every number knows\nthe remainder it carries wherever it goes.\nSo write your lines and pack them tight:\nthe leftovers sing the coda at night.`;
+$('#stext').value=Q.s||S0;R.range('sd',drawS);$('#stext').addEventListener('input',drawS);
+function drawS(){Q.s=$('#stext').value;save();const L=Q.s.split('\n').filter(t=>t.trim()!=='');const n=L.length;$('#sd').max=Math.max(1,n);let d=Math.min(+$('#sd').value,Math.max(1,n));R.setR('sd',d);
+  if(!n){$('#sout').innerHTML='';$('#sinfo').textContent='Write some lines first.';return}
+  const q=Math.floor(n/d),r=n%d,divs=[];for(let k=1;k<=n;k++)if(n%k===0)divs.push(k);
+  let h='';for(let k=0;k<q;k++)h+=L.slice(k*d,k*d+d).map(esc).join('\n')+'\n\n';
+  if(r)h+=`<div class="coda">${L.slice(q*d).map(esc).join('\n')}</div>`;
+  $('#sout').innerHTML=h.trim();
+  $('#sinfo').textContent=`${n} lines = ${q} × ${d} + ${r}: ${q} stanza${q===1?'':'s'} of ${d}${r?`, and a coda of ${r} line${r===1?'':'s'}`:', no coda'}.\nStanza sizes with no coda (the divisors of ${n}): ${divs.join(', ')}.${divs.length===2?` ${n} is prime: only 1 and ${n} work.`:''}`}
+drawS();
+/* pantoum */
+const P0=['The harbor lights are counting down the hours,','I pack my fears in crates of three and two,','the gulls write numbers on the morning air,','and every number circles back to you.'];
+Q.p=Q.p||{};
+function drawPI(){const s=+$('#pans').value;let h='<fieldset style="border:1px solid var(--line);border-radius:10px;padding:6px 10px;margin:0 0 8px"><legend>Stanza 1 (four new lines)</legend>'+[0,1,2,3].map(i=>`<input type="text" data-k="s1-${i}" aria-label="Stanza 1, line ${i+1}" value="${esc(Q.p['s1-'+i]??P0[i])}">`).join('')+'</fieldset>';
+  for(let k=2;k<s;k++)h+=`<fieldset style="border:1px solid var(--line);border-radius:10px;padding:6px 10px;margin:0 0 8px"><legend>Stanza ${k} (two new lines: 2 and 4)</legend>`+[1,3].map(i=>`<input type="text" data-k="s${k}-${i}" aria-label="Stanza ${k}, line ${i+1}" placeholder="New line ${i+1}" value="${esc(Q.p['s'+k+'-'+i]||'')}">`).join('')+'</fieldset>';
+  h+=`<p class="note">Stanza ${s} has no new lines: it brings back lines from stanza 1.</p>`;$('#pinputs').innerHTML=h;drawP()}
+$('#pinputs').addEventListener('input',e=>{const k=e.target.dataset.k;if(!k)return;Q.p[k]=e.target.value;save();drawP()});
+R.range('pans',drawPI);
+function drawP(){const s=+$('#pans').value,get=(k,i)=>Q.p[`s${k}-${i}`]??(k===1?P0[i]:''),st=[[0,1,2,3].map(i=>get(1,i))];
+  for(let k=2;k<=s;k++){const p=st[k-2];st.push(k<s?[p[1],get(k,1)||'(new line)',p[3],get(k,3)||'(new line)']:[p[1],st[0][2],p[3],st[0][0]])}
+  $('#pout').innerHTML=st.map(x=>x.map(esc).join('\n')).join('\n\n');$('#pinfo').textContent=`${4*s} lines, ${2*s} different ones, each used exactly twice.`}
+drawPI();
+/* Queneau */
+const QL=[['The tide comes in at seven, never late,','My grandmother counts beads beside the door,','The lighthouse blinks its question to the dark,','A clock of salt keeps time inside the bay,'],
+['and every wave is one more than the last;','and every bead remembers where it fell;','and every answer comes back as a ring;','and every hour is nine hours from before;'],
+['we count the leftovers the ocean keeps','we pack our doubts in crates of three and two,','the stars repeat, but never all at once,','a number knocks; we open: it was home,'],
+['and find the shore exactly where it was.','and sail before the remainders are due.','until the oldest calendar comes round.','and something odd turns even in the foam.']];
+Q.q=Q.q||{};
+function qv(){return +$('#qv').value}
+function drawQG(){const V=qv();$('#qgrid').innerHTML=QL.map((row,l)=>`<fieldset><legend>Line ${l+1}</legend>`+Array.from({length:V},(_,v)=>`<input type="text" data-k="${l}-${v}" aria-label="Line ${l+1}, version ${v}" placeholder="Version ${v} of line ${l+1}" value="${esc(Q.q[l+'-'+v]??(row[v]||''))}">`).join('')+'</fieldset>').join('');
+  $('#qn').max=Math.pow(V,4)-1;showQ(Math.min(+$('#qn').value||0,Math.pow(V,4)-1))}
+$('#qgrid').addEventListener('input',e=>{const k=e.target.dataset.k;if(!k)return;Q.q[k]=e.target.value;save()});
+R.range('qv',drawQG);
+function showQ(num){const V=qv(),tot=Math.pow(V,4);num=mod(num,tot);const dg=[];let x=num;for(let l=0;l<4;l++){dg.unshift(x%V);x=Math.floor(x/V)}
+  const lines=dg.map((v,l)=>Q.q[l+'-'+v]??(QL[l][v]||`(version ${v} of line ${l+1})`));$('#qn').value=num;
+  $('#qout').innerHTML=lines.map(esc).join('\n');$('#qinfo').textContent=`Poem ${num} of ${tot} (numbered 0 to ${tot-1}). In base ${V}, ${num} is ${dg.join('')}: versions ${dg.join(', ')} of lines 1 to 4.\nWith 14 lines and 10 versions, as in Queneau's book: 10^14 poems. Reading one a minute, day and night, would take about 190 million years.`}
+$('#qgo').onclick=()=>showQ(Math.floor(Math.random()*Math.pow(qv(),4)));
+$('#qshow').onclick=()=>showQ(parseInt($('#qn').value,10)||0);
+drawQG();
 }
 </script>
 </body>

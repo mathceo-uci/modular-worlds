@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Cipher Workshop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="rooms.css">
+<style>.map{display:grid;grid-template-columns:repeat(auto-fill,minmax(34px,1fr));gap:3px;font-family:"Roboto Mono",monospace;font-size:14px;text-align:center}
+.map span{border:1px solid var(--line);border-radius:6px;padding:2px 0;line-height:1.3}
+.map span b{display:block;color:var(--sea)}
+.map span.bad{border-color:var(--ember);background:var(--ember-soft)}
+.out{font-family:"Roboto Mono",monospace;font-size:17px;background:var(--code);border-radius:10px;padding:12px;min-height:3em;overflow-wrap:anywhere;white-space:pre-wrap}</style>
+</head>
+<body>
+<nav class="toc" aria-label="Cipher Workshop sections"><div class="wrap">
+<a class="brand" href="index.html">Modular Worlds</a><a href="#affine">Shift and multiply</a><a href="#crack">Cracking station</a><a href="#rsa">Toy RSA</a><a href="#card">Puzzle cards</a><a href="studio.html">All rooms</a>
+</div></nav>
+
+<header class="band hero"><div class="wrap two">
+<div>
+<div class="kicker">Modular Worlds · The Studio rooms · Chapters 6 and 9</div>
+<h1>The Cipher Workshop</h1>
+<p class="lede">In Secret Tides, messages travel in bottles, and anyone can fish them out. Ana runs the ship's cipher workshop: number the letters, do arithmetic mod the size of the alphabet, and the message becomes nonsense to everyone but the crew. Build ciphers, crack other crews' ciphers, and make puzzle cards for them to solve.</p>
+</div>
+<aside class="box thm"><h3>Letters are numbers mod m</h3>
+<p style="margin:0">In English, A = 0, B = 1, …, Z = 25, and arithmetic is mod 26. In Spanish, with Ñ, there are 27 letters and arithmetic is mod 27. That one extra letter changes which keys work.</p></aside>
+</div></header>
+
+<section class="band" id="affine"><div class="wrap two">
+<div>
+<h2>Shift and multiply</h2>
+<p class="note">The <b>affine cipher</b> sends letter <i class="v">x</i> to <i class="v">a</i>·<i class="v">x</i> + <i class="v">b</i> mod <i class="v">m</i>. With <i class="v">a</i> = 1 it is Julius Caesar's shift cipher.</p>
+<div class="field"><span class="lbl">Alphabet</span><div class="seg" id="alpha"></div></div>
+<div class="row">
+<div class="field" style="flex:1"><label class="lbl" for="ka">Multiply by a <output id="ka-o"></output></label><input type="range" id="ka" min="1" max="26" value="5"></div>
+<div class="field" style="flex:1"><label class="lbl" for="kb">Then shift by b <output id="kb-o"></output></label><input type="range" id="kb" min="0" max="26" value="8"></div>
+</div>
+<div class="field"><label class="lbl" for="plain">Message</label><textarea id="plain">MEET AT THE LIGHTHOUSE AT MIDNIGHT</textarea></div>
+<div class="row"><button class="primary" id="enc">Encrypt</button><button id="dec">Decrypt</button></div>
+<div class="out" id="cout" aria-live="polite"></div>
+<p class="status" id="kinfo" aria-live="polite"></p>
+</div>
+<div>
+<h3>The key as a table</h3>
+<div class="map" id="map" aria-label="Where each letter goes"></div>
+<div class="box tool" style="margin-top:16px"><h3>Which keys work?</h3>
+<p style="margin:0">Try <i class="v">a</i> = 2 or <i class="v">a</i> = 13 in English: some letters collide, and the message can't be undone. In Spanish, <i class="v">a</i> = 2 works but <i class="v">a</i> = 3 fails. A key works exactly when gcd(<i class="v">a</i>, <i class="v">m</i>) = 1, because then <i class="v">a</i> has an inverse mod <i class="v">m</i>. How many good values of <i class="v">a</i> does each alphabet have? (That count is Euler's φ, Chapter 8.)</p></div>
+</div>
+</div></section>
+
+<section class="band alt" id="crack"><div class="wrap two">
+<div>
+<h2>Cracking station</h2>
+<div class="field"><label class="lbl" for="ctext">Paste another crew's ciphertext</label><textarea id="ctext">QCCZ IZ ZRC LWMRZRAEUC IZ QWXVWMRZ</textarea></div>
+<div class="row"><button class="primary" id="freq">Count letters</button><button id="brute">Try every shift</button><button id="bruteA">Try every affine key</button></div>
+<div class="easel wide" style="margin-top:10px"><canvas id="cv-f" role="img" aria-label="Letter counts"></canvas></div>
+</div>
+<div>
+<div class="out" id="crackout" aria-live="polite" style="max-height:420px;overflow:auto"></div>
+<div class="box thm" style="margin-top:16px"><h3>Why these ciphers are weak</h3>
+<p style="margin:0">Each letter always becomes the same letter, so the most common letter in the ciphertext is probably E (in English) or E or A (in Spanish). And there are only a few hundred keys: a computer, or a patient crew, can try them all. Real security needs far more keys, and a different idea: RSA.</p></div>
+</div>
+</div></section>
+
+<section class="band" id="rsa"><div class="wrap two">
+<div>
+<h2>Toy RSA</h2>
+<p class="note">Pick two primes. Anyone can see <i class="v">n</i> = <i class="v">p</i><i class="v">q</i> and the public key <i class="v">e</i>. Only you know <i class="v">d</i>, which undoes <i class="v">e</i> because <i class="v">e</i><i class="v">d</i> ≡ 1 mod (<i class="v">p</i> − 1)(<i class="v">q</i> − 1).</p>
+<div class="row">
+<div class="field"><label class="lbl" for="rp">Prime p</label><select id="rp"></select></div>
+<div class="field"><label class="lbl" for="rq">Prime q</label><select id="rq"></select></div>
+<div class="field"><label class="lbl" for="re">Public key e</label><input type="number" id="re" value="17" min="3"></div>
+</div>
+<div class="field"><label class="lbl" for="rm">Message (a number smaller than n)</label><input type="number" id="rm" value="1234" min="0"></div>
+<div class="row"><button class="primary" id="rgo">Encrypt and decrypt</button><button id="rbreak">Break it by factoring n</button></div>
+<p class="status" id="rres" aria-live="polite"></p>
+</div>
+<aside class="box tool"><h3>Real keys</h3>
+<p style="margin:0">Factoring the toy <i class="v">n</i> takes a moment. Real RSA uses primes with hundreds of digits, and nobody knows a fast way to factor their product. Encrypting stays easy with fast powers (Chapter 8), while breaking it seems impossibly hard. Chapter 9 explains why it works, and asks who it protects.</p></aside>
+</div></section>
+
+<section class="band alt" id="card"><div class="wrap two">
+<div>
+<h2>Make a puzzle card</h2>
+<div class="field"><label class="lbl" for="pcrew">Your crew</label><input type="text" id="pcrew" value="The Lighthouse Crew"></div>
+<div class="field"><label class="lbl" for="ptext">Ciphertext (use Encrypt above, then paste here)</label><textarea id="ptext">QCCZ IZ ZRC LWMRZRAEUC IZ QWXVWMRZ</textarea></div>
+<div class="field"><label class="lbl" for="phint">A fair hint</label><input type="text" id="phint" value="Affine cipher, English alphabet. The key a is a prime."></div>
+<div class="row"><button class="primary" id="pmake">Make the card</button></div>
+</div>
+<div class="still" id="pout"><p class="note">Your card appears here. Save it and swap it with another crew.</p></div>
+</div></section>
+
+<section class="band"><div class="wrap pager"><a href="observatory.html">← The Observatory</a><a href="pixels.html">The Pixel Room →</a></div></section>
+<footer class="band"><div class="wrap">Modular Worlds · The Cipher Workshop · draft · UCI Math CEO</div></footer>
+
+<script src="book.js"></script>
+<script src="rooms.js"></script>
+<script>
+{
+const R=MWR,{$,gcd}=Object.assign({},MWR,{gcd:MW.gcd}),mod=(a,m)=>((a%m)+m)%m;
+const AL={en:'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),es:'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ'.split('')};
+let L='en';
+const clean=t=>t.toUpperCase().replace(/Ñ/g,'\u0001').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\u0001/g,'Ñ');
+function inv(a,m){for(let x=1;x<m;x++)if(mod(a*x,m)===1)return x;return null}
+function apply(t,f){const A=AL[L];return clean(t).split('').map(ch=>{const i=A.indexOf(ch);return i<0?ch:A[f(i)]}).join('')}
+R.seg('alpha',[['en','English (26 letters)'],['es','Español (27, with Ñ)']],'en',v=>{L=v;const m=AL[L].length;$('#ka').max=m-1;$('#kb').max=m-1;if(+$('#ka').value>m-1)R.setR('ka',m-1);if(+$('#kb').value>m-1)R.setR('kb',m-1);key()});
+R.range('ka',key);R.range('kb',key);
+function key(){const A=AL[L],m=A.length,a=+$('#ka').value,b=+$('#kb').value,g=gcd(a,m),img=A.map((_,i)=>mod(a*i+b,m)),hit={};img.forEach(j=>hit[j]=(hit[j]||0)+1);
+  $('#map').innerHTML=A.map((ch,i)=>`<span class="${hit[img[i]]>1?'bad':''}" aria-label="${ch} goes to ${A[img[i]]}">${ch}<b>${A[img[i]]}</b></span>`).join('');
+  const ai=inv(a,m);
+  if(g===1)$('#kinfo').textContent=`x → ${a}x + ${b} (mod ${m}). gcd(${a}, ${m}) = 1, so the key works.\nTo decrypt: x → ${ai}·(x − ${b}) (mod ${m}), because ${a} × ${ai} = ${a*ai} ≡ 1 (mod ${m}).`;
+  else{const i1=0,i2=m/g;$('#kinfo').textContent=`x → ${a}x + ${b} (mod ${m}). gcd(${a}, ${m}) = ${g}: broken key.\n${A[i1]} and ${A[i2]} both go to ${A[img[i1]]}, so a receiver can't tell them apart. Only ${m/g} different letters ever appear.`}}
+$('#enc').onclick=()=>{const m=AL[L].length,a=+$('#ka').value,b=+$('#kb').value;$('#cout').textContent=apply($('#plain').value,i=>mod(a*i+b,m))};
+$('#dec').onclick=()=>{const m=AL[L].length,a=+$('#ka').value,b=+$('#kb').value,ai=inv(a,m);if(ai===null){$('#cout').textContent='This key cannot be undone: gcd(a, m) is not 1.';return}$('#cout').textContent=apply($('#plain').value,i=>mod(ai*(i-b),m))};
+function counts(t){const A=AL[L],c=A.map(()=>0);clean(t).split('').forEach(ch=>{const i=A.indexOf(ch);if(i>=0)c[i]++});return c}
+function drawF(){const cv=$('#cv-f'),[g,W,H]=R.ctx(cv),A=AL[L],c=counts($('#ctext').value),mx=Math.max(1,...c),bw=(W-20)/A.length;g.clearRect(0,0,W,H);
+  c.forEach((v,i)=>{const h=(H-40)*v/mx;g.fillStyle=v===mx?R.col('--ember'):R.col('--sea');g.fillRect(10+i*bw+2,H-24-h,bw-4,h);g.fillStyle=R.col('--ink');g.font=`${Math.min(13,bw*0.7)}px "Roboto Mono", monospace`;g.textAlign='center';g.fillText(A[i],10+i*bw+bw/2,H-8);if(v){g.fillStyle=R.col('--mute');g.fillText(v,10+i*bw+bw/2,H-28-h)}});
+  const top=A.map((ch,i)=>[ch,c[i]]).sort((p,q)=>q[1]-p[1]).slice(0,3).filter(p=>p[1]);
+  cv.setAttribute('aria-label','Letter counts. Most common: '+top.map(p=>`${p[0]} (${p[1]})`).join(', '));return top}
+$('#freq').onclick=()=>{const top=drawF();$('#crackout').textContent=`Most common letters: ${top.map(p=>p[0]+' ('+p[1]+')').join(', ')}.\nIf the top letter stands for E, the shift is ${top.length?mod(AL[L].indexOf(top[0][0])-AL[L].indexOf('E'),AL[L].length):'?'}. Try it with Decrypt.`};
+$('#brute').onclick=()=>{const m=AL[L].length;$('#crackout').textContent=Array.from({length:m},(_,b)=>`shift ${String(b).padStart(2)}: ${apply($('#ctext').value,i=>mod(i-b,m))}`).join('\n');drawF()};
+$('#bruteA').onclick=()=>{const m=AL[L].length,out=[];for(let a=1;a<m;a++){const ai=inv(a,m);if(ai===null)continue;for(let b=0;b<m;b++)out.push({a,b,t:apply($('#ctext').value,i=>mod(ai*(i-b),m))})}
+  const common=L==='en'?/\b(THE|AND|AT|OF|TO|IS|IN)\b/g:/\b(EL|LA|DE|QUE|EN|Y|LOS)\b/g;
+  out.forEach(o=>o.score=(o.t.match(common)||[]).length);out.sort((p,q)=>q.score-p.score);
+  $('#crackout').textContent=`${out.length} possible keys. The ones that look most like ${L==='en'?'English':'Spanish'} come first:\n`+out.slice(0,12).map(o=>`a = ${o.a}, b = ${o.b}: ${o.t}`).join('\n');drawF()};
+/* RSA */
+const isP=n=>{if(n<2)return false;for(let d=2;d*d<=n;d++)if(n%d===0)return false;return true};
+const PR=[];for(let n=11;n<400;n++)if(isP(n))PR.push(n);
+$('#rp').innerHTML=PR.map(p=>`<option ${p===61?'selected':''}>${p}</option>`).join('');$('#rq').innerHTML=PR.map(p=>`<option ${p===53?'selected':''}>${p}</option>`).join('');
+const pow=(b,e,m)=>{b=BigInt(b)%BigInt(m);e=BigInt(e);m=BigInt(m);let r=1n;while(e>0n){if(e&1n)r=r*b%m;b=b*b%m;e>>=1n}return r};
+function egcdInv(a,m){let[o,r]=[a,m],[os,s]=[1,0];while(r){const q=Math.floor(o/r);[o,r]=[r,o-q*r];[os,s]=[s,os-q*s]}return o===1?mod(os,m):null}
+$('#rgo').onclick=()=>{const p=+$('#rp').value,q=+$('#rq').value,e=parseInt($('#re').value,10),M=parseInt($('#rm').value,10),n=p*q,phi=(p-1)*(q-1);
+  if(p===q){$('#rres').textContent='Choose two different primes.';return}
+  if(!(e>1)||gcd(e,phi)!==1){$('#rres').textContent=`e must share no factor with (p − 1)(q − 1) = ${phi}. gcd(${e}, ${phi}) = ${gcd(e||0,phi)}. Try another e.`;return}
+  if(!(M>=0&&M<n)){$('#rres').textContent=`The message must be a whole number from 0 to ${n-1}.`;return}
+  const d=egcdInv(e,phi),c=pow(M,e,n),back=pow(c,d,n);
+  $('#rres').textContent=`Public: n = ${p} × ${q} = ${n}, e = ${e}.\nPrivate: d = ${d}, since ${e} × ${d} = ${e*d} ≡ 1 (mod ${phi}).\nEncrypt: ${M}^${e} mod ${n} = ${c}.\nDecrypt: ${c}^${d} mod ${n} = ${back}. ${Number(back)===M?'The message is back.':''}`};
+$('#rbreak').onclick=()=>{const n=+$('#rp').value*+$('#rq').value;let f=2,tries=0;while(n%f){f++;tries++}
+  $('#rres').textContent+=`\n\nAn eavesdropper sees n = ${n}. Trying divisors 2, 3, 4, … finds ${f} after ${tries+1} tries, so n = ${f} × ${n/f}, and the private key falls out. With 300-digit primes, the same search would outlast the universe.`};
+/* card */
+$('#pmake').onclick=()=>{const cv=document.createElement('canvas'),W=1000,g=cv.getContext('2d'),pad=50;
+  const wrap=(t,w,font)=>{g.font=font;const out=[];let line='';t.split(' ').forEach(wd=>{const tr=line?line+' '+wd:wd;if(g.measureText(tr).width>w&&line){out.push(line);line=wd}else line=tr});out.push(line);return out};
+  const ct=wrap($('#ptext').value,W-2*pad,'500 30px "Roboto Mono", monospace'),hi=wrap('Hint: '+$('#phint').value,W-2*pad,'italic 22px Roboto, sans-serif');
+  const H=pad*2+70+ct.length*44+30+hi.length*32+40;cv.width=W;cv.height=H;
+  g.fillStyle='#14181b';g.fillRect(0,0,W,H);g.strokeStyle='#e0b154';g.lineWidth=4;g.strokeRect(14,14,W-28,H-28);
+  let y=pad+30;g.fillStyle='#e0b154';g.font='700 30px "Roboto Flex", Roboto, sans-serif';g.fillText('A sealed message from '+$('#pcrew').value,pad,y);
+  y+=50;g.fillStyle='#f6f1e7';g.font='500 30px "Roboto Mono", monospace';ct.forEach(t=>{g.fillText(t,pad,y);y+=44});
+  y+=10;g.fillStyle='#9cd3c6';g.font='italic 22px Roboto, sans-serif';hi.forEach(t=>{g.fillText(t,pad,y);y+=32});
+  g.fillStyle='#8a9096';g.font='16px Roboto, sans-serif';g.fillText('Modular Worlds · The Cipher Workshop',pad,H-pad+10);
+  $('#pout').innerHTML=`<img alt="Puzzle card from ${$('#pcrew').value.replace(/"/g,'')}: ciphertext ${$('#ptext').value.replace(/"/g,'')}" src="${cv.toDataURL('image/png')}"><p class="note">Right-click or press and hold the card to save it.</p>`};
+key();drawF();new ResizeObserver(drawF).observe($('#cv-f'));
+}
+</script>
+</body>
+</html>

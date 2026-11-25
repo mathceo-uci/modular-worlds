@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Game Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="rooms.css">
+<style>
+.board{display:grid;grid-template-columns:minmax(52px,1fr) repeat(6,minmax(0,1fr)) minmax(52px,1fr);grid-template-rows:auto auto;gap:6px;background:#7a4f2a;padding:12px;border-radius:40px}
+.board .store{grid-row:1/3;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#5c3a1e;border-radius:30px;color:#f6f1e7;font-weight:700;font-size:22px;min-height:150px}
+.board .store small{font-size:12px;font-weight:400;opacity:.85}
+.board>div{display:flex;align-items:center;justify-content:center;min-width:0}
+.pit{width:100%;max-width:90px;aspect-ratio:1;border-radius:50%!important;background:#5c3a1e!important;border:none;color:#f6f1e7;font:700 20px Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0;padding:0;cursor:pointer}
+.pit[disabled]{cursor:default;opacity:1!important;color:#f6f1e7!important}
+.pit small{font-size:clamp(8px,1.6vw,11px);font-weight:400;line-height:1.1;color:#e0b154}
+.pit.extra{box-shadow:0 0 0 3px #e0b154 inset}
+.pit.last{box-shadow:0 0 0 3px #9cd3c6 inset}
+.circle{display:flex;flex-wrap:wrap;gap:6px}
+</style>
+</head>
+<body>
+<nav class="toc" aria-label="Game Room sections"><div class="wrap">
+<a class="brand" href="index.html">Modular Worlds</a><a href="#mancala">Mancala</a><a href="#potato">Hot potato</a><a href="studio.html">All rooms</a>
+</div></nav>
+
+<header class="band hero"><div class="wrap two">
+<div>
+<div class="kicker">Modular Worlds · The Studio rooms</div>
+<h1>The Game Room</h1>
+<p class="lede">Some of the oldest games in the world are played around a circle, and circles mean leftovers. Below deck there is a carved mancala board and a crew that never tires of hot potato. Win them, then explain why you won.</p>
+</div>
+<aside class="box thm"><h3>Games from many places</h3>
+<p style="margin:0">Mancala games (oware in Ghana, bao in East Africa, and many more across Africa, the Middle East and South Asia) are among the oldest board games still played. The version here is Kalah, a simple modern variant that is easy to learn.</p></aside>
+</div></header>
+
+<section class="band" id="mancala"><div class="wrap">
+<div class="two" style="align-items:start">
+<div>
+<h2>Mancala</h2>
+<p class="note">Pick one of your pits (bottom row). Its seeds are sown one by one counterclockwise, into your store too, but never into the computer's store. Last seed in your store: go again. Last seed in an empty pit on your side: capture it and the seeds across from it. Most seeds in your store when one side runs out wins.</p>
+</div>
+<aside class="box tool"><h3>The leftover trick</h3>
+<p style="margin:0">Going around, there are 13 holes (12 pits and your store). From a pit that is <i class="v">d</i> steps from your store, a pile of <i class="v">s</i> seeds ends in your store exactly when <i class="v">s</i> ≡ <i class="v">d</i> (mod 13). Turn on Lucía's marks to see where each pile will end: “store!” means an extra turn.</p></aside>
+</div>
+<div class="board" id="board" aria-label="Mancala board"></div>
+<div class="row" style="margin-top:12px">
+<div class="field"><label class="lbl" for="seeds">Seeds per pit</label><select id="seeds"><option>3</option><option selected>4</option><option>5</option><option>6</option></select></div>
+<button class="primary" id="mnew">New game</button>
+<button id="marks" aria-pressed="false">Lucía's marks</button>
+</div>
+<p class="status" id="mstat" aria-live="polite" style="margin-top:10px"></p>
+</div></section>
+
+<section class="band alt piece" id="potato"><div class="wrap">
+<div><div class="easel"><canvas id="cv-p" role="img" aria-label="Players in a circle"></canvas></div></div>
+<div class="panel">
+<h2>Hot potato</h2>
+<p class="note"><i class="v">n</i> players stand in a circle. Counting starts at player 1; every <i class="v">k</i>-th player is out, and counting goes on from the next player. Who is left at the end?</p>
+<div class="field"><label class="lbl" for="pn">Players n <output id="pn-o"></output></label><input type="range" id="pn" min="2" max="41" value="10"></div>
+<div class="field"><label class="lbl" for="pk">Every k-th is out <output id="pk-o"></output></label><input type="range" id="pk" min="2" max="9" value="2"></div>
+<div class="row"><label for="guess" class="note">Your guess for the survivor</label><input type="number" id="guess" min="1" max="41" value="1" style="width:5em"><button class="primary" id="pgo">Play it out</button><button id="pstep">One step</button><button id="preset">Reset</button></div>
+<p class="status" id="pstat" aria-live="polite"></p>
+<div class="box tool" style="margin:0"><h3>Find the pattern (Chapter 1)</h3>
+<p>With <i class="v">k</i> = 2, list the survivor for <i class="v">n</i> = 1, 2, …, 16. You should see runs that restart at 1 whenever <i class="v">n</i> is a power of 2. Write <i class="v">n</i> = 2<sup><i class="v">m</i></sup> + <i class="v">L</i> and guess the survivor in terms of <i class="v">L</i>. Then prove it by strong induction.</p>
+<p style="margin:0">History: this is the Josephus problem, named after a story told by the historian Flavius Josephus in the first century.</p></div>
+</div>
+</div></section>
+
+<section class="band"><div class="wrap pager"><a href="pixels.html">← The Pixel Room</a><a href="studio.html">All rooms →</a></div></section>
+<footer class="band"><div class="wrap">Modular Worlds · The Game Room · draft · UCI Math CEO</div></footer>
+
+<script src="book.js"></script>
+<script src="rooms.js"></script>
+<script>
+{
+const R=MWR,{$}=R;
+/* ---------- Kalah: 0-5 you, 6 your store, 7-12 computer, 13 its store ---------- */
+let B=[],turn=0,over=false,marks=false,lastHole=-1;
+function sow(b,p,who){b=b.slice();let s=b[p];b[p]=0;let i=p;const skip=who===0?13:6;while(s>0){i=(i+1)%14;if(i===skip)continue;b[i]++;s--}
+  let extra=false;const store=who===0?6:13;
+  if(i===store)extra=true;else{const mine=who===0?(i>=0&&i<=5):(i>=7&&i<=12);if(mine&&b[i]===1&&b[12-i]>0){b[store]+=b[12-i]+1;b[i]=0;b[12-i]=0}}
+  let end=false;const a=b.slice(0,6).reduce((x,y)=>x+y,0),c=b.slice(7,13).reduce((x,y)=>x+y,0);
+  if(a===0||c===0){b[6]+=a;b[13]+=c;for(let k=0;k<6;k++)b[k]=0;for(let k=7;k<13;k++)b[k]=0;end=true}
+  return {b,extra,end,last:i}}
+function moves(b,who){const r=[];for(let k=who===0?0:7;k<(who===0?6:13);k++)if(b[k]>0)r.push(k);return r}
+function search(b,who,depth,al,be){const ms=moves(b,who);if(depth===0||!ms.length)return [b[13]-b[6],null];
+  let best=who===1?-1e9:1e9,bm=ms[0];
+  for(const m of ms){const r=sow(b,m,who);let v;if(r.end)v=r.b[13]-r.b[6];else if(r.extra)v=search(r.b,who,depth-1,al,be)[0];else v=search(r.b,1-who,depth-1,al,be)[0];
+    if(who===1){if(v>best){best=v;bm=m}al=Math.max(al,v)}else{if(v<best){best=v;bm=m}be=Math.min(be,v)}if(be<=al)break}
+  return [best,bm]}
+function draw(){const bd=$('#board');const pit=i=>{const yours=i<6,d=6-i,s=B[i];const land=yours?((i+s)%13):0;const ex=marks&&yours&&s>0&&(s%13)===(d%13);
+    const lm=marks&&yours&&s>0?`<small>${ex?'store!':'→ '+(()=>{let j=i,k=s;while(k>0){j=(j+1)%14;if(j===13)continue;k--}return j<6?'pit '+(j+1):j===6?'store':'theirs'})()}</small>`:'';
+    return `<button class="pit${ex?' extra':''}${i===lastHole?' last':''}" data-i="${i}" ${(!yours||turn!==0||over||!s)?'disabled':''} aria-label="${yours?'Your pit '+(i+1):'Computer pit '+(13-i)}: ${s} seeds${ex?', lands in your store':''}">${s}${lm}</button>`};
+  bd.innerHTML=`<div class="store" style="grid-column:1" aria-label="Computer store: ${B[13]} seeds"><small>computer</small>${B[13]}</div>`+
+    [12,11,10,9,8,7].map((i,c)=>`<div style="grid-column:${c+2};grid-row:1">${pit(i)}</div>`).join('')+
+    [0,1,2,3,4,5].map((i,c)=>`<div style="grid-column:${c+2};grid-row:2">${pit(i)}</div>`).join('')+
+    `<div class="store" style="grid-column:8" aria-label="Your store: ${B[6]} seeds"><small>you</small>${B[6]}</div>`}
+function status(t){$('#mstat').textContent=t}
+function finish(){over=true;draw();status(B[6]>B[13]?`You win, ${B[6]} to ${B[13]}!`:B[6]<B[13]?`The computer wins, ${B[13]} to ${B[6]}. Try again with Lucía's marks.`:`A tie, ${B[6]} to ${B[13]}.`)}
+function cpu(){if(over)return;status('The computer is thinking…');setTimeout(()=>{const[,m]=search(B,1,7,-1e9,1e9);const r=sow(B,m,1);B=r.b;lastHole=r.last;
+  if(r.end)return finish();if(r.extra){draw();status(`The computer sowed pit ${13-m} and landed in its store: it goes again.`);return cpu()}turn=0;draw();status(`The computer sowed its pit ${13-m}. Your turn.`)},500)}
+$('#board').addEventListener('click',e=>{const p=e.target.closest('.pit');if(!p||p.disabled||turn!==0||over)return;const i=+p.dataset.i;const r=sow(B,i,0);B=r.b;lastHole=r.last;
+  if(r.end)return finish();if(r.extra){draw();status('Your last seed landed in your store: go again!');return}turn=1;draw();cpu()});
+function newGame(){const s=+$('#seeds').value;B=[s,s,s,s,s,s,0,s,s,s,s,s,s,0];turn=0;over=false;lastHole=-1;draw();status('Your turn: pick a pit on the bottom row.')}
+$('#mnew').onclick=newGame;$('#seeds').onchange=newGame;
+$('#marks').onclick=e=>{marks=!marks;e.target.setAttribute('aria-pressed',marks);draw()};
+newGame();
+
+/* ---------- Hot potato (Josephus) ---------- */
+let ring=[],out=[],pos=0,pn=10,pk=2,timer=0;
+function presetP(){clearInterval(timer);pn=+$('#pn').value;pk=+$('#pk').value;ring=Array.from({length:pn},(_,i)=>i+1);out=[];pos=0;$('#guess').max=pn;drawP();$('#pstat').textContent=`${pn} players, every ${pk === 2 ? 'second' : pk+'th'} is out. Make a guess, then play.`}
+function stepP(){if(ring.length<=1)return false;pos=(pos+pk-1)%ring.length;out.push(ring.splice(pos,1)[0]);if(pos>=ring.length)pos=0;drawP();return ring.length>1}
+function drawP(){const cv=$('#cv-p'),[g,W,H]=R.ctx(cv),cx=W/2,cy=H/2,rad=Math.min(W,H)*0.4,r=Math.min(22,rad*Math.PI/pn*0.8);g.clearRect(0,0,W,H);
+  for(let i=1;i<=pn;i++){const a=-Math.PI/2+2*Math.PI*(i-1)/pn,x=cx+rad*Math.cos(a),y=cy+rad*Math.sin(a),alive=ring.includes(i),isNext=alive&&ring[pos]===i&&ring.length>1;
+    g.beginPath();g.arc(x,y,r,0,7);g.fillStyle=alive?(ring.length===1?R.col('--brass'):R.col('--sea')):R.col('--panel');g.fill();g.lineWidth=isNext?3:1;g.strokeStyle=isNext?R.col('--ember'):R.col('--line');g.stroke();
+    g.fillStyle=alive?'#fff':R.col('--mute');g.font=`700 ${Math.max(10,r*0.8)}px Roboto, sans-serif`;g.textAlign='center';g.textBaseline='middle';g.fillText(i,x,y)}
+  if(out.length){g.fillStyle=R.col('--mute');g.font='13px Roboto, sans-serif';g.fillText('out: '+out.slice(-12).join(', ')+(out.length>12?' …':''),cx,cy)}
+  cv.setAttribute('aria-label',`Circle of ${pn} players; still in: ${ring.join(', ')}`)}
+function result(){const g=+$('#guess').value,s=ring[0];let msg=`Player ${s} survives. ${g===s?'You guessed it!':'You guessed '+g+'.'}`;
+  if(pk===2){let m=1;while(m*2<=pn)m*=2;const L=pn-m;msg+=`\n${pn} = ${m} + ${L}, and the survivor is 2 × ${L} + 1 = ${2*L+1}.`}
+  $('#pstat').textContent=msg}
+$('#pgo').onclick=()=>{presetP();clearInterval(timer);if(R.reduce){while(stepP());result();return}timer=setInterval(()=>{if(!stepP()){clearInterval(timer);result()}},Math.max(120,1800/pn))};
+$('#pstep').onclick=()=>{if(!stepP())result();else $('#pstat').textContent=`Out so far: ${out.join(', ')}.`};
+$('#preset').onclick=presetP;R.range('pn',presetP);R.range('pk',presetP);
+presetP();new ResizeObserver(drawP).observe($('#cv-p'));MW.onTheme(drawP);
+}
+</script>
+</body>
+</html>

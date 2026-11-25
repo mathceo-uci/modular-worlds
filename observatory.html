@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Observatory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="rooms.css">
+</head>
+<body>
+<nav class="toc" aria-label="Observatory sections"><div class="wrap">
+<a class="brand" href="index.html">Modular Worlds</a><a href="#wheels">The wheels</a><a href="#birthday">Your birthday</a><a href="#meet">Do they ever meet?</a><a href="#week">The week</a><a href="studio.html">All rooms</a>
+</div></nav>
+
+<header class="band hero"><div class="wrap two">
+<div>
+<div class="kicker">Modular Worlds · The Studio rooms · Chapter 7</div>
+<h1>The Observatory</h1>
+<p class="lede">On the Calendar Isles, an observatory keeps time the way the Maya did: with wheels inside wheels. A 13-day count turns with 20 day names to make the 260-day <b>Tzolk'in</b>. Beside it turns the 365-day <b>Haab'</b>. Together they make the <b>Calendar Round</b>, which repeats every 52 years.</p>
+</div>
+<aside class="box thm"><h3>Three cycles, one question</h3>
+<p style="margin:0">How long until all the wheels line up again? That is an lcm. Which combinations can ever happen at all? That is the Chinese Remainder Theorem, and the answer depends on a gcd.</p></aside>
+</div></header>
+
+<section class="band piece" id="wheels"><div class="wrap">
+<div><div class="easel"><canvas id="cv" role="img" aria-label="Maya calendar wheels"></canvas></div>
+<p class="note">Inner ring: the 13 numbers. Middle ring: the 20 day names. Outer ring: the 365 days of the Haab' (18 months of 20 days and 5 days of Wayeb'). The mark at the top is today's position.</p></div>
+<div class="panel">
+<h2>Turn the wheels</h2>
+<p class="status" id="now" aria-live="polite"></p>
+<div class="row">
+<button data-step="-1">− 1 day</button><button data-step="1">+ 1 day</button><button data-step="13">+ 13</button><button data-step="20">+ 20</button><button data-step="260">+ 260</button><button data-step="365">+ 365</button><button data-step="18980" class="primary">+ 18,980</button>
+</div>
+<div class="row"><button id="today">Back to today</button><button id="play" aria-pressed="false">Spin</button></div>
+<div class="box tool" style="margin:0"><h3>Predict before you press</h3>
+<ol style="margin:0">
+<li>After 13 days, which ring is back where it started? After 20? After 260?</li>
+<li>After 365 days, the Haab' is back. Is the Tzolk'in? Where does it land instead, and why is that 365 mod 260?</li>
+<li>Why is the Calendar Round 18,980 days and not 260 × 365 = 94,900?</li>
+</ol></div>
+</div>
+</div></section>
+
+<section class="band alt" id="birthday"><div class="wrap two">
+<div>
+<h2>Your birthday in the Maya calendar</h2>
+<div class="row" style="align-items:end"><div class="field"><label class="lbl" for="bd">A date (your birthday, or any day)</label><input type="date" id="bd" value="2007-07-04"></div><button class="primary" id="bgo">Look it up</button></div>
+<p class="status" id="bres" aria-live="polite"></p>
+</div>
+<aside class="box thm"><h3>How the lookup works</h3>
+<p>Every date gets a day number, counted from a fixed starting day long ago. Then each cycle is just a leftover: the weekday is the day number mod 7, the Tzolk'in uses it mod 13 and mod 20, and the Haab' uses it mod 365.</p>
+<p style="margin:0">The link between the Maya count and our calendar is the GMT correlation (Maya day zero = day number 584,283), the one most scholars use. The 260-day count is still kept today by K'iche' daykeepers in highland Guatemala.</p></aside>
+</div></section>
+
+<section class="band" id="meet"><div class="wrap two">
+<div>
+<h2>Do they ever meet?</h2>
+<p>Pick a Tzolk'in date and a Haab' date. Will they ever fall on the same day?</p>
+<div class="row" style="align-items:end">
+<div class="field"><label class="lbl" for="mn">Number</label><select id="mn"></select></div>
+<div class="field"><label class="lbl" for="ms">Day name</label><select id="ms"></select></div>
+<div class="field"><label class="lbl" for="hd">Haab' day</label><select id="hd"></select></div>
+<div class="field"><label class="lbl" for="hm">Haab' month</label><select id="hm"></select></div>
+<button class="primary" id="mgo">Check</button>
+</div>
+<p class="status" id="mres" aria-live="polite"></p>
+</div>
+<aside class="box tool"><h3>The CRT at work</h3>
+<p>The Tzolk'in repeats every 260 days and the Haab' every 365. A pair can only happen if the two positions agree mod gcd(260, 365) = 5. So only one pair in five ever occurs: 18,980 pairs out of 94,900.</p>
+<p style="margin:0">Cartographer: the Haab' day names that can go with a Tzolk'in day name are called "year bearers" when they start a year. Show that only 4 of the 20 day names can ever start a Haab' year.</p></aside>
+</div></section>
+
+<section class="band alt" id="week"><div class="wrap two">
+<div>
+<h2>The week is a wheel too</h2>
+<div class="row" style="align-items:end"><div class="field"><label class="lbl" for="wd">How many days from today?</label><input type="number" id="wd" value="1000" min="-100000" max="1000000"></div><button class="primary" id="wgo">Which weekday?</button></div>
+<p class="status" id="wres" aria-live="polite"></p>
+</div>
+<aside class="box thm"><h3>Quick rule</h3><p style="margin:0">Days of the week repeat every 7, so only <i class="v">n</i> mod 7 matters. 1,000 days from a Wednesday: 1,000 = 7 × 142 + 6, so six days after Wednesday.</p></aside>
+</div></section>
+
+<section class="band"><div class="wrap pager"><a href="gears.html">← The Gear Shop</a><a href="cipher.html">The Cipher Workshop →</a></div></section>
+<footer class="band"><div class="wrap">Modular Worlds · The Observatory · draft · UCI Math CEO</div></footer>
+
+<script src="book.js"></script>
+<script src="rooms.js"></script>
+<script>
+{
+const R=MWR,{$}=R;
+const TZ=['Imix','Ik’','Ak’bal','K’an','Chikchan','Kimi','Manik’','Lamat','Muluk','Ok','Chuwen','Eb','Ben','Ix','Men','Kib','Kaban','Etz’nab','Kawak','Ajaw'];
+const HB=['Pop','Wo’','Sip','Sotz’','Sek','Xul','Yaxk’in','Mol','Ch’en','Yax','Sak’','Keh','Mak','K’ank’in','Muwan','Pax','K’ayab','Kumk’u','Wayeb’'];
+const WD=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const EPOCH=584283,mod=(a,m)=>((a%m)+m)%m;
+const jdn=(y,m,d)=>{const a=Math.floor((14-m)/12),Y=y+4800-a,M=m+12*a-3;return d+Math.floor((153*M+2)/5)+365*Y+Math.floor(Y/4)-Math.floor(Y/100)+Math.floor(Y/400)-32045};
+const toDate=J=>new Date((J-2440588)*86400000);
+const fmt=J=>toDate(J).toLocaleDateString('en-US',{timeZone:'UTC',year:'numeric',month:'long',day:'numeric'});
+const t0=new Date(),TODAY=jdn(t0.getFullYear(),t0.getMonth()+1,t0.getDate());
+function cr(J){const d=J-EPOCH,n=mod(d+3,13)+1,s=mod(d+19,20),h=mod(d+348,365);return {n,s,h,hm:Math.floor(h/20),hd:h%20,d}}
+const crTxt=c=>`${c.n} ${TZ[c.s]}  ${c.hd} ${HB[c.hm]}`;
+function lc(J){let d=J-EPOCH;const out=[];for(const u of [144000,7200,360,20,1]){out.push(Math.floor(d/u));d=mod(d,u)}return out.join('.')}
+let J=TODAY,shown=0,spin=false,raf=0;
+function draw(){const cv=$('#cv'),[g,W,H]=R.ctx(cv),c=cr(J),cx=W/2,cy=H/2,Rm=Math.min(W,H)/2;g.clearRect(0,0,W,H);
+  const ring=(count,r0,r1,cur,label,fill,rad)=>{for(let i=0;i<count;i++){const a0=-Math.PI/2+(i-cur-0.5)*2*Math.PI/count,a1=a0+2*Math.PI/count;
+      g.beginPath();g.arc(cx,cy,r1,a0,a1);g.arc(cx,cy,r0,a1,a0,true);g.closePath();g.fillStyle=fill(i,i===cur);g.fill();if(count<100){g.strokeStyle=R.col('--bg');g.lineWidth=1;g.stroke()}}
+    for(let i=0;i<count;i++){const a0=-Math.PI/2+(i-cur-0.5)*2*Math.PI/count,a1=a0+2*Math.PI/count;
+      const lb=label(i);if(lb){const am=(a0+a1)/2+(count===365?Math.PI*2*(i>=360?2:9.5)/365:0),rm=(r0+r1)/2,thick=r1-r0,arc=rm*2*Math.PI/(count===365?18.25:count);
+        const fs=rad?Math.max(9,Math.min(14,thick*1.6/Math.max(3,lb.length))):Math.max(9,Math.min(16,arc*0.55,thick*0.5));
+        g.save();g.translate(cx+rm*Math.cos(am),cy+rm*Math.sin(am));g.rotate(rad?(Math.cos(am)<0?am+Math.PI:am):am+Math.PI/2);
+        const on=count===365?Math.floor(i/20)===Math.floor(cur/20):i===cur;g.fillStyle=on&&count!==365?'#fff':R.col('--ink');g.font=`${on?700:400} ${fs}px Roboto, sans-serif`;g.textAlign='center';g.textBaseline='middle';g.fillText(lb,0,0);g.restore()}}};
+  ring(13,Rm*0.14,Rm*0.34,c.n-1,i=>String(i+1),(i,on)=>on?R.col('--ember'):(i%2?R.col('--ember-soft'):R.col('--panel')),false);
+  ring(20,Rm*0.36,Rm*0.64,c.s,i=>TZ[i],(i,on)=>on?R.col('--sea'):(i%2?R.col('--sea-soft'):R.col('--panel')),true);
+  ring(365,Rm*0.66,Rm*0.97,c.h,i=>i%20===0?HB[Math.floor(i/20)]:'',(i,on)=>on?R.col('--ink'):(Math.floor(i/20)%2?R.col('--brass-soft'):R.col('--panel')),true);
+  g.fillStyle=R.col('--ink');g.beginPath();g.moveTo(cx,cy-Rm*0.985);g.lineTo(cx-8,cy-Rm*1.0+ -2);g.lineTo(cx+8,cy-Rm*1.0-2);g.fill();
+  $('#now').textContent=`${fmt(J)} (${WD[mod(J+1,7)]})\nCalendar Round: ${crTxt(c)}\nLong Count: ${lc(J)}\nDays moved: ${(J-TODAY).toLocaleString('en-US')}`;
+  cv.setAttribute('aria-label',`Calendar wheels showing ${crTxt(c)} for ${fmt(J)}`)}
+document.querySelectorAll('[data-step]').forEach(b=>b.addEventListener('click',()=>{J+=+b.dataset.step;draw()}));
+$('#today').onclick=()=>{J=TODAY;draw()};
+$('#play').onclick=e=>{spin=!spin;e.target.setAttribute('aria-pressed',spin);e.target.textContent=spin?'Stop':'Spin';cancelAnimationFrame(raf);let lastT=0;
+  const tick=ts=>{if(!spin)return;if(ts-lastT>140){J++;draw();lastT=ts}raf=requestAnimationFrame(tick)};if(spin)raf=requestAnimationFrame(tick)};
+new ResizeObserver(draw).observe($('#cv'));MW.onTheme(draw);
+
+$('#bgo').onclick=()=>{const v=$('#bd').value;if(!v){$('#bres').textContent='Choose a date first.';return}const[y,m,d]=v.split('-').map(Number),B=jdn(y,m,d),c=cr(B);
+  $('#bres').textContent=`${fmt(B)} was a ${WD[mod(B+1,7)]}.\nCalendar Round: ${crTxt(c)}\nLong Count: ${lc(B)}\nThe same Calendar Round returns 18,980 days later: ${fmt(B+18980)} (about 52 years).\nThe same Tzolk'in day comes back every 260 days: next on ${fmt(B+260)}.`;J=B;draw()};
+const opt=(n,f)=>Array.from({length:n},(_,i)=>`<option value="${i}">${f(i)}</option>`).join('');
+$('#mn').innerHTML=opt(13,i=>i+1);$('#ms').innerHTML=opt(20,i=>TZ[i]);$('#hd').innerHTML=opt(20,i=>i);$('#hm').innerHTML=opt(19,i=>HB[i]);
+$('#hm').addEventListener('change',()=>{const n=+$('#hm').value===18?5:20,cur=+$('#hd').value;$('#hd').innerHTML=opt(n,i=>i);$('#hd').value=Math.min(cur,n-1)});
+$('#mgo').onclick=()=>{const N=+$('#mn').value+1,s=+$('#ms').value,h=+$('#hm').value*20+ +$('#hd').value;
+  let found=null;for(let k=0;k<18980;k++){const c=cr(TODAY+k);if(c.n===N&&c.s===s&&c.h===h){found=TODAY+k;break}}
+  const tzPos=(()=>{for(let k=0;k<260;k++){const c=cr(EPOCH+k);if(c.n===N&&c.s===s)return k}})();
+  $('#mres').textContent=found!==null?`${N} ${TZ[s]} with ${h%20} ${HB[Math.floor(h/20)]}: yes. Next time: ${fmt(found)}, then every 18,980 days.`:
+   `${N} ${TZ[s]} with ${h%20} ${HB[Math.floor(h/20)]}: never.\nThe Tzolk'in day sits at position ${tzPos} of 260, the Haab' day at position ${mod(h-348,365)} of 365 (counted from the same start). These differ mod 5 (${mod(tzPos,5)} and ${mod(h-348,5)}), and every day moves both counts by 1, so the difference mod 5 never changes.`};
+$('#wgo').onclick=()=>{const n=parseInt($('#wd').value,10);if(isNaN(n)){$('#wres').textContent='Enter a whole number of days.';return}
+  const q=Math.floor(n/7),r=mod(n,7);$('#wres').textContent=`Today is ${WD[mod(TODAY+1,7)]}. ${n.toLocaleString('en-US')} = 7 × ${q.toLocaleString('en-US')} + ${r}, so in ${n.toLocaleString('en-US')} days it will be ${WD[mod(TODAY+1+n,7)]}, ${fmt(TODAY+n)}.`};
+draw();
+}
+</script>
+</body>
+</html>
