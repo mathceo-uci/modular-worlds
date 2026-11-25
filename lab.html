@@ -14,6 +14,8 @@
 .claimbtn .t{font-weight:700;font-size:16px}
 .claimbtn .s{font-size:14px;color:var(--mute);font-weight:400}
 .claimbtn .st{font-size:13px;color:var(--sea);font-weight:700}
+.chh{grid-column:1/-1;margin:14px 0 0;font-size:17px;color:var(--brass)}
+.crate{width:20px;height:20px;border:2.5px solid var(--sea);border-radius:4px;background:var(--sea-soft)}
 .claimbtn[aria-pressed=true]{outline:3px solid var(--sea);outline-offset:1px}
 .bench{background:var(--panel);border-radius:16px;padding:16px}
 .goal{font-size:18px;margin:0 0 4px}
@@ -27,7 +29,7 @@
 .d{width:11px;height:11px;border-radius:50%;background:var(--sea)}
 .d.one{background:var(--ember)}
 .tl{font-size:12px;color:var(--mute);font-family:"Roboto Mono",monospace}
-.card{font-family:"Roboto Mono",monospace;font-size:16px;font-weight:500;padding:6px 4px}
+.fl{font-family:"Roboto Mono",monospace;font-size:16px;font-weight:500;padding:6px 4px}
 .plus{font-size:20px;color:var(--mute)}
 .moves{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 4px}
 .moves button{min-height:40px;font-size:15px}
@@ -69,9 +71,9 @@
 
 <header class="band hero"><div class="wrap two">
 <div>
-<div class="kicker">Modular Worlds · Chapter 0 companion</div>
+<div class="kicker">Modular Worlds · companion to Chapters 0–4</div>
 <h1>The Proof Lab</h1>
-<p class="lede">Behind the harbor in Mojadito, Lucía found an old laboratory. Every flask holds a number, and the shelves are labelled with recipes: <i>produce an even from two odds</i>, <i>produce a full trio from one extra and one short</i>. The rules of the lab are the rules of arithmetic. Follow them, and you produce a proof.</p>
+<p class="lede">Behind the harbor in Mojadito, Lucía found an old laboratory. Every flask holds a number, and the shelves are labelled with recipes: <i>produce an even from two odds</i>, <i>produce a full trio from one extra and one short</i>, and later in the voyage, <i>pack crates of d into crates of d</i>. The rules of the lab are the rules of arithmetic. Follow them, and you produce a proof.</p>
 <p>Each recipe can be produced in more than one way. Find a route, pass Kevin's safety inspection, and the lab writes up your report.</p>
 </div>
 <aside class="box thm">
@@ -99,6 +101,7 @@
 <button id="mBond">Bond loose atoms</button>
 <button id="mPour">Pour flasks together</button>
 <button id="mExpand">Expand the product</button>
+<button id="mBez">Use Bézout</button>
 <button id="mRule">Use a lab rule</button>
 <button id="mClaim" class="primary">Submit for inspection</button>
 <button id="mUndo">Undo</button>
@@ -114,7 +117,7 @@
 <section class="band" id="how"><div class="wrap two">
 <div>
 <h2>How the lab works</h2>
-<p><b>Flasks are numbers.</b> A card like <span class="card">a</span> is a number you know one fact about (odd, even, one extra). Reading its label means using the definition: an odd number is some number of pairs plus one loose atom. The dots stand for <i>any</i> number of pairs, including none.</p>
+<p><b>Flasks are numbers.</b> A card like <span class="fl">a</span> is a number you know one fact about (odd, even, one extra). Reading its label means using the definition: an odd number is some number of pairs plus one loose atom. The dots stand for <i>any</i> number of pairs, including none.</p>
 <p><b>Moves are reasons.</b> Every move is a rule of arithmetic or a result you proved earlier. The lab never asks you to follow a fixed path. It only checks that each move is legal, and that your final flask shows what the recipe asks for.</p>
 <p><b>Kevin inspects.</b> He looks for the classic mistakes: using the same letter for two different numbers, using the claim to prove itself, and forgetting the case with no pairs at all.</p>
 </div>
@@ -138,43 +141,83 @@ const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}};
 const RN={def:'By definition',lem:'By earlier results',mix:'Mixed route'};
 
 const CLAIMS=[
- {id:'c1',title:'Neighbours',stmt:'If a is odd, then a + 1 is even.',g:2,goal:'even',lhs:'a + 1',given:'a is odd',
+ {id:'c1',ch:'Chapter 0 · Parity and trios',title:'Neighbours',stmt:'If a is odd, then a + 1 is even.',g:2,goal:'even',lhs:'a + 1',given:'a is odd',
   start:{mode:'sum',terms:[{t:'odd',n:'a'},{t:'one',v:1}]},routes:['def'],zero:'a = 1',ex:'3 + 1 = 4 and 9 + 1 = 10',
   dist:{def:'An odd number is a stack of pairs with one atom left over. Add one more atom, and the two loose atoms bond into a pair, so nothing is left over.'}},
- {id:'c2',title:'Even + even',stmt:'If a and b are even, then a + b is even.',g:2,goal:'even',lhs:'a + b',given:'a and b are even',
+ {id:'c2',ch:'Chapter 0 · Parity and trios',title:'Even + even',stmt:'If a and b are even, then a + b is even.',g:2,goal:'even',lhs:'a + b',given:'a and b are even',
   start:{mode:'sum',terms:[{t:'even',n:'a'},{t:'even',n:'b'}]},routes:['def'],zero:'a = 0',ex:'4 + 6 = 10 and 8 + 2 = 10',
   dist:{def:'Two even numbers are made entirely of pairs. Pour them together and you still have only pairs, with nothing left over.'}},
- {id:'c3',title:'Even + odd',stmt:'If a is even and b is odd, then a + b is odd.',g:2,goal:'odd',lhs:'a + b',given:'a is even and b is odd',
+ {id:'c3',ch:'Chapter 0 · Parity and trios',title:'Even + odd',stmt:'If a is even and b is odd, then a + b is odd.',g:2,goal:'odd',lhs:'a + b',given:'a is even and b is odd',
   start:{mode:'sum',terms:[{t:'even',n:'a'},{t:'odd',n:'b'}]},routes:['def'],zero:'b = 1',ex:'4 + 3 = 7 and 10 + 5 = 15',
   dist:{def:'An even number is all pairs, and an odd number is pairs plus one loose atom. Together the pairs stay pairs, and the loose atom has no partner, so exactly one is left over.'}},
- {id:'c4',title:'Odd + odd',stmt:'If a and b are odd, then a + b is even.',g:2,goal:'even',lhs:'a + b',given:'a and b are odd',
+ {id:'c4',ch:'Chapter 0 · Parity and trios',title:'Odd + odd',stmt:'If a and b are odd, then a + b is even.',g:2,goal:'even',lhs:'a + b',given:'a and b are odd',
   start:{mode:'sum',terms:[{t:'odd',n:'a'},{t:'odd',n:'b'}]},routes:['def','lem','mix'],zero:'a = 1',ex:'3 + 5 = 8 and 7 + 9 = 16',
   hint:'Three routes exist. The route by earlier results needs the rules from Neighbours and Even + odd.',
   dist:{def:'Each odd number is pairs plus one loose atom. Put them together, and the two loose atoms bond into a new pair, so nothing is left over.',
    lem:'Peel the loose atom off one odd number, and what remains is even. Even plus odd is odd, and adding the peeled atom back turns that odd number into an even one.',
    mix:'Break both numbers into pairs and loose atoms, using what we already know about even numbers. The pairs stay pairs, and the two loose atoms bond into one more, so nothing is left over.'}},
- {id:'c5',title:'Even × anything',stmt:'If a is even and n is any integer, then a × n is even.',g:2,goal:'even',lhs:'a × n',given:'a is even and n is an integer',
+ {id:'c5',ch:'Chapter 0 · Parity and trios',title:'Even × anything',stmt:'If a is even and n is any integer, then a × n is even.',g:2,goal:'even',lhs:'a × n',given:'a is even and n is an integer',
   start:{mode:'prod',factors:[[{t:'even',n:'a'}],[{t:'int',n:'n'}]]},routes:['def'],zero:'a = 0',ex:'4 × 3 = 12 and 6 × 5 = 30',
   dist:{def:'An even number is all pairs. Taking it any number of times only gives more pairs, so the product is still made entirely of pairs.'}},
- {id:'c6',title:'Odd × odd',stmt:'If a and b are odd, then a × b is odd.',g:2,goal:'odd',lhs:'a × b',given:'a and b are odd',
+ {id:'c6',ch:'Chapter 0 · Parity and trios',title:'Odd × odd',stmt:'If a and b are odd, then a × b is odd.',g:2,goal:'odd',lhs:'a × b',given:'a and b are odd',
   start:{mode:'prod',factors:[[{t:'odd',n:'a'}],[{t:'odd',n:'b'}]]},routes:['def','lem','mix'],zero:'a = 1',ex:'3 × 5 = 15 and 7 × 9 = 63',
   hint:'Expand the product to see every part. The route by earlier results needs the rules from Even + odd and Even × anything.',
   dist:{def:'Each odd number is pairs plus one loose atom. When you multiply, every part that touches a pair becomes pairs, and only the two loose atoms meet, making one loose atom. So exactly one is left over.',
    lem:'Peel one atom off the second odd number, leaving an even one. The first number times that even part is even, and what remains is the first number itself, which is odd. Even plus odd is odd.',
    mix:'Split the product into parts. Every part with an even piece in it is even, and exactly one odd part remains, so the product is odd.'}},
- {id:'c7',title:'Trina’s trio',stmt:'If a leaves 1 and b leaves 2 when packed in trios, then a + b is a multiple of 3.',g:3,goal:'mult3',lhs:'a + b',given:'a leaves 1 and b leaves 2 in trios',
+ {id:'c7',ch:'Chapter 0 · Parity and trios',title:'Trina’s trio',stmt:'If a leaves 1 and b leaves 2 when packed in trios, then a + b is a multiple of 3.',g:3,goal:'mult3',lhs:'a + b',given:'a leaves 1 and b leaves 2 in trios',
   start:{mode:'sum',terms:[{t:'r1',n:'a'},{t:'r2',n:'b'}]},routes:['def'],zero:'a = 1',ex:'4 + 5 = 9 and 7 + 8 = 15',
   dist:{def:'One number has one atom beyond its full trios, and the other has two. The three extra atoms form one more full trio, so nothing is left over.'}},
- {id:'c8',title:'Three extras',stmt:'If a, b and c each leave 1 when packed in trios, then a + b + c is a multiple of 3.',g:3,goal:'mult3',lhs:'a + b + c',given:'a, b and c each leave 1 in trios',
+ {id:'c8',ch:'Chapter 0 · Parity and trios',title:'Three extras',stmt:'If a, b and c each leave 1 when packed in trios, then a + b + c is a multiple of 3.',g:3,goal:'mult3',lhs:'a + b + c',given:'a, b and c each leave 1 in trios',
   start:{mode:'sum',terms:[{t:'r1',n:'a'},{t:'r1',n:'b'},{t:'r1',n:'c'}]},routes:['def'],zero:'a = 1',ex:'4 + 7 + 10 = 21',
-  dist:{def:'Each number has one atom beyond its full trios. The three extra atoms form one more full trio, so nothing is left over.'}}];
+  dist:{def:'Each number has one atom beyond its full trios. The three extra atoms form one more full trio, so nothing is left over.'}},
+ {id:'c9',ch:'Chapter 1 · Divisibility',title:'Crates add up',stmt:'If d divides a and d divides b, then d divides a + b.',g:'d',goal:'multg',lhs:'a + b',given:'d | a and d | b',
+  start:{mode:'sum',terms:[{t:'mult',of:'d',n:'a'},{t:'mult',of:'d',n:'b'}]},routes:['def'],zero:'a = 0',ex:'3 | 6 and 3 | 9, and 3 | 15',
+  dist:{def:'Both numbers are made of whole crates of size d. Pour them together and you still have only whole crates, with nothing left over.'}},
+ {id:'c10',ch:'Chapter 1 · Divisibility',title:'Crates scale',stmt:'If d divides a, then d divides a × n for every integer n.',g:'d',goal:'multg',lhs:'a × n',given:'d | a and n is an integer',
+  start:{mode:'prod',factors:[[{t:'mult',of:'d',n:'a'}],[{t:'int',n:'n'}]]},routes:['def'],zero:'a = 0',ex:'4 | 8, and 4 divides 16, 24 and 32',
+  dist:{def:'A number made of whole crates of size d, taken any number of times, is still made of whole crates.'}},
+ {id:'c11',ch:'Chapter 1 · Divisibility',title:'Crates of crates',stmt:'If d divides a and a divides b, then d divides b.',g:'d',goal:'multg',lhs:'b',given:'d | a and a | b',
+  start:{mode:'sum',terms:[{t:'mult',of:'a',n:'b'}]},inner:{t:'mult',of:'d',n:'a'},routes:['def','mix'],zero:'b = 0',ex:'2 | 6 and 6 | 18, and 2 | 18',
+  hint:'Read the label on b first. The mixed route needs the rule from Crates scale.',
+  dist:{def:'b is made of crates of size a, and each of those crates is made of crates of size d. Unpack everything, and b is made entirely of crates of size d.',
+   mix:'b is a multiple of a, and a is a multiple of d. A multiple of d, taken any number of times, is still a multiple of d.'}},
+ {id:'c12',ch:'Chapter 1 · Divisibility',title:'Mixing crates',stmt:'If d divides a and d divides b, then d divides ax + by for all integers x and y.',g:'d',goal:'multg',lhs:'ax + by',given:'d | a and d | b; x and y are integers',
+  start:{mode:'sum',terms:[{t:'mul',n:'ax',parts:[{t:'mult',of:'d',n:'a'},{t:'int',n:'x'}]},{t:'mul',n:'by',parts:[{t:'mult',of:'d',n:'b'},{t:'int',n:'y'}]}]},routes:['def','lem','mix'],zero:'a = 0',ex:'3 | 6 and 3 | 9, and 3 divides 6·2 + 9·5 = 57',
+  hint:'The route by earlier results needs the rules from Crates add up and Crates scale.',
+  dist:{def:'Each of a and b is made of whole crates of size d. Taking them any number of times and adding the results only ever gives whole crates.',
+   lem:'Each product is a multiple of d, because a multiple of d stays one when it is multiplied. Two multiples of d add up to a multiple of d.',
+   mix:'Some pieces are unpacked into crates of size d and the others follow from known rules: every piece is a multiple of d, so the total is too.'}},
+ {id:'c13',ch:'Chapter 3 · Euclid’s Forge',title:'The forge lemma',stmt:'If d divides b and d divides r, then d divides qb + r for every integer q.',g:'d',goal:'multg',lhs:'qb + r',given:'d | b and d | r; q is an integer',
+  start:{mode:'sum',terms:[{t:'mul',n:'qb',parts:[{t:'int',n:'q'},{t:'mult',of:'d',n:'b'}]},{t:'mult',of:'d',n:'r'}]},routes:['def','lem','mix'],zero:'r = 0',ex:'7 | 14 and 7 | 21, and 7 divides 3·14 + 21 = 63',
+  hint:'This is half of Lemma 3.1: every common divisor of b and r also divides a = qb + r.',
+  dist:{def:'b and r are both made of whole crates of size d. Taking b any number of times and adding r still gives only whole crates, so every common divisor of b and r also divides qb + r.',
+   lem:'qb is a multiple of d because b is, and adding the multiple r keeps it a multiple of d.',
+   mix:'Some pieces are unpacked into crates of size d and the others follow from known rules: both pieces are multiples of d, so qb + r is too.'}},
+ {id:'c14',ch:'Chapter 4 · Diophantine Delta',title:'Euclid’s lemma',stmt:'If gcd(a, b) = 1 and a divides bc, then a divides c.',g:'a',goal:'multg',lhs:'c',given:'gcd(a, b) = 1 and a | bc',bezout:true,
+  start:{mode:'sum',terms:[{t:'int',n:'c'}]},routes:['def','lem','mix'],zero:'c = 0',ex:'5 | 3·10, and 5 | 10',
+  hint:'Start with Bézout: since gcd(a, b) = 1, you can write 1 = ax + by. The route by earlier results needs the rules from Crates add up and Crates scale.',
+  mulHook:(u,v)=>u.n==='c'&&v.n==='ax'?{t:'mul',n:'acx',parts:[{t:'self',n:'a'},{t:'int',n:'cx'}]}:u.n==='c'&&v.n==='by'?{t:'mul',n:'bcy',parts:[{t:'mult',of:'a',n:'bc'},{t:'int',n:'y'}]}:null,
+  dist:{def:'Because a and b share no factor, Bézout writes 1 as a mix of a and b. Multiply c by that 1: one part is a times something, and the other contains bc, which a divides. Both parts are whole crates of size a, so c is too.',
+   lem:'Write c as c times a Bézout mix of a and b. Both products are multiples of a: one contains a, the other contains bc. Multiples of a add up to a multiple of a.',
+   mix:'Write c as c times a Bézout mix of a and b, then show that each part is made of crates of size a, by unpacking or by known rules.'}}];
 const LEMMAS=[
  {id:'L1',txt:'odd + 1 = even',from:'c1',pat:['1','odd'],out:'even'},
  {id:'L2',txt:'even + even = even',from:'c2',pat:['even','even'],out:'even'},
  {id:'L3',txt:'even + odd = odd',from:'c3',pat:['even','odd'],out:'odd'},
  {id:'L4',txt:'odd + odd = even',from:'c4',pat:['odd','odd'],out:'even'},
  {id:'L5',txt:'even × integer = even',from:'c5',pat:'mulEven',out:'even'},
- {id:'L6',txt:'odd × odd = odd',from:'c6',pat:'mulOdd',out:'odd'}];
+ {id:'L6',txt:'odd × odd = odd',from:'c6',pat:'mulOdd',out:'odd'},
+ {id:'L7',txt:'multiple of d + multiple of d = multiple of d',from:'c9',pat:['mg','mg'],out:'mg',fam:'div'},
+ {id:'L8',txt:'multiple of d × integer = multiple of d',from:'c10',pat:'mulMult',out:'mg',fam:'div'}];
+const famOf=c=>typeof c.g==='string'?'div':'parity';
+const GN=()=>C.g===2?'pairs':C.g===3?'trios':`crates of ${C.g}`;
+const GN1=()=>C.g===2?'pair':C.g===3?'trio':`crate of ${C.g}`;
+const cap=t=>t.charAt(0).toUpperCase()+t.slice(1);
+const goalWord=()=>({even:'even',odd:'odd',mult3:'a multiple of 3',multg:`a multiple of ${C.g}`})[C.goal];
+const mk=(k,n)=>k==='mg'?{t:'mult',of:C.g,n}:{t:k,n};
+const desc=o=>o.t==='mult'?`a multiple of ${o.of}`:o.t;
+function multDef(x){return {ok:`${x.of}·(an integer)`,bad:[[`(an integer) ÷ ${x.of}`,`That would make ${x.n} a fraction of ${x.of}, not a multiple of it.`],[`${x.of} ÷ (an integer)`,`That says ${x.n} divides ${x.of}: the other way around.`]],res:l=>[{t:'grp',w:l}],form:l=>`${x.of}${l}`,word:`a multiple of ${x.of} (${x.of} | ${x.n})`}}
 const DEF={
  odd:{ok:'2·(an integer) + 1',bad:[['2·(an integer)','That is the definition of even.'],['(an integer) + 1','Every integer is (an integer) + 1. That says nothing about parity.']],res:l=>[{t:'grp',w:l},{t:'one',v:1}],form:l=>`2${l} + 1`,word:'odd'},
  even:{ok:'2·(an integer)',bad:[['2·(an integer) + 1','That is the definition of odd.'],['(an integer) + 2','Every integer is (an integer) + 2. That says nothing about parity.']],res:l=>[{t:'grp',w:l}],form:l=>`2${l}`,word:'even'},
@@ -185,25 +228,27 @@ let C,S,hist,sel,LOG,letters,usedLem,usedDef;
 const simple=x=>/^[a-z0-9]+$/.test(x);
 const wrapd=x=>simple(x)||/^\([^()]*\)$/.test(x)?x:`(${x})`;
 const pn=(x,y)=>wrapd(x)+wrapd(y);
-function alg(x){if(x.t==='one')return String(x.v);if(x.t==='grp')return /^[a-z]+$/.test(x.w)?`${C.g}${x.w}`:/^[0-9]+$/.test(x.w)?`${C.g}·${x.w}`:`${C.g}(${x.w})`;return x.n}
+function alg(x){if(x.t==='one')return String(x.v);if(x.t==='grp')return /^[a-z]$/.test(x.w)?`${C.g}${x.w}`:/^[0-9]+$/.test(x.w)?`${C.g}·${x.w}`:`${C.g}(${x.w})`;return x.n}
 function now(){return C.lhs+' = '+(S.mode==='sum'?S.terms.map(alg).join(' + '):S.factors.map(f=>f.length>1?`(${f.map(alg).join(' + ')})`:alg(f[0])).join(' × '))}
 function snap(){hist.push(JSON.stringify({S,LOG,letters,usedLem,usedDef}))}
 function say(t,c){const e=$('#say');e.textContent=t;e.className='say'+(c?' '+c:'')}
 function setAsk(h){$('#ask').innerHTML=h}
 function proven(id){return P.proven.includes(id)}
 
-function drawClaims(){$('#claims').innerHTML=CLAIMS.map(c=>{const r=P.routes[c.id]||[];return `<button class="claimbtn" data-c="${c.id}" aria-pressed="${C&&C.id===c.id}"><span class="t">${esc(c.title)}</span><span class="s">${esc(c.stmt)}</span><span class="st">${proven(c.id)?`Proven ✓ · routes ${r.length} of ${c.routes.length}`:'Not yet produced'}</span></button>`}).join('')}
+function drawClaims(){let last='';$('#claims').innerHTML=CLAIMS.map(c=>{const r=P.routes[c.id]||[];const h=c.ch!==last?`<h3 class="chh">${esc(c.ch)}</h3>`:'';last=c.ch;return h+`<button class="claimbtn" data-c="${c.id}" aria-pressed="${C&&C.id===c.id}"><span class="t">${esc(c.title)}</span><span class="s">${esc(c.stmt)}</span><span class="st">${proven(c.id)?`Proven ✓ · routes ${r.length} of ${c.routes.length}`:'Not yet produced'}</span></button>`}).join('')}
 $('#claims').addEventListener('click',e=>{const b=e.target.closest('.claimbtn');if(!b)return;load(b.dataset.c);$('#bench').scrollIntoView({behavior:'smooth',block:'start'})});
 
 function load(id){C=CLAIMS.find(c=>c.id===id);S=JSON.parse(JSON.stringify(C.start));hist=[];sel=[];letters=[];usedLem=false;usedDef=false;LOG=[{s:C.given,r:'Given'}];
   $('#goal').innerHTML=`<b>Recipe: ${esc(C.title)}.</b> ${esc(C.stmt)}`;$('#hint').textContent=C.hint||'Select one or two flasks, then choose a move.';
+  $('#mBez').style.display=C.bezout?'':'none';$('#mBond').style.display=famOf(C)==='div'?'none':'';$('#mSplit').style.display=C.g===2?'':'none';
   $('#rep').innerHTML='';setAsk('');say('Select a flask to begin.');draw();drawClaims()}
 
 function termHTML(x){
   if(x.t==='one')return `<div class="dots">${'<span class="d one"></span>'.repeat(x.v)}</div><span class="tl">${x.v} loose</span>`;
+  if(x.t==='grp'&&typeof C.g==='string')return `<div class="dots">${'<span class="crate"></span>'.repeat(3)}<span class="tl">…</span></div><span class="tl">${esc(x.w)} ${esc(GN())}</span>`;
   if(x.t==='grp'){const c=`<div class="col">${'<span class="d"></span>'.repeat(C.g)}</div>`;return `<div class="dots">${c.repeat(3)}<span class="tl">…</span></div><span class="tl">${esc(x.w)} ${C.g===2?'pairs':'trios'}</span>`}
-  const lab={odd:'odd',even:'even',int:'integer',r1:'1 extra',r2:'1 short',mul:'product'}[x.t];
-  return `<span class="card">${esc(x.n)}</span><span class="tl">${lab}</span>`}
+  const lab={odd:'odd',even:'even',int:'integer',r1:'1 extra',r2:'1 short',mul:'product',mult:`multiple of ${x.of}`}[x.t];
+  return `<span class="fl">${esc(x.n)}</span><span class="tl">${lab}</span>`}
 function draw(){
   const btn=(x,id)=>`<button class="term" data-id="${id}" aria-pressed="${sel.includes(id)}" aria-label="${esc(alg(x))}, ${x.t==='grp'?'groups':x.t}">${termHTML(x)}</button>`;
   if(S.mode==='sum')$('#expr').innerHTML=S.terms.map((x,i)=>btn(x,String(i))).join('<span class="plus" aria-hidden="true">+</span>');
@@ -220,18 +265,27 @@ function sameBox(){if(S.mode==='sum')return true;return sel.every(s=>s.split(':'
 const shuffle=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
 function log(r){LOG.push({s:now(),r})}
 
-$('#mUnpack').onclick=()=>{if(!need(1,'Select one flask whose label you want to read.'))return;const x=get(sel[0]);
+$('#mUnpack').onclick=()=>{if(!need(1,'Select one flask whose label you want to read.'))return;const id=sel[0],x=get(id);
   if(x.t==='int'){say('Its label only says "integer". There is nothing more to read.','bad');return}
-  const D=DEF[x.t];if(!D){say('That flask is already open.','bad');return}
+  let T=x,rest=null;
+  if(x.t==='mul'){const ps=x.parts||[],sp=ps.find(p=>p.t==='self'),mp=ps.find(p=>p.t==='mult'&&p.of===C.g);
+    if(sp){const r=ps.filter(p=>p!==sp).map(p=>p.n).reduce((u,v)=>pn(u,v));snap();usedDef=true;replace([id],[{t:'grp',w:r}]);
+      log(`${x.n} = ${C.g}·${wrapd(r)}: ${C.g} times an integer`);say(`${x.n} has ${C.g} as a factor, so it is ${wrapd(r)} ${GN()}.`);draw();return}
+    if(!mp){say('No label in this product says anything about '+C.g+'. Try a lab rule.','bad');return}
+    T=mp;rest=ps.filter(p=>p!==mp).map(p=>p.n).reduce((u,v)=>pn(u,v))}
+  const D=T.t==='mult'?multDef(T):DEF[T.t];if(!D){say('That flask is already open.','bad');return}
   const opts=shuffle([[D.ok,''],...D.bad]);
-  setAsk(`<span class="q">What does the label "${esc(x.n)} is ${D.word}" mean? ${esc(x.n)} = …</span>`+opts.map(([t,m],i)=>`<button data-i="${i}">${esc(t)}</button>`).join(''));
+  setAsk(`<span class="q">What does the label "${esc(T.n)} is ${esc(D.word)}" mean? ${esc(T.n)} = …</span>`+opts.map(([t,m],i)=>`<button data-i="${i}">${esc(t)}</button>`).join(''));
   say('Choose the definition you are using.');
   $('#ask').onclick=ev=>{const b=ev.target.closest('button');if(!b)return;const [t,m]=opts[+b.dataset.i];if(m){say(m,'bad');return}
-    setAsk(`<span class="q">Name the integer:</span>`+['k','m','j','p'].map(l=>`<button data-l="${l}">${esc(x.n)} = ${D.form(l)}</button>`).join(''));
-    say('Pick a letter for the number of '+(C.g===2?'pairs.':'trios.'));
-    $('#ask').onclick=ev2=>{const b2=ev2.target.closest('button');if(!b2)return;const l=b2.dataset.l;const id=sel[0];snap();letters.push(l);usedDef=true;replace([id],D.res(l));setAsk('');
-      log(`${x.n} is ${D.word}, so ${x.n} = ${D.form(l)} for some integer ${l} (definition)`);
-      say(`${x.n} = ${D.form(l)}. The dots stand for any number of ${C.g===2?'pairs':'trios'}, even none.`);draw()}}};
+    setAsk(`<span class="q">Name the integer:</span>`+['k','m','j','p'].map(l=>`<button data-l="${l}">${esc(T.n)} = ${esc(D.form(l))}</button>`).join(''));
+    say(T.t==='mult'&&T.of!==C.g?`Pick a letter for the number of crates of ${T.of}.`:`Pick a letter for the number of ${GN()}.`);
+    $('#ask').onclick=ev2=>{const b2=ev2.target.closest('button');if(!b2)return;const l=b2.dataset.l;snap();letters.push(l);usedDef=true;
+      const base=`${T.n} is ${D.word}, so ${T.n} = ${D.form(l)} for some integer ${l} (definition)`;
+      if(rest!==null){const w=pn(l,rest);replace([id],[{t:'grp',w}]);log(`${base}; so ${x.n} = ${C.g}${wrapd(w)}`);say(`${x.n} = ${C.g}${wrapd(w)}: whole ${GN()}.`)}
+      else if(T.t==='mult'&&T.of!==C.g){S={mode:'prod',factors:[[JSON.parse(JSON.stringify(C.inner))],[{t:'int',n:l}]]};sel=[];log(base);say(`${T.n} = ${D.form(l)}: ${l} crates of ${T.of}. Now look inside ${T.of}.`)}
+      else{replace([id],D.res(l));log(base);say(`${T.n} = ${D.form(l)}. The dots stand for any number of ${GN()}, even none.`)}
+      setAsk('');draw()}}};
 $('#mSplit').onclick=()=>{if(!need(1,'Select one odd flask to split.'))return;const x=get(sel[0]);
   if(x.t!=='odd'){say('Split off an atom works on an odd flask.','bad');return}
   snap();usedLem=true;replace([sel[0]],[{t:'even',n:`(${x.n} − 1)`},{t:'one',v:1}]);
@@ -244,28 +298,33 @@ $('#mBond').onclick=()=>{if(!need(2,'Select two flasks of loose atoms.'))return;
   if(s<g){out=[{t:'one',v:s}];eq=`${p.v} + ${q.v} = ${s}`}else if(s===g){out=[{t:'grp',w:'1'}];eq=`${p.v} + ${q.v} = ${g}·1`}else{out=[{t:'grp',w:'1'},{t:'one',v:s-g}];eq=`${p.v} + ${q.v} = ${g}·1 + ${s-g}`}
   snap();usedDef=true;replace(sel,out);log(`Rearrange the sum and bond the loose atoms: ${eq}`);
   say(s>=g?`The loose atoms bond into one more ${g===2?'pair':'trio'}.`:'The loose atoms share a flask, but they are not a full trio yet.');draw()};
-$('#mPour').onclick=()=>{if(!need(2,'Select two flasks of '+(C.g===2?'pairs.':'trios.')))return;
+$('#mPour').onclick=()=>{if(!need(2,'Select two flasks of '+GN()+'.'))return;
   if(S.mode==='prod'){say('Expand the product first.','bad');return}
-  if(!sel.every(s=>get(s).t==='grp')){say('Pour together needs two flasks of '+(C.g===2?'pairs':'trios')+'. A flask labelled even can be opened into pairs first.','bad');return}
+  if(!sel.every(s=>get(s).t==='grp')){say('Pour together needs two flasks of '+GN()+'. A labelled flask can be opened first with Read a label.','bad');return}
   const[p,q]=sel.map(get);snap();replace(sel,[{t:'grp',w:`${p.w} + ${q.w}`}]);
-  log(`Factor out ${C.g}: ${C.g}x + ${C.g}y = ${C.g}(x + y)`);say(`${C.g===2?'Pairs':'Trios'} poured together are still ${C.g===2?'pairs':'trios'}.`);draw()};
+  log(`Factor out ${C.g}: ${C.g}·u + ${C.g}·v = ${C.g}(u + v) (distributive law)`);say(`${cap(GN())} poured together are still ${GN()}.`);draw()};
 function mul(u,v){
-  if(u.t==='grp'&&v.t==='grp')return {t:'grp',w:'2'+pn(u.w,v.w)};
+  if(C.mulHook){const h=C.mulHook(u,v);if(h)return h}
+  if(u.t==='grp'&&v.t==='grp')return {t:'grp',w:C.g+pn(u.w,v.w)};
   if(u.t==='grp'&&v.t==='one')return {t:'grp',w:u.w};
   if(u.t==='one'&&v.t==='grp')return {t:'grp',w:v.w};
   if(u.t==='grp')return {t:'grp',w:pn(u.w,v.n)};
   if(v.t==='grp')return {t:'grp',w:pn(u.n,v.w)};
   if(u.t==='one')return Object.assign({},v);
   if(v.t==='one')return Object.assign({},u);
-  return {t:'mul',n:pn(u.n,v.n),ev:u.t==='even'||v.t==='even',od:u.t==='odd'&&v.t==='odd'}}
+  return {t:'mul',n:pn(u.n,v.n),ev:u.t==='even'||v.t==='even',od:u.t==='odd'&&v.t==='odd',parts:[...(u.parts||[u]),...(v.parts||[v])]}}
 $('#mExpand').onclick=()=>{if(S.mode!=='prod'){say('There is no product left to expand.','bad');return}
   const[A,B]=S.factors;const cells=A.map(u=>B.map(v=>mul(u,v)));
   setAsk(`<span class="q">The distributive law, as a grid: every part of one factor meets every part of the other.</span><table class="grid2"><tr><th>×</th>${B.map(v=>`<th>${esc(alg(v))}</th>`).join('')}</tr>${A.map((u,i)=>`<tr><th>${esc(alg(u))}</th>${cells[i].map(c=>`<td>${esc(alg(c))}</td>`).join('')}</tr>`).join('')}</table>`);
   snap();S={mode:'sum',terms:cells.flat()};sel=[];log('Expand the product (distributive law)');say('Expanded. Now combine what you see.');draw()};
-function kind(x){if(x.t==='odd')return 'odd';if(x.t==='even'||(x.t==='grp'&&C.g===2))return 'even';if(x.t==='one'&&x.v===1&&C.g===2)return '1';return x.t}
+$('#mBez').onclick=()=>{if(!C.bezout)return;
+  if(S.mode!=='sum'||S.terms.length!==1||S.terms[0].n!=='c'){say('Bézout is used once, at the start, on c.','bad');return}
+  snap();S={mode:'prod',factors:[[{t:'int',n:'c'}],[{t:'mul',n:'ax',parts:[{t:'self',n:'a'},{t:'int',n:'x'}]},{t:'mul',n:'by',parts:[{t:'int',n:'b'},{t:'int',n:'y'}]}]]};sel=[];
+  log('gcd(a, b) = 1, so 1 = ax + by for some integers x and y (Bézout); multiply c by this 1');say('c = c × 1 = c(ax + by). Now expand.');draw()};
+function kind(x){if((x.t==='mult'&&x.of===C.g)||(x.t==='grp'&&typeof C.g==='string'))return 'mg';if(x.t==='odd')return 'odd';if(x.t==='even'||(x.t==='grp'&&C.g===2))return 'even';if(x.t==='one'&&x.v===1&&C.g===2)return '1';return x.t}
 $('#mRule').onclick=()=>{
   if(C.g===3){say('The lab has no rules for trios yet. Use the definitions.','bad');return}
-  setAsk(`<span class="q">Which lab rule applies to the flasks you selected?</span>`+LEMMAS.map((L,i)=>`<button data-i="${i}">${esc(L.txt)}${proven(L.from)?'':' (locked)'}</button>`).join(''));
+  setAsk(`<span class="q">Which lab rule applies to the flasks you selected?</span>`+LEMMAS.map((L,i)=>(L.fam||'parity')!==famOf(C)?'':`<button data-i="${i}">${esc(L.txt)}${proven(L.from)?'':' (locked)'}</button>`).join(''));
   say('Pick a rule. Rules unlock when you prove their recipe.');
   $('#ask').onclick=ev=>{const b=ev.target.closest('button');if(!b)return;const L=LEMMAS[+b.dataset.i];
     if(L.from===C.id){say('That rule is the recipe you are producing. Using it here would be circular reasoning.','bad');return}
@@ -277,19 +336,20 @@ $('#mRule').onclick=()=>{
       const ts=ids.map(get),ks=ts.map(kind).sort().join('+');
       const fit=(k,p)=>k===p||(p==='odd'&&k==='1');const ok=(fit(kind(ts[0]),L.pat[0])&&fit(kind(ts[1]),L.pat[1]))||(fit(kind(ts[1]),L.pat[0])&&fit(kind(ts[0]),L.pat[1]));
       if(!ok){say(`That rule needs ${L.txt.split(' = ')[0]}, but you selected ${ts.map(kind).join(' + ').replace(/\b1\b/,'1')}.`,'bad');return}
-      out={t:L.out,n:`(${ts.map(alg).join(' + ')})`};
+      out=mk(L.out,`(${ts.map(alg).join(' + ')})`);
       snap();usedLem=true;replace(ids,[out]);
     }else{
       let target;
-      if(S.mode==='prod'&&S.factors.every(f=>f.length===1&&['odd','even','int'].includes(f[0].t))){const[u,v]=S.factors.map(f=>f[0]);target={t:'mul',n:pn(u.n,v.n),ev:u.t==='even'||v.t==='even',od:u.t==='odd'&&v.t==='odd'}}
+      if(S.mode==='prod'&&S.factors.every(f=>f.length===1&&['odd','even','int','mult'].includes(f[0].t))){const[u,v]=S.factors.map(f=>f[0]);target={t:'mul',n:pn(u.n,v.n),ev:u.t==='even'||v.t==='even',od:u.t==='odd'&&v.t==='odd',parts:[u,v]}}
       else if(S.mode==='sum'&&ids.length===1&&get(ids[0]).t==='mul')target=get(ids[0]);
       else{say('Select one product flask (like a(b − 1)) for this rule.','bad');return}
       if(L.pat==='mulEven'&&!target.ev){say('This rule needs a product with an even factor.','bad');return}
       if(L.pat==='mulOdd'&&!target.od){say('This rule needs a product of two odd numbers.','bad');return}
-      out={t:L.out,n:target.n};snap();usedLem=true;
+      if(L.pat==='mulMult'&&!(target.parts||[]).some(p=>p.t==='self'||(p.t==='mult'&&p.of===C.g))){say(`This rule needs a product with a factor that is a multiple of ${C.g}.`,'bad');return}
+      out=mk(L.out,target.n);snap();usedLem=true;
       if(S.mode==='prod')S={mode:'sum',terms:[out]};else replace(ids,[out]);sel=[];
     }
-    setAsk('');log(`${out.n} is ${out.t} (lab rule: ${L.txt})`);say('Rule applied.');draw()}};
+    setAsk('');log(`${out.n} is ${desc(out)} (lab rule: ${L.txt})`);say('Rule applied.');draw()}};
 const route=()=>usedLem&&usedDef?'mix':usedLem?'lem':'def';
 $('#mClaim').onclick=()=>{
   if(S.mode==='prod'){say('Expand the product, or use a rule on it, before inspection.','bad');return}
@@ -298,18 +358,19 @@ $('#mClaim').onclick=()=>{
   let w=null,shape=null;
   if(C.goal==='even'){if(T.length===1&&T[0].t==='even')shape='card';else if(T.length===1&&T[0].t==='grp'){shape='grp';w=T[0].w}}
   if(C.goal==='odd'){if(T.length===1&&T[0].t==='odd')shape='card';else if(T.length===2){const gg=T.find(x=>x.t==='grp'),oo=T.find(x=>x.t==='one'&&x.v===1);if(gg&&oo){shape='grp1';w=gg.w}}}
-  if(C.goal==='mult3'&&T.length===1&&T[0].t==='grp'){shape='grp';w=T[0].w}
-  if(!shape){const want={even:'one flask of pairs, or one flask labelled even',odd:'one flask of pairs plus one loose atom, or one flask labelled odd',mult3:'one flask of trios'}[C.goal];say(`Kevin: "Not ready. I need to see ${want}."`,'bad');return}
-  if(shape==='card'){const last=T[0];inspect({s:`${C.lhs} is ${C.goal}`,r:`${C.lhs} = ${last.n}, which the last step showed is ${C.goal}`});return}
+  if((C.goal==='mult3'||C.goal==='multg')&&T.length===1&&T[0].t==='grp'){shape='grp';w=T[0].w}
+  if(C.goal==='multg'&&T.length===1&&T[0].t==='mult'&&T[0].of===C.g)shape='card';
+  if(!shape){const want={even:'one flask of pairs, or one flask labelled even',odd:'one flask of pairs plus one loose atom, or one flask labelled odd',mult3:'one flask of trios',multg:`one flask of crates of ${C.g}, or one flask labelled multiple of ${C.g}`}[C.goal];say(`Kevin: "Not ready. I need to see ${want}."`,'bad');return}
+  if(shape==='card'){const last=T[0];inspect({s:`${C.lhs} is ${goalWord()}`,r:`${C.lhs} = ${last.n}, which the last step showed is ${goalWord()}`});return}
   const parts=w.split(' + '),drop=parts.length>1?parts.slice(0,-1).join(' + '):(w==='1'?'0':w+' + 1');
   const opts=shuffle([[w,1],[drop,0],[`${g}(${w})`,0]]);const tail=shape==='grp1'?' + 1':'';
   setAsk(`<span class="q">Finish the claim: ${esc(C.lhs)} = ${g} × ___${tail}</span>`+opts.map(([t,c],i)=>`<button data-i="${i}">${esc(t)}</button>`).join(''));
   say('Name exactly what multiplies the '+g+'.');
   $('#ask').onclick=ev=>{const b=ev.target.closest('button');if(!b)return;if(!opts[+b.dataset.i][1]){say('Count again: every group, including any new one.','bad');return}
-    const word={even:'even',odd:'odd',mult3:'a multiple of 3'}[C.goal],def={even:'definition of even',odd:'definition of odd',mult3:'definition of multiple'}[C.goal];
+    const word=goalWord(),def={even:'definition of even',odd:'definition of odd',mult3:'definition of multiple',multg:'definition of divides'}[C.goal];
     inspect({s:`${C.lhs} is ${word}`,r:`${C.lhs} = ${g}(${w})${tail}, and ${w} is an integer, since sums and products of integers are integers (${def})`})}};
 function inspect(last){
-  setAsk(`<span class="q">Kevin: "Your flasks always show three ${C.g===2?'pairs':'trios'}. Does your proof still work when a number has none, like ${esc(C.zero)}?"</span><button data-y="1">Yes: the letter can be 0, so zero ${C.g===2?'pairs':'trios'} is covered</button><button data-y="0">No: the proof needs at least one</button>`);
+  setAsk(`<span class="q">Kevin: "Your flasks always show three ${GN()}. Does your proof still work when a number has none, like ${esc(C.zero)}?"</span><button data-y="1">Yes: the letter can be 0, so zero ${GN()} is covered</button><button data-y="0">No: the proof needs at least one</button>`);
   say('Last safety question.','good');
   $('#ask').onclick=ev=>{const b=ev.target.closest('button');if(!b)return;
     if(b.dataset.y==='0'){say(`Try it: ${C.zero}. The letter in the definition can be 0, and the dots stand for any number, including none.`,'bad');return}
@@ -317,7 +378,7 @@ function inspect(last){
 function distil(last){const r=route();
   const others=Object.keys(C.dist).filter(k=>k!==r);
   const fake=`We checked examples like ${C.ex}, and it worked every time, so it must always be true.`;
-  const opts=shuffle([[C.dist[r]||C.dist.def,'ok'],[fake,'ex'],...(others.length?[[C.dist[others[0]],'other']]:[[C.goal==='mult3'?'Numbers that look alike behave alike, so the total must be a multiple of 3.':'Odd numbers end in 1, 3, 5, 7 or 9, and the last digits always work out.','surface']])]);
+  const opts=shuffle([[C.dist[r]||C.dist.def,'ok'],[fake,'ex'],...(others.length?[[C.dist[others[0]],'other']]:[[C.goal==='mult3'?'Numbers that look alike behave alike, so the total must be a multiple of 3.':C.goal==='multg'?'Divisors always pass from smaller numbers to bigger ones, so it has to work.':'Odd numbers end in 1, 3, 5, 7 or 9, and the last digits always work out.','surface']])]);
   setAsk(`<span class="q">Choose the Distillate: the sentence that captures the essence of <b>your</b> proof.</span>`+opts.map(([t],i)=>`<button data-i="${i}">${esc(t)}</button>`).join(''));
   say('Kevin passed your inspection. Now distill it.','good');
   $('#ask').onclick=ev=>{const b=ev.target.closest('button');if(!b)return;const [t,k]=opts[+b.dataset.i];
