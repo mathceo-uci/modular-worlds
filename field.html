@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Field Station</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="book.css">
+<style>
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:16px;margin-top:12px}
+.fcard{background:var(--panel);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;border:1px solid var(--line,#ddd)}
+.fcard h3{margin:0;font-size:19px}
+.fcard p{margin:0}
+.ftag{display:inline-block;align-self:flex-start;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--sea);background:var(--sea-soft);border-radius:999px;padding:3px 10px}
+.demo{background:var(--bg);border-radius:12px;padding:10px 12px;border:1px dashed var(--line,#ccc)}
+.demo .ctrl{margin:0;flex-wrap:wrap}
+.demo input[type=number]{width:7.5em}
+.out{white-space:pre-line;font-family:"Roboto Mono",monospace;font-size:14px;margin-top:8px;line-height:1.55}
+.back{font-size:15px;border-left:4px solid var(--brass);padding-left:10px}
+.fq{font-size:15px;color:var(--ink)}
+.bits{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0}
+.bits button{min-width:38px;min-height:38px;padding:0;font-family:"Roboto Mono",monospace;font-size:16px;font-weight:700}
+.bits button.pb{border:2.5px solid var(--brass)}
+.bits button.flip{background:var(--ember-soft);border-color:var(--ember)}
+.bits .lbl{font-size:12px;color:var(--mute);align-self:center;margin-left:4px}
+.buckets{display:flex;flex-wrap:wrap;gap:3px;margin-top:8px}
+.buckets span{min-width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:5px;font-family:"Roboto Mono",monospace;font-size:12px;border:1px solid var(--mute);background:var(--panel)}
+.buckets span.used{background:var(--sea-soft);border:2px solid var(--sea);font-weight:700}
+.chjump{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}
+</style>
+</head>
+<body>
+
+<nav class="toc" aria-label="Field Station sections"><div class="wrap">
+<a class="brand" href="index.html">Modular Worlds</a><a href="#about">The station</a><a href="#ch0">Ch 0</a><a href="#ch1">Ch 1</a><a href="#ch2">Ch 2</a><a href="#ch3">Ch 3</a><a href="#ch4">Ch 4</a><a href="#ch5">Ch 5</a>
+</div></nav>
+
+<header class="band hero" id="about"><div class="wrap">
+<div>
+<div class="kicker">Modular Worlds · The Field Station</div>
+<h1>The Field Station</h1>
+<p class="lede">At every landing the crew pitches a tent, unpacks the instruments and asks one question: where does this math show up outside the book?</p>
+<div class="episode" aria-label="Field Station scene">
+<p><span class="who">Diego:</span> We proved odd plus odd is even. Great. Who uses that?</p>
+<p><span class="who">Ana</span> <span class="stage">(holding up her phone)</span>: This does. Every message you send is checked for errors before anyone reads it, and the simplest check is parity.</p>
+<p><span class="who">Kevin:</span> Prove it.</p>
+<p><span class="who">Ana:</span> Better. I'll show you. Grab the instruments.</p>
+</div>
+</div>
+<aside class="box tool">
+<h3>How the station works</h3>
+<p>Each chapter has field cards. A card has:</p>
+<ul style="margin:6px 0">
+<li>a <b>field</b> where the idea is used (computer science, engineering, biology, astronomy, chemistry, games);</li>
+<li>a small <b>instrument</b> to try;</li>
+<li><b>Back to the math</b>: the theorem from the chapter that makes it work;</li>
+<li>a <b>field question</b> for your crew.</li>
+</ul>
+<p style="margin:0">The Proof Lab asks <i>why</i> something is true. The Studio asks what it looks and sounds like. The Field Station asks <i>where it is used</i>.</p>
+<div class="chjump"><a class="btn" href="lab.html">Proof Lab</a><a class="btn" href="studio.html#rooms">Studio</a></div>
+</aside>
+</div></header>
+
+<!-- ============ Chapter 0 ============ -->
+<section class="band" id="ch0"><div class="wrap">
+<h2>Chapter 0 · The Entrance Exam: even and odd</h2>
+<div class="fgrid">
+
+<article class="fcard" id="parity">
+<span class="ftag">Computer science</span>
+<h3>The parity bit</h3>
+<p>Computers send letters as strings of 0s and 1s. A simple safety check adds one extra <b>parity bit</b> so that the total number of 1s is even. If one bit flips on the way, the count turns odd, and the receiver knows something went wrong.</p>
+<div class="demo">
+<p class="small" style="margin:0">Press bits to change the message. The last bit (gold border) is the parity bit, set automatically.</p>
+<div class="bits" id="pbits" role="group" aria-label="Message bits"></div>
+<div class="ctrl"><button id="psend">Send with noise</button><button id="pclean">Send cleanly</button></div>
+<div class="out" id="pout" aria-live="polite"></div>
+</div>
+<p class="back"><b>Back to the math:</b> adding a 1 changes even to odd and odd to even (<a href="ch0.html#t1">the plaza rules, Theorem 0.1</a>).</p>
+<p class="fq"><b>Field question:</b> what happens if <i>two</i> bits flip? Can parity catch it? What would you add to catch it?</p>
+</article>
+
+<article class="fcard" id="handshake">
+<span class="ftag">Networks</span>
+<h3>Cables between computers</h3>
+<p>Picture a network: computers joined by cables. Count, for each computer, how many cables plug into it. Some counts are odd. However the network is built, the number of computers with an <b>odd</b> count is always even.</p>
+<div class="demo"><p style="margin:0">Each cable has two ends, so the counts add up to twice the number of cables, an even number. A sum of numbers is even only when it has an even number of odd terms.</p></div>
+<p class="back"><b>Back to the math:</b> the handshake rule (<a href="ch0.html#t1">Theorem 0.1′</a>), the same rule that tells chemists which molecules can close up.</p>
+<p class="fq"><b>Field question:</b> someone claims to have built a network of 7 routers, each connected to exactly 3 others. Why are they wrong?</p>
+</article>
+
+<article class="fcard" id="fifteen">
+<span class="ftag">Games</span>
+<h3>The impossible 15 puzzle</h3>
+<p>In the sliding 15 puzzle, swap the 14 and 15 tiles and try to slide everything back. You can't, ever. In 1879 William Johnson and William Story proved that exactly half of all arrangements can be solved and half cannot.</p>
+<div class="demo"><p style="margin:0">Count the pairs of tiles in the wrong order, and add the blank's row. A sideways slide changes neither. An up-or-down slide moves the blank one row and changes the wrong-order count by 1 or 3. So the total's parity never changes, but swapping 14 and 15 changes it by 1.</p></div>
+<p class="back"><b>Back to the math:</b> an <b>invariant</b>, the same argument as <a href="ch0.html#t2">the Broken Floor</a>.</p>
+<p class="fq"><b>Field question:</b> a Rubik's cube with one corner twisted can't be solved either. Look up why. Is it a parity argument too?</p>
+</article>
+</div>
+</div></section>
+
+<!-- ============ Chapter 1 ============ -->
+<section class="band alt" id="ch1"><div class="wrap">
+<h2>Chapter 1 · Mojadito: division and induction</h2>
+<div class="fgrid">
+
+<article class="fcard" id="clock">
+<span class="ftag">Computer science</span>
+<h3>Seconds to days</h3>
+<p>Your phone stores time as one huge count of seconds. To show you "3 days, 4 hours", it runs the division algorithm again and again: divide by 60, keep the remainder, divide the quotient by 60, then by 24.</p>
+<div class="demo">
+<div class="ctrl"><div><label for="secs">Seconds</label><input id="secs" type="number" value="1000000" min="0" max="9999999999"></div><button id="secgo">Convert</button></div>
+<div class="out" id="secout" aria-live="polite"></div>
+</div>
+<p class="back"><b>Back to the math:</b> each step is <i class="v">n</i> = <i class="v">q</i>·<i class="v">d</i> + <i class="v">r</i> with 0 ≤ <i class="v">r</i> &lt; <i class="v">d</i> (<a href="ch1.html#theory">Theorem 1.1</a>). The remainders are the clock's digits.</p>
+<p class="fq"><b>Field question:</b> one billion seconds is about how many years? Guess first, then convert.</p>
+</article>
+
+<article class="fcard" id="leap">
+<span class="ftag">Astronomy</span>
+<h3>The leap-year rule</h3>
+<p>A year (equinox to equinox) lasts about 365.2422 days. The Gregorian calendar (1582) adds a leap day in years divisible by 4, except years divisible by 100, except years divisible by 400. That averages 365.2425 days.</p>
+<div class="demo">
+<div class="ctrl"><div><label for="ly">Year</label><input id="ly" type="number" value="2100" min="1583" max="99999"></div><button id="lygo">Check</button></div>
+<div class="out" id="lyout" aria-live="polite"></div>
+</div>
+<p class="back"><b>Back to the math:</b> "divisible by" means remainder 0 in the division algorithm (<a href="ch1.html#theory">Theorem 1.1</a>).</p>
+<p class="fq"><b>Field question:</b> the rule drifts by about 0.0003 days a year. Roughly when will the calendar be one full day off?</p>
+</article>
+
+<article class="fcard" id="hanoi">
+<span class="ftag">Computer science</span>
+<h3>Recursion is induction</h3>
+<p>To move a tower of <i class="v">n</i> disks (the Tower of Hanoi, Édouard Lucas, 1883): move the top <i class="v">n</i> − 1 out of the way, move the big disk, move the <i class="v">n</i> − 1 back on top. Programmers call this <b>recursion</b>: a program that calls itself on a smaller case.</p>
+<div class="demo"><p style="margin:0">Moves needed: 1, 3, 7, 15, … Induction proves the pattern 2<sup><i class="v">n</i></sup> − 1: if <i class="v">n</i> − 1 disks take 2<sup><i class="v">n</i>−1</sup> − 1 moves, then <i class="v">n</i> disks take 2(2<sup><i class="v">n</i>−1</sup> − 1) + 1 = 2<sup><i class="v">n</i></sup> − 1.</p></div>
+<p class="back"><b>Back to the math:</b> a recursive program is correct for the same reason an <a href="ch1.html#theory">induction proof</a> works: the base case, then the step.</p>
+<p class="fq"><b>Field question:</b> legend says monks move 64 disks, one per second. How long would that take?</p>
+</article>
+</div>
+</div></section>
+
+<!-- ============ Chapter 2 ============ -->
+<section class="band" id="ch2"><div class="wrap">
+<h2>Chapter 2 · Ammonia Bay: gcd and lcm</h2>
+<div class="fgrid">
+
+<article class="fcard" id="broods">
+<span class="ftag">Biology</span>
+<h3>When two cicada broods meet</h3>
+<p>Some periodical cicadas emerge every 13 years, others every 17. Two neighbouring broods emerge together only every lcm(13, 17) = 221 years. In 2024, Brood XIII (17-year) and Brood XIX (13-year) came out together in Illinois, for the first time since 1803.</p>
+<div class="demo"><p style="margin:0">1803 + 221 = 2024. With 12-year and 18-year cycles, two broods would meet every lcm(12, 18) = 36 years instead.</p></div>
+<p class="back"><b>Back to the math:</b> two Books meet every lcm of their steps (<a href="ch2.html#theory">Theorem 2.1</a>).</p>
+<p class="fq"><b>Field question:</b> when will these two broods next emerge together?</p>
+</article>
+
+<article class="fcard" id="gears">
+<span class="ftag">Engineering</span>
+<h3>The hunting tooth</h3>
+<p>When two gears turn, the same pairs of teeth keep meeting. If one tooth is damaged, it wears the same partners again and again. Engineers pick tooth counts with gcd 1 so every tooth meets every other tooth, spreading the wear (the extra tooth is called a <b>hunting tooth</b>).</p>
+<div class="demo">
+<div class="ctrl"><div><label for="ga">Teeth A</label><input id="ga" type="number" value="12" min="2" max="500"></div><div><label for="gb">Teeth B</label><input id="gb" type="number" value="18" min="2" max="500"></div><button id="ggo">Turn</button></div>
+<div class="out" id="gout" aria-live="polite"></div>
+</div>
+<p class="back"><b>Back to the math:</b> the gears return to their start after lcm(<i class="v">a</i>, <i class="v">b</i>) tooth-steps, and each tooth of A meets <i class="v">b</i> / gcd(<i class="v">a</i>, <i class="v">b</i>) teeth of B (<a href="ch2.html#theory">Chapter 2</a>). See them turn in the <a href="gears.html">Gear Shop</a>.</p>
+<p class="fq"><b>Field question:</b> a bike has 48 teeth in front and 16 at the back. Is that a good choice for wear? What changes with 17?</p>
+</article>
+
+<article class="fcard" id="lights">
+<span class="ftag">Engineering</span>
+<h3>Lights that blink together</h3>
+<p>A lighthouse flashes every 12 seconds and a buoy every 20. When do they flash together? Traffic engineers ask the same question to sync signal cycles along a street.</p>
+<div class="demo">
+<div class="ctrl"><div><label for="la">Every (s)</label><input id="la" type="number" value="12" min="1" max="9999"></div><div><label for="lb">Every (s)</label><input id="lb" type="number" value="20" min="1" max="9999"></div><button id="lgo">Sync</button></div>
+<div class="out" id="lout" aria-live="polite"></div>
+</div>
+<p class="back"><b>Back to the math:</b> lcm(<i class="v">a</i>, <i class="v">b</i>) = <i class="v">ab</i> / gcd(<i class="v">a</i>, <i class="v">b</i>) (<a href="ch2.html#theory">Chapter 2</a>).</p>
+<p class="fq"><b>Field question:</b> if the buoy starts 4 seconds after the lighthouse, do they ever flash together? (Chapter 2 has a test for "never".)</p>
+</article>
+</div>
+</div></section>
+
+<!-- ============ Chapter 3 ============ -->
+<section class="band alt" id="ch3"><div class="wrap">
+<h2>Chapter 3 · Euclid's Forge: Euclid and Bézout</h2>
+<div class="fgrid">
+
+<article class="fcard" id="screens">
+<span class="ftag">Computer science</span>
+<h3>Screen shapes</h3>
+<p>A screen of 1920 × 1080 pixels is called "16:9". To get there, divide both by their gcd, 120. Video and photo apps reduce ratios this way every time they crop.</p>
+<div class="demo">
+<div class="ctrl"><div><label for="sw">Width</label><input id="sw" type="number" value="1920" min="1" max="99999"></div><div><label for="sh">Height</label><input id="sh" type="number" value="1080" min="1" max="99999"></div><button id="sgo">Reduce</button></div>
+<div class="out" id="sout" aria-live="polite"></div>
+</div>
+<p class="back"><b>Back to the math:</b> <a href="ch3.html#theory">Euclid's algorithm</a> finds the gcd in a few divisions, even for huge numbers.</p>
+<p class="fq"><b>Field question:</b> a phone screen is 2532 × 1170. What is its ratio? Why isn't it a "nice" one?</p>
+</article>
+
+<article class="fcard" id="calendar">
+<span class="ftag">Astronomy</span>
+<h3>Leap years from Euclid</h3>
+<p>The year's extra 0.2422 days must be packed into whole leap days. Running Euclid's algorithm on 2422 and 10000 gives the best simple choices: 1 leap day in 4 years, 7 in 29, 8 in 33, 31 in 128. Calendars associated with Omar Khayyam use 8 leap years every 33.</p>
+<div class="demo">
+<div class="ctrl"><div><label for="cf">Decimal</label><input id="cf" type="number" value="0.2422" step="0.0001" min="0.0001" max="0.9999"></div><button id="cfgo">Run Euclid</button></div>
+<div class="out" id="cfout" aria-live="polite"></div>
+</div>
+<p class="back"><b>Back to the math:</b> the quotients of <a href="ch3.html#theory">Euclid's algorithm</a> build these fractions, called <b>continued fraction convergents</b>.</p>
+<p class="fq"><b>Field question:</b> a month (new moon to new moon) is about 29.5306 days. Find a good fraction for 0.5306 and invent a lunar calendar.</p>
+</article>
+
+<article class="fcard" id="lame">
+<span class="ftag">Computer science</span>
+<h3>The first speed test of an algorithm</h3>
+<p>In 1844, Gabriel Lamé proved that Euclid's algorithm needs at most about five steps per decimal digit of the smaller number. It is one of the first proofs about how <i>fast</i> an algorithm is, a question at the heart of computer science today.</p>
+<div class="demo"><p style="margin:0">The slowest inputs are neighbouring Fibonacci numbers: 89 and 55 take 9 divisions, because almost every quotient is 1.</p></div>
+<p class="back"><b>Back to the math:</b> each step of <a href="ch3.html#theory">Euclid's algorithm</a> shrinks the pair at least as fast as Fibonacci numbers grow.</p>
+<p class="fq"><b>Field question:</b> your phone runs Euclid on numbers with 600 digits during a secure connection. About how many steps can that take, at most?</p>
+</article>
+</div>
+</div></section>
+
+<!-- ============ Chapter 4 ============ -->
+<section class="band" id="ch4"><div class="wrap">
+<h2>Chapter 4 · Diophantine Delta: whole-number equations</h2>
+<div class="fgrid">
+
+<article class="fcard" id="jugs">
+<span class="ftag">Puzzles and engineering</span>
+<h3>Measuring with two jugs</h3>
+<p>You have a 3-litre jug and a 5-litre jug, no markings, and a tap. Can you measure exactly 4 litres? Filling and pouring adds and subtracts the jug sizes, so you can measure <i class="v">c</i> exactly when 3<i class="v">x</i> + 5<i class="v">y</i> = <i class="v">c</i> has a solution.</p>
+<div class="demo">
+<div class="ctrl"><div><label for="ja">Jug A</label><input id="ja" type="number" value="3" min="1" max="999"></div><div><label for="jb">Jug B</label><input id="jb" type="number" value="5" min="1" max="999"></div><div><label for="jc">Target</label><input id="jc" type="number" value="4" min="1" max="999"></div><button id="jgo">Pour</button></div>
+<div class="out" id="jout" aria-live="polite"></div>
+</div>
+<p class="back"><b>Back to the math:</b> possible exactly when gcd(<i class="v">a</i>, <i class="v">b</i>) divides <i class="v">c</i> and <i class="v">c</i> fits in the bigger jug (<a href="ch4.html#theory">Theorem 4.2</a> and Bézout).</p>
+<p class="fq"><b>Field question:</b> with jugs of 4 and 6 litres, which amounts can you never measure? Why?</p>
+</article>
+
+<article class="fcard" id="reactions">
+<span class="ftag">Chemistry</span>
+<h3>Balancing a reaction</h3>
+<p>Propane burns in a gas grill: <i class="v">x</i> C<sub>3</sub>H<sub>8</sub> + <i class="v">y</i> O<sub>2</sub> → <i class="v">z</i> CO<sub>2</sub> + <i class="v">w</i> H<sub>2</sub>O. Atoms are never created or destroyed, so each element balances, and you can't use part of a molecule.</p>
+<div class="demo"><p style="margin:0">Carbon: 3<i class="v">x</i> = <i class="v">z</i>. Hydrogen: 8<i class="v">x</i> = 2<i class="v">w</i>. Oxygen: 2<i class="v">y</i> = 2<i class="v">z</i> + <i class="v">w</i>. Smallest whole solution: C<sub>3</sub>H<sub>8</sub> + 5 O<sub>2</sub> → 3 CO<sub>2</sub> + 4 H<sub>2</sub>O.</p></div>
+<p class="back"><b>Back to the math:</b> a system of linear Diophantine equations (<a href="ch4.html#theory">Chapter 4</a>); every other solution is a multiple of the smallest.</p>
+<p class="fq"><b>Field question:</b> balance the reaction that makes rust: Fe + O<sub>2</sub> → Fe<sub>2</sub>O<sub>3</sub>.</p>
+</article>
+
+<article class="fcard" id="football">
+<span class="ftag">Sports</span>
+<h3>Impossible scores</h3>
+<p>Suppose a football team scores only field goals (3 points) and touchdowns with the extra point (7 points). Some totals can't happen: 1, 2, 4, 5, 8 and 11. Every total above 11 can.</p>
+<div class="demo"><p style="margin:0">3 · 7 − 3 − 7 = 11, and (3 − 1)(7 − 1)/2 = 6 impossible totals. Real football also has 2-point safeties and conversions, and then every total except 1 is possible.</p></div>
+<p class="back"><b>Back to the math:</b> Sylvester's toll theorem (<a href="ch4.html#tolls">Corollary 4.4</a>).</p>
+<p class="fq"><b>Field question:</b> in rugby union, a try with conversion is 7, a try alone is 5 and a penalty is 3. Which totals are impossible?</p>
+</article>
+</div>
+</div></section>
+
+<!-- ============ Chapter 5 ============ -->
+<section class="band alt" id="ch5"><div class="wrap">
+<h2>Chapter 5 · Prime Peaks: primes</h2>
+<div class="fgrid">
+
+<article class="fcard" id="hash">
+<span class="ftag">Computer science</span>
+<h3>Why hash tables like primes</h3>
+<p>Programs store data in a table of <i class="v">m</i> slots, putting key <i class="v">k</i> in slot <i class="v">k</i> mod <i class="v">m</i>. Real keys often come in steps (prices in tens, IDs in hundreds). With a bad table size, they pile into a few slots and searches get slow.</p>
+<div class="demo">
+<div class="ctrl"><div><label for="hm">Table size</label><input id="hm" type="number" value="10" min="2" max="60"></div><div><label for="hs">Keys step by</label><input id="hs" type="number" value="10" min="1" max="999"></div><button id="hgo">Store 60 keys</button></div>
+<div class="buckets" id="hb" aria-hidden="true"></div>
+<div class="out" id="hout" aria-live="polite"></div>
+</div>
+<p class="back"><b>Back to the math:</b> keys in steps of <i class="v">s</i> use only <i class="v">m</i> / gcd(<i class="v">s</i>, <i class="v">m</i>) slots. A prime size <i class="v">m</i> has gcd 1 with every step it doesn't divide (<a href="ch5.html#theory">Chapter 5</a>).</p>
+<p class="fq"><b>Field question:</b> try size 10 and then 11 with steps of 10. Which table size would you choose for prices in cents?</p>
+</article>
+
+<article class="fcard" id="factorhard">
+<span class="ftag">Cryptography</span>
+<h3>Easy to multiply, hard to undo</h3>
+<p>Multiplying two primes takes a moment. Undoing it, finding the primes from their product, can take ages. The security of the internet (Chapter 9) rests on this gap.</p>
+<div class="demo">
+<div class="ctrl"><div><label for="fp">Prime pair</label><select id="fp"><option value="101,103">101 and 103</option><option value="10007,10009">10007 and 10009</option><option value="1000003,1000033" selected>1000003 and 1000033</option></select></div><button id="fgo">Multiply, then factor</button></div>
+<div class="out" id="fout" aria-live="polite"></div>
+</div>
+<p class="back"><b>Back to the math:</b> unique factorization (<a href="ch5.html#fta">Theorem 5.5</a>) says the two primes are the only answer, and the sieve bound (<a href="ch5.html#theory">Proposition 5.3</a>) says how far trial division must search.</p>
+<p class="fq"><b>Field question:</b> real keys use primes with about 300 digits. If trial division checked a trillion numbers per second, roughly how long would it take?</p>
+</article>
+
+<article class="fcard" id="cicadas">
+<span class="ftag">Biology</span>
+<h3>Prime-year cicadas</h3>
+<p>Periodical cicadas emerge every 13 or 17 years, both prime. One hypothesis: a predator with a 2-, 3-, 4- or 6-year cycle would rarely line up with a prime cycle, but often with a 12-year one. Biologists still debate it.</p>
+<div class="demo"><p style="margin:0">A 12-year cicada meets a 4-year predator every lcm(12, 4) = 12 years, every single emergence. A 13-year cicada meets it every lcm(13, 4) = 52 years.</p></div>
+<p class="back"><b>Back to the math:</b> a prime <i class="v">p</i> shares no factor with smaller cycles, so lcm(<i class="v">p</i>, <i class="v">k</i>) = <i class="v">pk</i> for 1 &lt; <i class="v">k</i> &lt; <i class="v">p</i> (<a href="ch5.html#theory">primes</a> and <a href="ch2.html#theory">lcm</a>).</p>
+<p class="fq"><b>Field question:</b> which cycle length from 10 to 20 years would meet predators of cycles 2 to 6 least often? Make a table.</p>
+</article>
+</div>
+<p class="small" style="margin-top:16px">More cards arrive with each chapter: check digits (Chapter 6), splitting big calculations (Chapter 7), random numbers (Chapter 8), secure websites (Chapter 9) and right triangles (Chapter 10).</p>
+</div></section>
+
+<section class="band"><div class="wrap pager"><a href="index.html">← Contents</a><a href="lab.html">The Proof Lab</a><a href="studio.html#rooms">The Studio →</a></div></section>
+<footer class="band"><div class="wrap">Modular Worlds · The Field Station · draft · UCI Math CEO</div></footer>
+
+<script src="book.js"></script>
+<script>
+{
+const {$,gcd}=MW;
+const fmt=n=>n.toLocaleString('en-US');
+const egcd=(a,b)=>{if(b===0)return[a,1,0];const[g,x,y]=egcd(b,a%b);return[g,y,x-Math.floor(a/b)*y]};
+const num=id=>{const v=parseFloat($(id).value);return isFinite(v)?v:NaN};
+
+/* parity bit */
+const P={bits:[1,0,0,0,0,0,1],flip:-1};
+function drawP(){const par=P.bits.reduce((a,b)=>a+b,0)%2;const all=P.bits.concat([par]);
+  $('#pbits').innerHTML=all.map((b,i)=>i<7?`<button data-i="${i}" class="${P.flip===i?'flip':''}" aria-label="Bit ${i+1}: ${b}. Press to change">${b}</button>`:`<button class="pb ${P.flip===7?'flip':''}" disabled aria-label="Parity bit: ${b}">${b}</button>`).join('')+'<span class="lbl">← parity</span>';
+  return all}
+$('#pbits').addEventListener('click',e=>{const b=e.target.closest('button[data-i]');if(!b)return;P.bits[+b.dataset.i]^=1;P.flip=-1;drawP();$('#pout').textContent=''});
+function send(noise){P.flip=-1;const all=drawP().slice();if(noise){P.flip=Math.floor(Math.random()*8);all[P.flip]^=1}
+  const ones=all.reduce((a,b)=>a+b,0);
+  if(noise){$('#pbits').querySelectorAll('button')[P.flip].classList.add('flip')}
+  $('#pout').textContent=`Received: ${all.join('')}\nNumber of 1s: ${ones}, ${ones%2?'odd':'even'}.\n`+(ones%2?`Error detected! (bit ${P.flip+1} flipped on the way, shown in red)`:'Looks fine: even number of 1s.')}
+$('#psend').addEventListener('click',()=>send(true));$('#pclean').addEventListener('click',()=>send(false));drawP();
+
+/* seconds */
+function secs(){let s=Math.floor(num('#secs'));if(!(s>=0)){$('#secout').textContent='Enter a whole number of seconds.';return}
+  const s0=s;const sec=s%60;s=Math.floor(s/60);const min=s%60;s=Math.floor(s/60);const hr=s%24;const d=Math.floor(s/24);
+  $('#secout').textContent=`${fmt(s0)} = ${fmt(Math.floor(s0/60))}·60 + ${sec}\n${fmt(Math.floor(s0/60))} = ${fmt(Math.floor(s0/3600))}·60 + ${min}\n${fmt(Math.floor(s0/3600))} = ${fmt(d)}·24 + ${hr}\nSo: ${fmt(d)} days, ${hr} hours, ${min} minutes, ${sec} seconds.`}
+$('#secgo').addEventListener('click',secs);secs();
+
+/* leap */
+function leap(){const y=Math.floor(num('#ly'));if(!(y>0)){$('#lyout').textContent='Enter a year.';return}
+  const r4=y%4,r100=y%100,r400=y%400;const L=r4===0&&(r100!==0||r400===0);
+  $('#lyout').textContent=`${y} mod 4 = ${r4}, mod 100 = ${r100}, mod 400 = ${r400}\n${y} ${L?'IS':'is NOT'} a leap year`+(r4===0&&!L?' (divisible by 100 but not by 400).':r400===0?' (divisible by 400).':'.')}
+$('#lygo').addEventListener('click',leap);leap();
+
+/* gears */
+function gears(){const a=Math.floor(num('#ga')),b=Math.floor(num('#gb'));if(!(a>1&&b>1)){$('#gout').textContent='Enter tooth counts of 2 or more.';return}
+  const g=gcd(a,b),l=a*b/g;
+  $('#gout').textContent=`gcd(${a}, ${b}) = ${g}, lcm = ${l}\nBack to the start after ${l} tooth-steps.\nEach tooth of A meets ${b/g} of B's ${b} teeth.\n`+(g===1?'✓ Every tooth meets every tooth: wear spreads evenly.':`✗ Each tooth only meets 1 in ${g} of the other gear's teeth. Try ${b+1} teeth for B.`)}
+$('#ggo').addEventListener('click',gears);gears();
+
+/* lights */
+function lights(){const a=Math.floor(num('#la')),b=Math.floor(num('#lb'));if(!(a>0&&b>0)){$('#lout').textContent='Enter two positive periods.';return}
+  const g=gcd(a,b),l=a*b/g;const list=[];for(let t=l;t<=l*4;t+=l)list.push(t);
+  $('#lout').textContent=`gcd = ${g}, so lcm = ${a}·${b} / ${g} = ${l}\nTogether at ${list.join(', ')}, … seconds`}
+$('#lgo').addEventListener('click',lights);lights();
+
+/* screens */
+function screens(){const w=Math.floor(num('#sw')),h=Math.floor(num('#sh'));if(!(w>0&&h>0)){$('#sout').textContent='Enter width and height.';return}
+  let a=w,b=h;const steps=[];while(b){steps.push(`${a} = ${Math.floor(a/b)}·${b} + ${a%b}`);[a,b]=[b,a%b]}
+  $('#sout').textContent=steps.slice(0,6).join('\n')+(steps.length>6?'\n…':'')+`\ngcd = ${a}, so ${w} × ${h} is ${w/a}:${h/a}`}
+$('#sgo').addEventListener('click',screens);screens();
+
+/* continued fraction */
+function cfr(){let x=num('#cf');if(!(x>0&&x<1)){$('#cfout').textContent='Enter a decimal between 0 and 1.';return}
+  const s=String($('#cf').value);const dec=(s.split('.')[1]||'').length||4;const D=Math.pow(10,Math.min(dec,8));let a=Math.round(x*D),b=D;
+  const g0=gcd(a,b);const qs=[];let A=b,B=a;while(B&&qs.length<10){qs.push(Math.floor(A/B));[A,B]=[B,A%B]}
+  let h1=1,h2=0,k1=0,k2=1;const conv=[];for(const q of qs){const h=q*h1+h2,k=q*k1+k2;h2=h1;h1=h;k2=k1;k1=k;conv.push([h,k])}
+  /* x = a/b < 1: x = 1/(q0 + ...), convergents are k/h */
+  $('#cfout').textContent=`Euclid on ${b} and ${a}: quotients ${qs.join(', ')}\nBest simple fractions:\n`+conv.slice(0,6).map(([h,k])=>`${k}/${h} = ${(k/h).toFixed(5)}  (${k} leap day${k>1?'s':''} every ${h} years)`).join('\n')}
+$('#cfgo').addEventListener('click',cfr);cfr();
+
+/* jugs */
+function jugs(){const a=Math.floor(num('#ja')),b=Math.floor(num('#jb')),c=Math.floor(num('#jc'));if(!(a>0&&b>0&&c>0)){$('#jout').textContent='Enter positive sizes and target.';return}
+  const g=gcd(a,b);
+  if(c%g){$('#jout').textContent=`gcd(${a}, ${b}) = ${g} does not divide ${c}: impossible.`;return}
+  if(c>Math.max(a,b)){$('#jout').textContent=`${c} doesn't fit in either jug (but ${c} litres in total, split across both jugs, may be possible).`;return}
+  /* simulate: fill A, pour into B, empty B when full */
+  const big=Math.max(a,b),small=Math.min(a,b),Sn=a===small?'A':'B',Bn=a===small?'B':'A';
+  let s=0,t=0;const log=[];const seen=new Set();
+  for(let i=0;i<60;i++){if(s===c||t===c)break;const key=s+','+t;if(seen.has(key))break;seen.add(key);
+    if(s===0){s=small;log.push(`fill ${Sn} (${small})`)}
+    else if(t===big){t=0;log.push(`empty ${Bn}`)}
+    else{const m=Math.min(s,big-t);s-=m;t+=m;log.push(`pour ${Sn} → ${Bn}: ${Sn} has ${s}, ${Bn} has ${t}`)}}
+  const ok=s===c||t===c;
+  $('#jout').textContent=`gcd(${a}, ${b}) = ${g} divides ${c}: possible.\n`+(ok?log.join('\n')+`\n✓ ${c} litres measured in ${log.length} steps.`:'(Try pouring the other way.)')}
+$('#jgo').addEventListener('click',jugs);jugs();
+
+/* hash */
+function hash(){const m=Math.floor(num('#hm')),s=Math.floor(num('#hs'));if(!(m>=2&&m<=60&&s>=1)){$('#hout').textContent='Table size 2 to 60, step at least 1.';return}
+  const cnt=new Array(m).fill(0);for(let k=0;k<60;k++)cnt[(k*s)%m]++;const used=cnt.filter(x=>x).length;
+  $('#hb').innerHTML=cnt.map(x=>`<span class="${x?'used':''}">${x||''}</span>`).join('');
+  $('#hout').textContent=`Keys 0, ${s}, ${2*s}, … land in ${used} of ${m} slots (m / gcd(${s}, ${m}) = ${m}/${gcd(s,m)} = ${m/gcd(s,m)}).\nBusiest slot holds ${Math.max(...cnt)} keys.`+(used===m?' ✓ Spread over every slot.':' ✗ Pile-up.')}
+$('#hgo').addEventListener('click',hash);hash();
+
+/* factor */
+function fact(){const [p,q]=$('#fp').value.split(',').map(Number);const n=p*q;
+  let d=2,tries=0;const t0=performance.now();while(n%d){d++;tries++}const ms=performance.now()-t0;
+  $('#fout').textContent=`Multiply: ${fmt(p)} × ${fmt(q)} = ${fmt(n)}  (one step)\nFactor by trial division: tried ${fmt(tries+1)} divisors before finding ${fmt(d)} (${ms<1?'under 1':Math.round(ms)} ms here).\nEach extra digit in the primes multiplies the work by about 10.`}
+$('#fgo').addEventListener('click',fact);
+$('#fout').textContent='Pick a pair and press the button.';
+}
+</script>
+</body>
+</html>
