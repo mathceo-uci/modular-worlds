@@ -25,6 +25,8 @@ class Painting:
         random.seed(seed)
         tex = self.noise(7, 7, 3) * 0.6 + self.noise(2.5, 2.5, 2) * 0.4
         self.paper_tex = tex
+        ph = self.noise(9, 9, 3) * 0.55 + self.noise(3.5, 3.5, 2) * 0.45
+        self.ph = (ph - ph.min()) / (ph.max() - ph.min())
         base = hexc(paper)
         self.c = np.ones((H, W, 3)) * base * (1 - 0.035 * tex[..., None])
 
@@ -76,7 +78,11 @@ class Painting:
         return gaussian_filter(m, blur) if blur else m
 
     # ---------- painting ----------
-    def wash(self, mask, color, strength=0.8, wobble=5, edge=0.5, gran=0.25, var=0.35, seed=None, rough=0.45, streak=None, reserve=None, halo=4):
+    def wash(self, mask, color, strength=0.8, wobble=5, edge=0.5, gran=0.25, var=0.35, seed=None, rough=0.45, streak=None, reserve=None, halo=4, tooth=0.35, mix=None, pool=0.6, bloom=0):
+        """One watercolor wash.
+        mask: where the brush went; color: pigment (or mix=second pigment for wet-in-wet);
+        edge: dried-edge darkening; pool: pigment pooling at the lower edge (gravity);
+        tooth: paper peaks left white; gran: pigment settling in paper valleys; bloom: backruns."""
         if seed is not None:
             self.rng = np.random.default_rng(seed)
         col = hexc(color) if isinstance(color, str) else np.array(color)
@@ -84,21 +90,46 @@ class Painting:
         m = gaussian_filter(mask.astype(np.float32), wobble) if wobble else mask.astype(np.float32)
         n1 = self.noise(wobble * 6 + 20, wobble * 6 + 20, 3)
         m2 = np.clip((m + (n1 - 0.5) * rough - 0.5) * 5 + 0.5, 0, 1)
-        m2 = m2 * (mask > 0.02) if wobble == 0 else m2
+        if wobble == 0:
+            m2 = m2 * (mask > 0.02)
         if reserve is not None:
             rv = gaussian_filter(reserve.astype(np.float32), halo)
             rv = np.clip((rv + (self.noise(30, 30, 2) - 0.5) * 0.3 - 0.12) * 6, 0, 1)
             m2 = m2 * (1 - rv)
-        rim = np.clip(m2 - gaussian_filter(m2, 3.5), 0, 1) * edge * 3.0
-        if streak:
-            nv = self.noise(streak[0], streak[1], 4)
-        else:
-            nv = self.noise(90, 90, 4)
+        inner = gaussian_filter(m2, 3.5)
+        rim = np.clip(m2 - inner, 0, 1) * edge * 3.0
+        if pool:
+            gy = np.gradient(gaussian_filter(m2, 2.5), axis=0)
+            rim = rim + np.clip(-gy, 0, None) * pool * 9.0
+        nv = self.noise(streak[0], streak[1], 4) if streak else self.noise(90, 90, 4)
         dens = strength * m2 * (1 - var / 2 + var * nv) + rim * m2
-        fine = self.paper_tex
-        dens = dens * (1 + gran * (fine - 0.5) * 2)
-        dens = np.clip(dens, 0, 1)[..., None]
-        self.c = self.c * (1 - dens * (1 - col))
+        # granulation: pigment settles in the valleys of the paper
+        dens = dens * (1 + gran * (0.5 - self.ph) * 2.2)
+        # paper tooth: the highest peaks stay white, more where the wash is thin
+        if tooth:
+            thin = 1 - np.clip(dens, 0, 1)
+            peak = np.clip((self.ph - (0.92 - tooth * 0.25 * (0.4 + thin))) * 12, 0, 1)
+            dens = dens * (1 - peak * 0.85)
+        if bloom:
+            for _ in range(int(bloom)):
+                ys, xs = np.nonzero(m2 > 0.8)
+                if len(xs) == 0: break
+                k = self.rng.integers(len(xs)); cx, cy = xs[k], ys[k]
+                r = self.rng.uniform(18, 45)
+                yy, xx = np.ogrid[0:H, 0:W]
+                d = np.sqrt((xx - cx) ** 2 + (yy - cy) ** 2) / r
+                d = d + (self.noise(14, 14, 3) - 0.5) * 0.6
+                ring = np.exp(-((d - 1) ** 2) / 0.012) * 0.6
+                dens = dens * np.where(d < 1, 0.55, 1.0) + ring * strength * m2
+        dens = np.clip(dens, 0, 1.6)
+        if mix is not None:
+            c2 = hexc(mix) if isinstance(mix, str) else np.array(mix)
+            t = self.noise(160, 120, 3)[..., None]
+            t = np.clip((t - 0.5) * 2.2 + 0.5, 0, 1)
+            col = col[None, None, :] * (1 - t) + c2[None, None, :] * t
+        # Beer-Lambert layering: each glaze absorbs light multiplicatively, like real transparent pigment
+        A = -np.log(np.clip(col, 0.03, 1.0))
+        self.c = self.c * np.exp(-A * dens[..., None])
 
     def glaze(self, mask, color, strength=0.5):
         col = hexc(color)
@@ -173,7 +204,20 @@ class Painting:
         paper = np.array([0.985, 0.97, 0.94])
         self.c = self.c * k + paper * (1 - k)
 
-    def save(self, path, quality=88):
+    def finish(self):
+        from scipy.ndimage import map_coordinates
+        H, W = self.H, self.W
+        dx = (self.noise(220, 220, 2) - 0.5) * 3.0; dy = (self.noise(220, 220, 2) - 0.5) * 3.0
+        yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
+        for ch in range(3):
+            self.c[..., ch] = map_coordinates(self.c[..., ch], [yy + dy, xx + dx], order=1, mode='nearest')
+        self.c = gaussian_filter(self.c, (0.55, 0.55, 0))
+        shade = (self.ph - 0.5) * 0.035
+        self.c = self.c * (1 + shade[..., None]) + self.rng.normal(0, 0.006, self.c.shape)
+
+    def save(self, path, quality=88, finish=True):
+        if finish:
+            self.finish()
         im = Image.fromarray((np.clip(self.c, 0, 1) * 255).astype(np.uint8))
         if path.endswith('.jpg'):
             im.save(path, quality=quality, optimize=True, progressive=True)

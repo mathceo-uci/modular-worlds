@@ -35,15 +35,55 @@ def stars(p, n, region, seed=3):
 
 
 def sky_bands(p, y0, y1, colors, reserve=None, n=9, gap=6, strength=0.8, seed=0):
-    random.seed(seed)
-    cuts = sorted([y0] + [random.uniform(y0, y1) for _ in range(n - 1)] + [y1])
-    for i in range(n):
-        g1, g2 = random.uniform(-3, gap * 1.6), random.uniform(-3, gap * 1.6)
-        tilt = random.uniform(-14, 14)
-        top = [(x, y + tilt * (x / W - 0.5)) for x, y in jag(-20, W + 20, cuts[i] + g1 / 2, 7, 10)]
-        bot = [(x, y + tilt * (x / W - 0.5)) for x, y in jag(W + 20, -20, cuts[i + 1] - g2 / 2, 7, 10)]
-        m = p.poly_mask(top + bot)
-        p.wash(m, random.choice(colors), strength * random.uniform(0.7, 1.05), wobble=3, edge=0.6, rough=0.45, streak=(260, 16), var=0.6, reserve=reserve, halo=5)
+    """A sky made of real-looking horizontal brushstrokes: tapered rounded ends, wavy edges,
+    pigment pooling along the bottom edge, white paper between and inside strokes."""
+    rnd = random.Random(seed)
+    rows = int(n * 1.6)
+    ys = np.linspace(y0 - 6, y1 + 4, rows + 1)
+    for i in range(rows):
+        yc = (ys[i] + ys[i + 1]) / 2; thick = (ys[i + 1] - ys[i]) * rnd.uniform(0.8, 1.25) - rnd.uniform(0, gap)
+        x = rnd.uniform(-120, 60)
+        while x < W + 40:
+            L = rnd.uniform(0.35, 1.0) * W
+            col = rnd.choice(colors); mixc = rnd.choice(colors)
+            k = 26; pts = []
+            ph = rnd.uniform(0, 6.3); amp = rnd.uniform(2, 7); tilt = rnd.uniform(-10, 10)
+            top, bot = [], []
+            for j in range(k + 1):
+                u = j / k; xx = x + L * u
+                taper = min(1, u / 0.06, (1 - u) / 0.1) ** 0.6
+                wv = math.sin(u * 9 + ph) * amp + math.sin(u * 23 + ph * 2) * amp * 0.4 + tilt * (u - 0.5)
+                th = thick * (0.75 + 0.25 * math.sin(u * 5 + ph)) * max(0.05, taper)
+                top.append((xx, yc + wv - th / 2)); bot.append((xx, yc + wv + th / 2 + rnd.uniform(-1.5, 1.5)))
+            m = p.poly_mask(top + bot[::-1])
+            p.wash(m, col, strength * rnd.uniform(0.65, 1.05), wobble=2.2, edge=0.55, rough=0.5, streak=(240, 14), var=0.6,
+                   reserve=reserve, halo=5, mix=mixc if rnd.random() < 0.5 else None, pool=0.9, tooth=0.45, gran=0.35)
+            x += L + rnd.uniform(-60, 40)
+
+
+def fill_strokes(p, region, colors, y0, y1, thick=40, overlap=0.25, strength=0.7, seed=0, angle=0.0, reserve=None, bloom=0, amp=4):
+    """Fill a region with overlapping brushstrokes (visible strokes, darker overlaps), clipped to the region."""
+    rnd = random.Random(seed)
+    y = y0 - thick * 0.3
+    while y < y1 + thick * 0.3:
+        th = thick * rnd.uniform(0.8, 1.3)
+        x = rnd.uniform(-200, 0)
+        while x < W + 60:
+            L = rnd.uniform(0.3, 0.8) * W; ph = rnd.uniform(0, 6.3)
+            top, bot = [], []
+            for j in range(21):
+                u = j / 20; xx = x + L * u
+                taper = min(1, u / 0.05, (1 - u) / 0.08) ** 0.5
+                yy = y + math.sin(u * 7 + ph) * amp + angle * (xx - W / 2)
+                hh = th * max(0.1, taper) * (0.8 + 0.2 * math.sin(u * 4 + ph))
+                top.append((xx, yy - hh / 2)); bot.append((xx, yy + hh / 2))
+            m = p.poly_mask(top + bot[::-1]) * region
+            if m.max() > 0:
+                p.wash(m, rnd.choice(colors), strength * rnd.uniform(0.6, 1.0), wobble=2, edge=0.5, rough=0.45, var=0.5,
+                       streak=(200, 20), mix=rnd.choice(colors) if rnd.random() < 0.4 else None, reserve=reserve, halo=4,
+                       pool=0.7, tooth=0.4, gran=0.45, bloom=bloom if rnd.random() < 0.3 else 0)
+            x += L - rnd.uniform(0, 80)
+        y += th * (1 - overlap)
 
 
 def balance_reserve(p):
@@ -65,22 +105,21 @@ def ch3():
     cliffm = p.poly_mask([(980, 800), (1010, 520), (1080, 400), (1150, 300), (1260, 232), (1370, 192), (1480, 212), (1610, 172), (1610, 800)])
     res = np.clip(moon + bal + archm + cliffm, 0, 1)
     # sky in streaky bands
-    sky_bands(p, 0, 476, ['#24308f', '#3b2f8f', '#1f3fa0', '#5a3d9a', '#2a3a96', '#1b2a7a'], reserve=res, n=12, gap=9, strength=0.8, seed=2)
+    sky_bands(p, 0, 476, ['#24308f', '#3b2f8f', '#1f3fa0', '#5a3d9a', '#2a3a96', '#1b2a7a'], reserve=res, n=8, gap=2, strength=0.85, seed=2)
     stars(p, 120, (20, 20, 980, 380))
     p.wash(moon, '#f3df8a', 0.45, wobble=2, edge=0.7)
     p.ink([(300 + 54 * math.cos(t), 150 + 54 * math.sin(t)) for t in np.linspace(0, 2 * math.pi, 40)], 1.6, '#3a3420', 0.6)
     # sea
     sea = p.poly_mask([(-10, 478), (1010, 470), (1030, 605), (-10, 612)])
-    p.wash(sea, '#1f5fb8', 0.75, wobble=3, streak=(380, 12), var=0.7, seed=4, reserve=res)
-    p.wash(p.poly_mask([(-10, 540), (1030, 535), (1030, 605), (-10, 612)]), '#2b8fc0', 0.35, wobble=3, streak=(380, 10), reserve=res)
+    fill_strokes(p, sea, ['#1f5fb8', '#2b6fc8', '#1a4fa0', '#2b8fc0'], 470, 612, thick=26, overlap=0.15, strength=0.8, seed=4, reserve=res)
     random.seed(5)
     for y in (500, 522, 548, 575, 598):
         xs = random.uniform(0, 300)
         p.lift(p.stroke_mask([(xs, y), (xs + random.uniform(250, 650), y + random.uniform(-3, 3))], 4, 2), 0.9)
     # cliff
     cliff = [(980, 800), (1010, 520), (1080, 400), (1150, 300), (1260, 232), (1370, 192), (1480, 212), (1610, 172), (1610, 800)]
-    p.wash(p.poly_mask(cliff), '#5b4a74', 0.75, wobble=4, edge=0.8, seed=5, reserve=archm)
-    p.wash(p.poly_mask([(1060, 800), (1110, 560), (1210, 430), (1400, 380), (1610, 330), (1610, 800)]), '#3a3048', 0.45, wobble=6, seed=6, reserve=archm)
+    p.wash(p.poly_mask(cliff), '#6a5a84', 0.55, wobble=4, edge=0.8, seed=5, reserve=archm, mix='#4a5a7a', bloom=2)
+    fill_strokes(p, p.poly_mask(cliff), ['#5b4a74', '#3a3048', '#4a3f62'], 180, 800, thick=70, overlap=0.1, strength=0.45, seed=6, angle=-0.35, reserve=archm, amp=10)
     for k in range(6):
         x = 1050 + k * 90
         p.ink([(x, 330 + k * 8 - 40), (x + 30, 420), (x + 10, 520)], 1.3, '#2a2236', 0.5, 2)
@@ -90,8 +129,8 @@ def ch3():
     p.wash(inner, '#ff7a1a', 0.6, wobble=4, edge=1.0, var=0.7)
     p.wash(p.poly_mask([(1250, 615), (1270, 560), (1300, 520), (1330, 560), (1350, 615)]), '#c8301a', 0.5, wobble=4, edge=1.0)
     p.lift(p.ellipse_mask(1300, 585, 34, 22), 0.55); p.wash(p.ellipse_mask(1300, 585, 34, 22), '#ffe9a0', 0.4, wobble=3)
-    glow = gaussian(archm, 45)
-    p.wash(np.clip(glow * 2.2 - archm, 0, 1), '#ff8c3a', 0.55, wobble=0, edge=0)
+    glow = np.clip(gaussian(archm, 45) * 2.2 - archm, 0, 1)
+    p.lift(glow, 0.55); p.wash(glow, '#ffb04a', 0.5, wobble=0, edge=0, tooth=0, pool=0)
     p.ink(arch, 2.6, '#1d1010', 0.85)
     for x in (1250, 1300, 1350):
         p.ink([(x, 615), (x + 6, 600)], 1.2, '#3a1a10', 0.6)
@@ -102,10 +141,11 @@ def ch3():
         mk = p.ellipse_mask(x, y, s, s); p.lift(mk, 1.0); p.wash(mk, random.choice(['#ffb000', '#ff7a1a', '#ffd84a']), 0.85, wobble=0.6, edge=0.3, rough=0.1)
     # beach
     beach = p.poly_mask([(-10, 605), (1040, 596), (1610, 640), (1610, 810), (-10, 810)])
-    p.wash(beach, '#3a3440', 0.7, wobble=3, gran=0.35, seed=7, reserve=np.clip(bal + cliffm, 0, 1))
-    p.wash(p.poly_mask([(-10, 690), (1610, 705), (1610, 810), (-10, 810)]), '#24202a', 0.45, wobble=6, gran=0.35, reserve=bal)
+    p.wash(beach, '#3a3440', 0.55, wobble=3, seed=7, reserve=np.clip(bal + cliffm, 0, 1), mix='#2a2a38', gran=0.6, bloom=2)
+    fill_strokes(p, beach, ['#3a3440', '#2a2630', '#4a4050', '#24202a'], 600, 810, thick=60, overlap=0.5, strength=0.4, seed=7, reserve=np.clip(bal + cliffm, 0, 1), amp=9)
     p.splatter(160, '#15131a', (0, 620, 1000, 800), 1, 3, 0.5)
-    p.wash(gaussian(p.poly_mask([(1150, 615), (1450, 615), (1610, 800), (1000, 800)]), 30), '#e8743a', 0.35, wobble=0, edge=0)
+    sp = gaussian(p.poly_mask([(1150, 615), (1450, 615), (1610, 800), (1000, 800)]), 30)
+    p.lift(sp, 0.35); p.wash(sp, '#f0a050', 0.35, wobble=0, edge=0, tooth=0, pool=0)
     random.seed(11)
     for y in (650, 700, 750):
         x = random.uniform(0, 300); p.lift(p.stroke_mask([(x, y), (x + random.uniform(300, 600), y + 6)], 2.5, 1), 0.35)
@@ -531,13 +571,15 @@ def archipelago(unlocked=5):
     sx, sy = (pts[unlocked - 1][0] + pts[unlocked][0]) / 2, (pts[unlocked - 1][1] + pts[unlocked][1]) / 2 - 60
     boat(p, sx, sy, 110, hull='#7a3b1a', flag='#c8401a')
     # title and compass
-    p.text((60, 80), 'The Modular Archipelago', 64, MARKER, '#fff6e0', 0.95, anchor='lm')
+    p.lift(gaussian(p.rect_mask(40, 40, 760, 122), 10), 0.92)
+    p.text((60, 80), 'The Modular Archipelago', 64, MARKER, '#1d2433', 0.92, anchor='lm')
     cx, cy = MW_ - 130, 150
     for a, L, c in ((0, 80, '#c8401a'), (math.pi, 80, '#f6f1e7'), (math.pi / 2, 60, '#f6f1e7'), (-math.pi / 2, 60, '#f6f1e7')):
         tip = (cx + math.sin(a) * L, cy - math.cos(a) * L)
         side1 = (cx + math.cos(a) * 14, cy + math.sin(a) * 14); side2 = (cx - math.cos(a) * 14, cy - math.sin(a) * 14)
         quad(p, [tip, side1, side2], c, 0.85, lw=1.4)
-    p.text((cx, cy - 104 + 6), 'N', 30, MARKER, '#fff6e0', 0.95)
+    p.lift(gaussian(p.ellipse_mask(cx, cy - 98, 22, 22), 4), 0.9)
+    p.text((cx, cy - 98), 'N', 30, MARKER, '#1d2433', 0.95)
     p.border(18)
     out = p.save(OUT + 'map.jpg')
     W, H = W0, H0
