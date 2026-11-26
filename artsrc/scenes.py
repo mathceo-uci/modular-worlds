@@ -586,6 +586,86 @@ def archipelago(unlocked=5):
     return out
 
 
+
+# ---------------- Chapter 5: Prime Peaks ----------------
+def ridge(x0, x1, base, peaks, seed=0, rough=10):
+    """Mountain silhouette: peaks = [(x, top_y)], returns polygon down to base."""
+    rnd = random.Random(seed); pts = [(x0, base)]
+    xs = sorted(set(np.linspace(x0, x1, 90).tolist() + [px for px, _ in peaks]))
+    for x in xs:
+        y = base
+        for (px, py) in peaks:
+            w = (base - py) * 0.62
+            y = min(y, py + abs(x - px) * (base - py) / w + (0 if x == px else rnd.uniform(-rough, rough) * 0.5))
+        pts.append((x, y))
+    pts.append((x1, base)); return pts
+
+
+def ch5():
+    p = Painting(W, H, seed=55)
+    sun = p.ellipse_mask(1112, 66, 40, 40)
+    signm = p.rect_mask(120, 520, 560, 690)
+    sky_bands(p, 0, 430, ['#f3d6b8', '#f6e8cc', '#d6e2f2', '#ecd2d8', '#cfdcf0'], reserve=np.clip(sun + signm, 0, 1), n=8, gap=12, strength=0.5, seed=15)
+    p.wash(sun, '#f6d35a', 0.5, wobble=2, edge=0.8)
+    # back range (pale), middle range with the six prime peaks, front hills
+    back = ridge(-20, 1620, 470, [(80, 250), (330, 210), (600, 260), (900, 200), (1180, 240), (1480, 215)], seed=2, rough=14)
+    fill_strokes(p, p.poly_mask(back), ['#b9c4de', '#c8c2dc', '#aab8d4'], 190, 470, thick=34, strength=0.5, seed=21, angle=-0.05, reserve=signm)
+    PK = [(170, 150, '2'), (430, 120, '3'), (700, 95, '5'), (980, 135, '7'), (1250, 110, '11'), (1500, 160, '13')]
+    mid = ridge(-20, 1620, 560, [(x, y) for x, y, _ in PK], seed=5, rough=12)
+    midm = p.poly_mask(mid)
+    snow = np.zeros_like(midm)
+    for x, y, _ in PK:
+        s = [(x - 34, y + 34), (x - 16, y + 26), (x - 2, y + 38), (x + 14, y + 25), (x + 34, y + 33)]
+        snow += p.poly_mask([(x, y - 2)] + s)
+    snow = np.clip(snow, 0, 1) * midm
+    p.wash(midm, '#9aa6c8', 0.35, wobble=3, edge=0.7, reserve=np.clip(snow + signm, 0, 1), mix='#b8a8c8', pool=0.8)
+    fill_strokes(p, midm, ['#7f8fb4', '#8d7fa8', '#7486a8', '#9aa0bc'], 90, 560, thick=46, strength=0.45, seed=31, angle=0.0, reserve=np.clip(snow + signm, 0, 1), bloom=0.3)
+    p.wash(snow, '#c4d0e8', 0.45, wobble=1.5, edge=0.9)
+    # shadow side of each peak
+    for x, y, _ in PK:
+        p.wash(p.poly_mask([(x, y + 4), (x + 230, 560), (x + 30, 560)]) * midm * (1 - snow), '#4a5482', 0.2, wobble=2.5, edge=0.4, pool=0.3)
+    # pennants on the summits, each with its prime
+    for x, y, n in PK:
+        p.ink([(x, y + 14), (x, y - 46)], 2.2, '#3a2a2a', 0.9, 0.5)
+        flag = [(x, y - 46), (x + 52, y - 36), (x, y - 24)]
+        p.lift(p.poly_mask(flag), 1.0)
+        p.wash(p.poly_mask(flag), '#c8401a' if n in ('2', '7', '13') else '#e0b154', 0.9, wobble=1, edge=0.8)
+        p.text((x + 18, y - 36), n, 17 if len(n) > 1 else 19, RB, '#ffffff' if n in ('2', '7', '13') else '#1d2433', 0.97)
+    # front hills and terraces (the sieve fields)
+    front = [(-20, 560)] + [(x, 600 + 40 * math.sin(x / 260) + 20 * math.sin(x / 90)) for x in np.linspace(-20, 1620, 60)] + [(1620, 820), (-20, 820)]
+    fm = p.poly_mask(front)
+    fill_strokes(p, fm, ['#7a9a3a', '#8aa848', '#6f8f3a', '#9aa84a'], 560, 800, thick=30, strength=0.7, seed=41, angle=-0.02, reserve=signm)
+    rnd = random.Random(8)
+    for k in range(7):  # terrace lines
+        y = 640 + k * 24
+        p.ink([(x, y + 6 * math.sin(x / 70 + k)) for x in np.linspace(700 + k * 20, 1560, 30)], 1.4, '#4a6a2a', 0.55, 1.0)
+    # a grid of sieve plots on the terraces: some crossed out, some left with a stone
+    for i in range(10):
+        for j in range(3):
+            n = 1 + i + 10 * j
+            cx, cy = 840 + i * 68 + j * 14, 650 + j * 46
+            if n == 1 or any(n % q == 0 and n != q for q in (2, 3, 5)):
+                p.ink([(cx - 12, cy - 8), (cx + 12, cy + 8)], 2.2, '#5a3a24', 0.8, 0.8)
+                p.ink([(cx - 12, cy + 8), (cx + 12, cy - 8)], 2.2, '#5a3a24', 0.8, 0.8)
+            else:
+                p.lift(p.ellipse_mask(cx, cy, 17, 12), 1.0)
+                p.wash(p.ellipse_mask(cx, cy, 15, 10), '#cfc6b4', 0.9, wobble=1, edge=0.9)
+                p.ink([(cx + 15 * math.cos(t), cy + 10 * math.sin(t)) for t in np.linspace(0, 6.3, 18)], 1.3, '#3a3a3a', 0.75)
+    # winding path up to the ring
+    path = [(380, 820), (430, 720), (520, 650), (640, 600), (720, 562)]
+    p.lift(p.stroke_mask(path, 60, 10), 0.85)
+    p.wash(p.stroke_mask(path, 52, 8), '#d9b98a', 0.6, wobble=2, edge=0.7)
+    # signpost
+    for x in (150, 530):
+        p.lift(p.stroke_mask([(x, 680), (x, 800)], 16), 1.0); p.wash(p.stroke_mask([(x, 680), (x, 800)], 14), '#5a3a24', 0.9, wobble=1)
+    p.lift(p.rect_mask(116, 516, 564, 694), 1.0)
+    quad(p, [(120, 520), (560, 520), (560, 690), (120, 690)], '#f4ead2', 0.5)
+    p.text((340, 565), 'PRIME PEAKS', 46, MARKER, '#1d2433', 0.92)
+    p.text((340, 625), 'HILBERT MARKET  1, 5, 9, 13, ...', 25, MARKER, '#c8401a', 0.95)
+    p.text((340, 664), 'every stone unbreakable', 20, ROBOTO + 'Roboto-Italic.ttf', '#5a3a24', 0.9)
+    p.border(16)
+    return p.save(OUT + 'ch5.jpg')
+
 if __name__ == '__main__':
     which = sys.argv[1:] or ['ch3']
     for w in which:

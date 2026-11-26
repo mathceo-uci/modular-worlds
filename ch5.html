@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prime Peaks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="book.css">
+<style>
+.sieve{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:4px;margin:10px 0}
+.sieve span{display:flex;align-items:center;justify-content:center;min-height:34px;font-family:"Roboto Mono",monospace;font-size:14px;border-radius:7px;border:1px solid var(--line,#ccc);background:var(--panel)}
+.sieve span.pr{background:var(--brass-soft);border:2px solid var(--brass);font-weight:700}
+.sieve span.x{background:var(--bg);border-style:dashed;color:var(--mute);text-decoration:line-through}
+.sieve span.now{border:2.5px solid var(--ember);color:var(--ember);font-weight:700}
+.sieve span.one{background:var(--bg);color:var(--mute)}
+.legend2{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--mute);margin:4px 0 0}
+.legend2 span{display:inline-flex;align-items:center;gap:6px}
+.legend2 i{display:inline-block;width:18px;height:14px;border-radius:4px;border:1px solid var(--mute);background:var(--panel)}
+.legend2 i.pr{background:var(--brass-soft);border:2px solid var(--brass)}
+.legend2 i.x{background:var(--bg);border-style:dashed}
+.legend2 i.now{background:var(--bg);border:2.5px solid var(--ember)}
+.status.st2{white-space:pre-line;text-align:left;font-family:"Roboto Mono",monospace;font-size:15px;font-weight:400;background:var(--code);border-radius:10px;padding:10px 12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;min-height:52px}
+.chip2{min-width:60px;min-height:46px;font-family:"Roboto Mono",monospace;font-size:17px;font-weight:700;border-radius:999px}
+.chip2.hp{background:var(--brass-soft);border:2px solid var(--brass);cursor:default}
+.splits{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.splits button{font-family:"Roboto Mono",monospace}
+.found{list-style:none;padding:0;margin:6px 0}
+.found li{font-family:"Roboto Mono",monospace;background:var(--sea-soft);border:1px solid var(--sea);border-radius:8px;padding:4px 10px;margin:4px 0}
+.plot{width:100%;aspect-ratio:4/3;background:var(--panel);border-radius:12px;display:block}
+#hstat{font-size:16px;font-weight:500}
+.dv{font-family:"Roboto Mono",monospace;font-size:14px;line-height:1.7;word-break:break-word}
+</style>
+</head>
+<body>
+
+<nav class="toc" aria-label="Chapter sections"><div class="wrap">
+<a class="brand" href="index.html">Modular Worlds</a><a href="#landing">Landing</a><a href="#explore">Explore</a><a href="#prophecies">Prophecies</a><a href="#theory">Primes forever</a><a href="#fta">One way only</a><a href="#arena">Hilbert Market</a><a href="#doors">Doors and perfect numbers</a><a href="#count">How many?</a><a href="#culture">Culture</a><a href="#problems">Problems</a><a href="#code">Code quest</a><a href="#logbook">Logbook</a>
+</div></nav>
+
+<figure class="opener"><img src="art/ch5.jpg" width="1600" height="800" alt="Watercolor of Prime Peaks at dawn: a ring of six blue-violet mountains, each summit topped with a small snowcap and a pennant numbered 2, 3, 5, 7, 11 and 13, under a pale striped sky with a yellow sun. In the green terraced fields below, a grid of plots numbered 1 to 30 is marked with crosses, except for round stones on the primes. A sign by the path reads: PRIME PEAKS, HILBERT MARKET 1, 5, 9, 13, …, every stone unbreakable."></figure>
+<header class="band hero" id="landing"><div class="wrap">
+<div>
+<div class="kicker">Modular Worlds · Chapter 5</div>
+<h1>Prime Peaks</h1>
+<p class="lede">A ring of mountains where every stone is unbreakable, and a market in the clouds where one stone breaks two different ways.</p>
+<div class="episode" aria-label="Episode 5 opening scene">
+<p class="stage">The channels of the Delta end at a cliff path. Above it, six peaks, each with a flag: 2, 3, 5, 7, 11, 13. Below, terraced fields full of numbered plots, most of them crossed out.</p>
+<p><span class="who">Mateo:</span> Who crossed out the fields?</p>
+<p><span class="who">El Gran Pesado</span> <span class="stage">(sitting on a boulder, cracking walnuts on his knee)</span>: Every number that breaks. Four is two twos. Six is a two and a three. Up here we only keep the stones that cannot be split. We call them primes, and every other number is built from them.</p>
+<p><span class="who">Kevin:</span> Built in how many ways?</p>
+<p><span class="who">El Gran Pesado:</span> One. Always one. That is the law of the mountain.</p>
+<p><span class="who">Lucía</span> <span class="stage">(pointing at a market on the highest terrace)</span>: Then what's that sign? "Hilbert Market: Book weights only." They sell 441 as 9 times 49 at one stall, and as 21 times 21 at the next.</p>
+<p><span class="who">El Gran Pesado</span> <span class="stage">(the walnut stops halfway to his mouth)</span>: …The Market is not the mountain.</p>
+<p><span class="who">Diego:</span> And when the peaks run out? There's six flags.</p>
+<p><span class="who">Sofía:</span> There's six flags we can <i>see</i>.</p>
+</div>
+</div>
+
+<section class="forge" aria-labelledby="sv-h">
+<h3 id="sv-h" style="margin:0 0 4px">The sieve fields</h3>
+<p class="small" style="margin:0">Find the next number nobody has crossed out. It is prime. Then cross out all its multiples. Repeat.</p>
+<div class="ctrl" style="margin-top:8px">
+<div><label for="sN">Fields</label><select id="sN"><option value="100">1 to 100</option><option value="120" selected>1 to 120</option><option value="200">1 to 200</option></select></div>
+<button class="primary" id="sstep">Sieve the next prime</button>
+<button id="sall">Finish</button>
+<button id="sreset">Reset</button>
+</div>
+<div class="sieve" id="sieve" role="group" aria-label="Sieve fields"></div>
+<div class="legend2"><span><i class="pr"></i>prime</span><span><i class="now"></i>just crossed out</span><span><i class="x"></i>crossed out (composite)</span></div>
+<div class="status st2" id="sstat" aria-live="polite" style="margin-top:10px"></div>
+</section>
+</div></header>
+
+<section class="band" id="explore"><div class="wrap two">
+<div>
+<h2>Explore: run the sieve</h2>
+<p>A <b>prime</b> is a whole number greater than 1 whose only positive divisors are 1 and itself. A number greater than 1 that is not prime is <b>composite</b>. The number 1 is neither: it is the "empty" stone.</p>
+<ol>
+<li>Run the sieve on 1 to 120 one prime at a time. When you sieve with 7, which multiple of 7 is the first one that was <b>not</b> already crossed out? Why that one?</li>
+<li>After which prime does the sieve stop crossing anything new? How does that prime compare with √120 ≈ 10.95?</li>
+<li>Count the primes in each row of ten. Do the rows get emptier as you go down? Switch to 1 to 200.</li>
+<li>Find pairs of primes two apart (like 11 and 13). Do they ever stop? Nobody knows: see Culture.</li>
+<li>Multiply the first few primes and add 1: 2·3 + 1, 2·3·5 + 1, 2·3·5·7 + 1. Are these prime? Keep going to 2·3·5·7·11·13 + 1.</li>
+</ol>
+</div>
+<aside class="box tool">
+<h3>Proof toolkit: the smallest one</h3>
+<p>To show something exists, look at the <b>smallest</b> candidate and ask what it must look like. Every nonempty set of positive integers has a smallest element (the well-ordering principle from Chapter 1).</p>
+<p style="margin:0">Today: the smallest divisor of <i class="v">n</i> bigger than 1 is always a prime. If it broke into smaller pieces, each piece would be a smaller divisor. That one idea powers half of this chapter.</p>
+</aside>
+</div></section>
+
+<section class="band alt" id="prophecies"><div class="wrap">
+<h2>Prophecies to seal</h2>
+<p>Pick a confidence for each card before you read on. Your choices stay in this browser only. Each card names the section that settles it.</p>
+<div class="cards" id="cards"></div>
+</div></section>
+
+<section class="band" id="theory"><div class="wrap two">
+<div>
+<h2>Primes forever</h2>
+<div class="box thm"><h3>Lemma 5.1 (every number has a prime divisor)</h3>
+<p style="margin:0">Every integer <i class="v">n</i> &gt; 1 is divisible by some prime.</p></div>
+<div class="pf"><p><b>Proof.</b> The set of divisors of <i class="v">n</i> that are bigger than 1 is not empty (it contains <i class="v">n</i>), so it has a smallest element <i class="v">q</i>. If <i class="v">q</i> were composite, <i class="v">q</i> = <i class="v">ab</i> with 1 &lt; <i class="v">a</i> &lt; <i class="v">q</i>, and <i class="v">a</i> would divide <i class="v">n</i> too: a smaller divisor bigger than 1. That is impossible, so <i class="v">q</i> is prime.</p></div>
+<div class="box thm"><h3>Theorem 5.2 (Euclid: the peaks never run out)</h3>
+<p style="margin:0">There are infinitely many primes.</p></div>
+<div class="pf"><p><b>Proof.</b> Take any finite list of primes <i class="v">p</i><sub>1</sub>, …, <i class="v">p</i><sub>k</sub>, and let <i class="v">N</i> = <i class="v">p</i><sub>1</sub><i class="v">p</i><sub>2</sub>⋯<i class="v">p</i><sub>k</sub> + 1. By Lemma 5.1, some prime <i class="v">q</i> divides <i class="v">N</i>. If <i class="v">q</i> were on the list, it would divide both <i class="v">N</i> and the product, so it would divide their difference, 1. No prime divides 1. So <i class="v">q</i> is a prime missing from the list. No finite list holds every prime.</p></div>
+<p><b>Careful:</b> the proof does not say <i class="v">N</i> is prime. 2·3·5·7·11·13 + 1 = 30031 = 59 · 509. It only says <i class="v">N</i>'s prime divisors are new.</p>
+</div>
+<div>
+<div class="box thm"><h3>Proposition 5.3 (why the sieve can stop early)</h3>
+<p style="margin:0">A composite number <i class="v">n</i> has a prime divisor <i class="v">p</i> ≤ √<i class="v">n</i>.</p></div>
+<div class="pf"><p><b>Proof.</b> Write <i class="v">n</i> = <i class="v">ab</i> with 1 &lt; <i class="v">a</i> ≤ <i class="v">b</i>. Then <i class="v">a</i>² ≤ <i class="v">ab</i> = <i class="v">n</i>, so <i class="v">a</i> ≤ √<i class="v">n</i>. Any prime divisor of <i class="v">a</i> (Lemma 5.1) divides <i class="v">n</i> and is at most <i class="v">a</i>.</p></div>
+<p>So to sieve up to 120, you only need the primes 2, 3, 5 and 7: every composite up to 120 has one of them as a divisor. The same fact says the sieve can start crossing multiples of <i class="v">p</i> at <i class="v">p</i>²: smaller multiples <i class="v">kp</i> have <i class="v">k</i> &lt; <i class="v">p</i>, and a prime divisor of <i class="v">k</i> already crossed them out.</p>
+<div class="box lab"><h3>Lab note: formula numbers</h3>
+<p>Give each element a prime: H → 2, C → 3, O → 5, N → 7. (Mojadito chemists approve: oxygen 5, nitrogen 7, hydrogen even.) A molecule's <b>formula number</b> is the product of its atoms' primes: water H<sub>2</sub>O is 2²·5 = 20, methane CH<sub>4</sub> is 3·2⁴ = 48, carbon dioxide is 3·5² = 75.</p>
+<p>Now a balanced reaction has <b>equal products on both sides</b>. CH<sub>4</sub> + 2 O<sub>2</sub> → CO<sub>2</sub> + 2 H<sub>2</sub>O becomes 48 · 25² = 30000 = 75 · 20².</p>
+<p style="margin:0">Going back from 30000 to the atoms works only because a number breaks into primes in one way (Theorem 5.5). But the formula is not the molecule: ethanol and dimethyl ether are both C<sub>2</sub>H<sub>6</sub>O, formula number 2880, with their atoms joined in different ways.</p></div>
+</div>
+</div></section>
+
+<section class="band alt" id="fta"><div class="wrap two">
+<div>
+<h2>One way only: the law of the mountain</h2>
+<p>In the Entrance Exam you broke the prophecy "if <i class="v">a</i> | <i class="v">bc</i> then <i class="v">a</i> | <i class="v">b</i> or <i class="v">a</i> | <i class="v">c</i>" (6 divides 4 · 9 but neither 4 nor 9). Here is its repair.</p>
+<div class="box thm"><h3>Lemma 5.4 (Euclid's lemma for primes)</h3>
+<p style="margin:0">If a prime <i class="v">p</i> divides <i class="v">ab</i>, then <i class="v">p</i> | <i class="v">a</i> or <i class="v">p</i> | <i class="v">b</i>. More generally, if <i class="v">p</i> divides a product of several numbers, it divides one of them.</p></div>
+<div class="pf"><p><b>Proof.</b> Suppose <i class="v">p</i> ∤ <i class="v">a</i>. The only positive divisors of <i class="v">p</i> are 1 and <i class="v">p</i>, so gcd(<i class="v">p</i>, <i class="v">a</i>) = 1. By Euclid's lemma (Lemma 4.1, which came from Bézout), <i class="v">p</i> | <i class="v">b</i>. For several factors, use induction on how many there are.</p></div>
+<div class="box thm"><h3>Theorem 5.5 (Fundamental Theorem of Arithmetic)</h3>
+<p style="margin:0">Every integer <i class="v">n</i> &gt; 1 is a product of primes, and this product is unique apart from the order of the factors.</p></div>
+<div class="pf"><p><b>Existence.</b> Strong induction. If <i class="v">n</i> is prime, we are done. Otherwise <i class="v">n</i> = <i class="v">ab</i> with 1 &lt; <i class="v">a</i>, <i class="v">b</i> &lt; <i class="v">n</i>; both are products of primes by the induction hypothesis, so <i class="v">n</i> is too.</p>
+<p><b>Uniqueness.</b> Suppose some number has two different prime factorizations, and let <i class="v">n</i> be the smallest such number: <i class="v">n</i> = <i class="v">p</i><sub>1</sub>⋯<i class="v">p</i><sub>r</sub> = <i class="v">q</i><sub>1</sub>⋯<i class="v">q</i><sub>s</sub>. The prime <i class="v">p</i><sub>1</sub> divides the product of the <i class="v">q</i>'s, so by Lemma 5.4 it divides some <i class="v">q</i><sub>j</sub>. Since <i class="v">q</i><sub>j</sub> is prime, <i class="v">p</i><sub>1</sub> = <i class="v">q</i><sub>j</sub>. Cancel it from both sides: <i class="v">n</i>/<i class="v">p</i><sub>1</sub> is smaller than <i class="v">n</i> and still has two different factorizations. That contradicts the choice of <i class="v">n</i>.</p></div>
+</div>
+<div>
+<h3>Where the Market cheats</h3>
+<p>The Hilbert Market only deals in <b>Book weights</b>, the numbers 1, 5, 9, 13, 17, 21, … that leave remainder 1 when divided by 4. A product of two Book weights is a Book weight again, so the Market can multiply. Call a Book weight a <b>Book prime</b> if it is bigger than 1 and is not a product of two smaller Book weights.</p>
+<p>Then 9, 21 and 49 are all Book primes (3 and 7 are not Book weights), and</p>
+<div class="math">441 = 9 · 49 = 21 · 21</div>
+<p>Two different breakings. Which step of the proof above fails? Existence still works: strong induction never leaves the Book. Uniqueness used Lemma 5.4, and in the Book it is false: 9 divides 21 · 21 but does not divide 21. Lemma 5.4 came from Bézout, and Bézout needs subtraction, which throws you out of the Book.</p>
+<div class="box tool"><h3>The true atoms</h3>
+<p style="margin:0">In the full integers, 441 = 3 · 3 · 7 · 7, one way only. The real atoms 3 and 7 leave remainder 3 mod 4, so the Market never sees them alone, only in pairs: 3·3 = 9, 3·7 = 21, 7·7 = 49. Pairing the same four atoms in two ways is exactly what gives two breakings.</p></div>
+</div>
+</div></section>
+
+<section class="band" id="arena"><div class="wrap game">
+<div>
+<h2>Arena: the factor duel</h2>
+<p>El Gran Pesado brings a Book weight to the Hilbert Market. Break it into Book primes: press a stone to see how it splits into two Book weights, and pick one. Stones that cannot split turn gold. When everything is gold, you have one breaking.</p>
+<p>Then <b>start over</b> and find a different one. El Gran Pesado says how many breakings exist. Find them all to win the round.</p>
+<div class="ctrl" style="margin-top:6px">
+<div><label for="hround">Round</label><select id="hround"></select></div>
+<button id="hagain">Start over</button>
+<button id="hhint">Ask Lucía</button>
+</div>
+<div class="box tool" style="margin-top:18px">
+<h3>Strategy questions (Cartographer)</h3>
+<p style="margin:0">Which Book primes are not real primes? Show they are exactly the products of two real primes that each leave remainder 3 mod 4. Then predict, without the duel, how many breakings 3 · 7 · 11 · 19 = 4389 has.</p>
+</div>
+</div>
+<div>
+<p class="small" style="margin:0" id="hgoal"></p>
+<div class="chips" id="hchips" aria-label="Current stones"></div>
+<div class="splits" id="hsplits" aria-live="polite"></div>
+<div class="status" id="hstat" aria-live="polite"></div>
+<p class="small" style="margin:10px 0 0">Breakings found this round:</p>
+<ul class="found" id="hfound" aria-label="Breakings found"></ul>
+</div>
+</div></section>
+
+<section class="band alt" id="doors"><div class="wrap two">
+<div>
+<h2>Side quest: the Hundred Doors return</h2>
+<p>Once you know the primes of <i class="v">n</i>, you know all its divisors.</p>
+<div class="box thm"><h3>Corollary 5.6 (divisors from primes)</h3>
+<p style="margin:0">If <i class="v">n</i> = <i class="v">p</i><sub>1</sub><sup><i class="v">e</i>₁</sup> ⋯ <i class="v">p</i><sub>k</sub><sup><i class="v">e</i><sub>k</sub></sup>, the positive divisors of <i class="v">n</i> are the numbers <i class="v">p</i><sub>1</sub><sup><i class="v">f</i>₁</sup> ⋯ <i class="v">p</i><sub>k</sub><sup><i class="v">f</i><sub>k</sub></sup> with 0 ≤ <i class="v">f</i><sub>i</sub> ≤ <i class="v">e</i><sub>i</sub>. So <i class="v">n</i> has τ(<i class="v">n</i>) = (<i class="v">e</i>₁ + 1)⋯(<i class="v">e</i><sub>k</sub> + 1) divisors.</p></div>
+<div class="pf"><p><b>Proof.</b> If <i class="v">d</i> | <i class="v">n</i>, then <i class="v">n</i> = <i class="v">dm</i>, and putting the factorizations of <i class="v">d</i> and <i class="v">m</i> together gives the factorization of <i class="v">n</i>. By uniqueness, <i class="v">d</i> uses only the primes of <i class="v">n</i>, each at most as often. Conversely every such product divides <i class="v">n</i>. Each exponent <i class="v">f</i><sub>i</sub> has <i class="v">e</i><sub>i</sub> + 1 choices.</p></div>
+<p><b>The doors, settled for good.</b> τ(<i class="v">n</i>) is odd exactly when every <i class="v">e</i><sub>i</sub> is even, that is, when <i class="v">n</i> is a perfect square. In the Hall of a Hundred Doors, door <i class="v">n</i> is toggled τ(<i class="v">n</i>) times, so it ends open exactly when <i class="v">n</i> is a square.</p>
+<h3>Perfect numbers</h3>
+<p>A number is <b>perfect</b> if it equals the sum of its divisors smaller than itself: 6 = 1 + 2 + 3, and 28 = 1 + 2 + 4 + 7 + 14.</p>
+<div class="box thm"><h3>Theorem 5.7 (Euclid, Elements IX.36)</h3>
+<p style="margin:0">If <i class="v">q</i> = 2<sup><i class="v">k</i>+1</sup> − 1 is prime, then <i class="v">n</i> = 2<sup><i class="v">k</i></sup><i class="v">q</i> is perfect.</p></div>
+<div class="pf"><p><b>Proof.</b> By Corollary 5.6 the divisors of <i class="v">n</i> are 2<sup><i class="v">i</i></sup> and 2<sup><i class="v">i</i></sup><i class="v">q</i> for 0 ≤ <i class="v">i</i> ≤ <i class="v">k</i>. They add up to (1 + 2 + ⋯ + 2<sup><i class="v">k</i></sup>)(1 + <i class="v">q</i>) = (2<sup><i class="v">k</i>+1</sup> − 1) · 2<sup><i class="v">k</i>+1</sup> = <i class="v">q</i> · 2<sup><i class="v">k</i>+1</sup> = 2<i class="v">n</i>. Taking away <i class="v">n</i> itself leaves <i class="v">n</i>.</p></div>
+<p>Euler proved the converse: every <b>even</b> perfect number has this form. Primes 2<sup><i class="v">p</i></sup> − 1 are called <b>Mersenne primes</b>. Whether an odd perfect number exists is one of the oldest open questions in mathematics.</p>
+</div>
+<div>
+<h3>Try it: the stone cutter</h3>
+<div class="ctrl" style="margin-top:0">
+<div><label for="fn">n</label><input id="fn" type="number" value="360" min="1" max="999999999"></div>
+<button class="primary" id="frun">Cut</button>
+<button id="f28">Try 28</button>
+<button id="f100">Try 100</button>
+</div>
+<div class="status st2" id="fres" aria-live="polite"></div>
+<p class="small" style="margin:10px 0 4px">Divisors:</p>
+<div class="dv" id="fdiv"></div>
+<div class="box lab" style="margin-top:16px"><h3>Nature note: prime cicadas</h3>
+<p style="margin:0">Periodical cicadas in eastern North America come out of the ground all at once every 13 or 17 years. One hypothesis: a prime cycle rarely lines up with the shorter cycles of predators or other broods (when do a 17-year and a 3-year cycle meet? Chapter 2 knows). Biologists still debate how much this explains, so treat it as a question, not a fact.</p></div>
+<div class="box tool" style="margin-top:16px"><h3>Studio corner</h3><p style="margin:0">Paint the primes of a world with <i class="v">i</i>, where 5 = (2 + <i class="v">i</i>)(2 − <i class="v">i</i>) breaks but 3 does not. We return there in Chapter 10. <a class="btn" href="studio.html#gauss">Open the Studio</a></p></div>
+</div>
+</div></section>
+
+<section class="band" id="count"><div class="wrap two">
+<div>
+<h2>How many primes are there below <i class="v">x</i>?</h2>
+<p>Write π(<i class="v">x</i>) for the number of primes up to <i class="v">x</i> (no relation to 3.14…). The sieve showed rows getting emptier. How much emptier?</p>
+<div class="box thm"><h3>The Prime Number Theorem (stated, not proved)</h3>
+<p style="margin:0">As <i class="v">x</i> grows, π(<i class="v">x</i>) divided by <i class="v">x</i> / ln <i class="v">x</i> gets closer and closer to 1.</p></div>
+<p>Roughly: near a big number <i class="v">x</i>, about one number in ln <i class="v">x</i> is prime. Near a million, ln <i class="v">x</i> ≈ 13.8, so about one in 14. The proof needs complex analysis and came a century after Gauss guessed it (see Culture).</p>
+<table><thead><tr><th scope="col"><i class="v">x</i></th><th scope="col">π(<i class="v">x</i>)</th><th scope="col"><i class="v">x</i> / ln <i class="v">x</i></th></tr></thead>
+<tbody><tr><td>100</td><td>25</td><td>22</td></tr><tr><td>1,000</td><td>168</td><td>145</td></tr><tr><td>10,000</td><td>1,229</td><td>1,086</td></tr><tr><td>100,000</td><td>9,592</td><td>8,686</td></tr></tbody></table>
+</div>
+<div>
+<h3>Try it: count the peaks</h3>
+<div class="ctrl" style="margin-top:0">
+<div><label for="px">x up to</label><select id="px"><option value="100">100</option><option value="1000">1,000</option><option value="10000" selected>10,000</option><option value="100000">100,000</option></select></div>
+</div>
+<canvas class="plot" id="pplot" role="img" aria-label="Prime counting chart"></canvas>
+<p class="small">The staircase is π(<i class="v">x</i>), one step up at each prime. The smooth curve is <i class="v">x</i> / ln <i class="v">x</i>. Both keep growing, and their ratio drifts slowly toward 1.</p>
+<div class="status st2" id="pres" aria-live="polite"></div>
+</div>
+</div></section>
+
+<section class="band alt" id="culture"><div class="wrap two">
+<div>
+<h2>Culture: the people who climbed</h2>
+<p><b>Alexandria, about 300 BCE.</b> Euclid's <i>Elements</i>, Book IX, proves that the primes outnumber any finite list (Proposition 20) and builds perfect numbers from primes of the form 2<sup><i class="v">k</i>+1</sup> − 1 (Proposition 36).</p>
+<p><b>Cyrene and Alexandria, 3rd century BCE.</b> Eratosthenes, who also estimated the size of the Earth, is credited with the sieve. The method reaches us through Nicomachus of Gerasa, writing about 100 CE.</p>
+<p><b>Baghdad, 9th century.</b> Thābit ibn Qurra found a rule that builds <b>amicable</b> pairs, two numbers where each is the sum of the other's proper divisors, like 220 and 284.</p>
+<p><b>Paris and Berlin, 1644 to 1849.</b> Marin Mersenne listed exponents <i class="v">p</i> that he claimed make 2<sup><i class="v">p</i></sup> − 1 prime, with some mistakes. Leonhard Euler proved that every even perfect number comes from a Mersenne prime; the proof was published after his death.</p>
+<p><b>Göttingen, 1792 to 1896.</b> As a teenager, Carl Friedrich Gauss counted primes in tables and guessed the Prime Number Theorem. Jacques Hadamard and Charles de la Vallée Poussin proved it, independently, in 1896.</p>
+<p><b>Today.</b> As of November 2026, the largest known prime is 2<sup>136,279,841</sup> − 1, with 41,024,320 digits. Luke Durant found it in October 2024 through GIMPS, a volunteer project that searches for Mersenne primes.</p>
+</div>
+<aside class="box thm">
+<h3>Discuss with your crew</h3>
+<p><b>Twin primes</b> (like 11 and 13, or 101 and 103) seem to go on forever, but nobody has proved it. In 2013 Yitang Zhang, then a lecturer who had spent years outside academic jobs, proved that infinitely many pairs of primes are less than 70 million apart. Within a year, James Maynard and a large online collaboration (Polymath) brought the bound down to 246.</p>
+<p style="margin:0">Big discoveries came from a lecturer working alone and from a crowd working in public. What does that say about who gets to do mathematics? And why does a volunteer project spend years of computer time on a single prime?</p>
+</aside>
+</div></section>
+
+<section class="band" id="problems"><div class="wrap">
+<h2>Problems</h2>
+<p>Deckhand problems are for everyone. Navigator and Cartographer problems are where you stretch.</p>
+<div class="tiers">
+<div class="tier"><h3>Deckhand</h3><ol>
+<li>Factor 360, 1001 and 2310 into primes. How many divisors does each have?
+<details><summary>Answer</summary>360 = 2³·3²·5, 24 divisors. 1001 = 7·11·13, 8 divisors. 2310 = 2·3·5·7·11, 32 divisors.</details></li>
+<li>Which primes must you test to decide whether 391 is prime? Decide.
+<details><summary>Answer</summary>The primes up to 19 (since 19² = 361 ≤ 391 &lt; 23²). 391 = 17 · 23, so it is composite.</details></li>
+<li>Find the two smallest Book weights with two different breakings into Book primes.
+<details><summary>Answer</summary>441 = 9·49 = 21·21 and 693 = 9·77 = 21·33.</details></li>
+<li>Check that 496 is perfect, and write it in the form of Theorem 5.7.
+<details><summary>Answer</summary>496 = 2⁴ · 31, and 31 = 2⁵ − 1 is prime.</details></li>
+</ol></div>
+<div class="tier"><h3>Navigator</h3><ol>
+<li>Prove that if 2<sup><i class="v">m</i></sup> − 1 is prime then <i class="v">m</i> is prime. Is the converse true?
+<details><summary>Hint</summary>If m = ab, then 2^a − 1 divides 2^(ab) − 1. The converse fails: 2¹¹ − 1 = 2047 = 23 · 89.</details></li>
+<li>Prove that there are infinitely many primes that leave remainder 3 when divided by 4.
+<details><summary>Hint</summary>Use N = 4·p₁⋯p_k − 1. A product of numbers that each leave remainder 1 also leaves remainder 1.</details></li>
+<li>Prove that √<i class="v">n</i> is irrational unless <i class="v">n</i> is a perfect square, using unique factorization.</li>
+<li>Show that for any <i class="v">k</i>, there are <i class="v">k</i> consecutive composite numbers. (Look at (<i class="v">k</i> + 1)! + 2, …, (<i class="v">k</i> + 1)! + <i class="v">k</i> + 1.)</li>
+</ol></div>
+<div class="tier"><h3>Cartographer</h3><ol>
+<li>"<i class="v">n</i>² + <i class="v">n</i> + 41 is always prime": test it with the code quest, find where it breaks, and explain why it <i>must</i> break at that <i class="v">n</i>. Can any polynomial with integer coefficients give only primes?</li>
+<li>Find all Book weights below 10,000 with three or more breakings. What do their real prime factorizations have in common?</li>
+<li>Explore how far apart consecutive primes can be below 100,000 (code quest, cell 4). Where are the record gaps?</li>
+</ol></div>
+</div>
+</div></section>
+
+<section class="band alt" id="code"><div class="wrap">
+<h2>Code quest: the mountain in Python</h2>
+<p>These cells run real Python in your browser. The first run loads Python (about 10 MB, once). Edit anything and run again.</p>
+<div id="cells"></div>
+<p class="small" id="pystat" aria-live="polite"></p>
+</div></section>
+
+<section class="band" id="logbook"><div class="wrap two">
+<div>
+<h2>Logbook</h2>
+<ul class="log2">
+<li><b>Prime divisor (5.1):</b> every <i class="v">n</i> &gt; 1 has a prime divisor; the smallest divisor above 1 is prime.</li>
+<li><b>Euclid (5.2):</b> there are infinitely many primes.</li>
+<li><b>Sieve (5.3):</b> a composite <i class="v">n</i> has a prime divisor ≤ √<i class="v">n</i>.</li>
+<li><b>Euclid's lemma for primes (5.4):</b> <i class="v">p</i> | <i class="v">ab</i> ⇒ <i class="v">p</i> | <i class="v">a</i> or <i class="v">p</i> | <i class="v">b</i>.</li>
+<li><b>Fundamental Theorem (5.5):</b> every <i class="v">n</i> &gt; 1 factors into primes in exactly one way. It fails in the Hilbert Market: 441 = 9·49 = 21·21.</li>
+<li><b>Divisors (5.6):</b> τ(<i class="v">n</i>) = ∏(<i class="v">e</i><sub>i</sub> + 1), odd exactly for squares.</li>
+<li><b>Perfect numbers (5.7):</b> 2<sup><i class="v">k</i></sup>(2<sup><i class="v">k</i>+1</sup> − 1) is perfect when 2<sup><i class="v">k</i>+1</sup> − 1 is prime.</li>
+</ul>
+</div>
+<div>
+<h3>Prophecies opened in this chapter</h3>
+<ul class="log2">
+<li>"There is a largest prime": <b>broken</b> (Theorem 5.2).</li>
+<li>"<i class="v">n</i>² + <i class="v">n</i> + 41 is prime for every <i class="v">n</i> ≥ 0": <b>broken</b> at <i class="v">n</i> = 40, where it equals 1681 = 41².</li>
+<li>"Every Book weight breaks into Book primes in only one way": <b>broken</b> (441 = 9·49 = 21·21). Repaired: in the full integers, factorization is unique (Theorem 5.5).</li>
+<li>"A door in the Hall of a Hundred Doors ends open exactly when its number is a perfect square": <b>fulfilled</b> (Corollary 5.6).</li>
+</ul>
+<p class="stage" style="margin-top:16px">El Gran Pesado pays for his walnuts with a single 441-coin. "Nine times forty-nine," says the merchant. "Twenty-one squared," says Kevin. El Gran Pesado shrugs: "On the mountain, three, three, seven, seven." Below the peaks, across the water, something is ticking: a sea full of clocks.</p>
+</div>
+</div></section>
+
+<section class="band"><div class="wrap pager"><a href="ch4.html">← Chapter 4: Diophantine Delta</a><a href="index.html">Contents</a><a href="index.html#map">Chapter 6: Clockwork Isles (coming) →</a></div></section>
+<footer class="band"><div class="wrap">Modular Worlds, Chapter 5 · draft · UCI Math CEO<br><span class="credit">Watercolor style after Roberto Forero's illustrations for Math CEO.</span></div></footer>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js" defer></script>
+<script src="book.js"></script>
+<script>
+{
+const {$,esc}=MW;
+const probe=document.createElement('span');probe.style.display='none';document.body.appendChild(probe);
+const col=v=>{probe.style.color=`var(${v})`;return getComputedStyle(probe).color};
+const isPrime=n=>{if(n<2)return false;for(let d=2;d*d<=n;d++)if(n%d===0)return false;return true};
+const factor=n=>{const f=[];for(let p=2;p*p<=n;p++){let e=0;while(n%p===0){n/=p;e++}if(e)f.push([p,e])}if(n>1)f.push([n,1]);return f};
+const sup=e=>String(e).split('').map(c=>'⁰¹²³⁴⁵⁶⁷⁸⁹'[+c]).join('');
+const fstr=f=>f.map(([p,e])=>e>1?p+sup(e):String(p)).join(' · ');
+
+/* ---------- sieve ---------- */
+const S={N:120,st:[],p:1,done:false,now:new Set()};
+function resetS(){S.N=+$('#sN').value;S.st=new Array(S.N+1).fill(0);S.st[1]=3;S.p=1;S.done=false;S.now=new Set();drawS();
+  $('#sstat').textContent='Nothing is crossed out yet. 1 is not prime, so it is set aside. Press "Sieve the next prime".'}
+function drawS(){let h='';for(let n=1;n<=S.N;n++){const s=S.st[n];const c=n===1?'one':s===2?'pr':s===1?(S.now.has(n)?'x now':'x'):'';
+  const lab=n===1?'1, neither prime nor composite':s===2?`${n}, prime`:s===1?`${n}, crossed out`:`${n}, not decided yet`;
+  h+=`<span class="${c}" role="img" aria-label="${lab}">${n}</span>`}$('#sieve').innerHTML=h}
+function stepS(){if(S.done)return;
+  let p=S.p+1;while(p<=S.N&&S.st[p])p++;
+  if(p>S.N||p*p>S.N){for(let n=2;n<=S.N;n++)if(!S.st[n])S.st[n]=2;S.done=true;S.now=new Set();drawS();
+    const cnt=S.st.filter(v=>v===2).length;
+    $('#sstat').textContent=`The next uncrossed number is ${p<=S.N?p:'past the end'}, and ${p<=S.N?p+'² = '+p*p:'its square'} is bigger than ${S.N}.\nSo every number still standing is prime (Proposition 5.3).\nThere are ${cnt} primes from 1 to ${S.N}.`;return}
+  S.st[p]=2;S.now=new Set();const first=p*p;let k=0;for(let m=first;m<=S.N;m+=p){if(!S.st[m]){S.st[m]=1;S.now.add(m);k++}}
+  S.p=p;drawS();
+  const already=[];for(let m=2*p;m<first&&m<=S.N;m+=p)already.push(m);
+  $('#sstat').textContent=`${p} is not crossed out, so ${p} is prime.\nCrossed out ${k} new multiples of ${p}, starting at ${p}² = ${first}.`+(already.length?`\nThe smaller multiples (${already.slice(0,6).join(', ')}${already.length>6?', …':''}) were already crossed out by smaller primes.`:'')}
+$('#sstep').addEventListener('click',stepS);
+$('#sall').addEventListener('click',()=>{let g=0;while(!S.done&&g++<100)stepS()});
+$('#sreset').addEventListener('click',resetS);$('#sN').addEventListener('change',resetS);resetS();
+
+/* ---------- prophecies ---------- */
+MW.cards($('#cards'),[
+ {id:'p51',t:'There is a largest prime.',s:'Settled by Theorem 5.2'},
+ {id:'p52',t:'n² + n + 41 is prime for every n ≥ 0.',s:'Settled in the Cartographer problems and the code quest'},
+ {id:'p53',t:'Every Book weight breaks into Book primes in only one way.',s:'Settled in "Where the Market cheats"'},
+ {id:'p54',t:'A door in the Hall of a Hundred Doors ends open exactly when its number is a perfect square.',s:'Settled by Corollary 5.6'}],'mw-ch5',i=>'Prophecy 5.'+(i+1));
+
+/* ---------- Hilbert Market factor duel ---------- */
+const book=n=>n%4===1;
+const splits=n=>{const o=[];for(let d=5;d*d<=n;d+=4)if(n%d===0&&book(n/d))o.push([d,n/d]);return o};
+const hprime=n=>n>1&&book(n)&&splits(n).length===0;
+const memo=new Map();
+function allF(n){if(memo.has(n))return memo.get(n);let r;if(hprime(n))r=[[n]];else{const set=new Map();
+  for(const [a,b] of splits(n))for(const x of allF(a))for(const y of allF(b)){const t=x.concat(y).sort((u,v)=>u-v);set.set(t.join('·'),t)}r=[...set.values()]}
+  memo.set(n,r);return r}
+const ROUNDS=[45,441,693,1617,2205,4389];
+$('#hround').innerHTML=ROUNDS.map((n,i)=>`<option value="${n}">Round ${i+1}: ${n}</option>`).join('');
+const Hs={n:45,stones:[],sel:-1,found:new Set()};
+function hNew(){Hs.n=+$('#hround').value;Hs.found=new Set();$('#hfound').innerHTML='';hAgain()}
+function hAgain(){Hs.stones=[Hs.n];Hs.sel=-1;$('#hsplits').innerHTML='';drawH();
+  const tot=allF(Hs.n).length;$('#hgoal').textContent=`El Gran Pesado: "${Hs.n} breaks into Book primes in ${tot} way${tot>1?'s':''}. Find ${tot>1?'them all':'it'}."`;
+  $('#hstat').textContent='Press a stone to split it.'}
+function drawH(){$('#hchips').innerHTML=Hs.stones.map((s,i)=>hprime(s)?`<button class="chip2 hp" aria-label="${s}, a Book prime" aria-disabled="true">${s}</button>`:`<button class="chip2" data-i="${i}" aria-pressed="${i===Hs.sel}" aria-label="Split ${s}">${s}</button>`).join('')}
+$('#hchips').addEventListener('click',e=>{const b=e.target.closest('button[data-i]');if(!b)return;Hs.sel=+b.dataset.i;const s=Hs.stones[Hs.sel];drawH();
+  $('#hsplits').innerHTML=`<span class="small" style="align-self:center">${s} = </span>`+splits(s).map(([a,c])=>`<button data-a="${a}" data-c="${c}">${a} × ${c}</button>`).join('<span class="small" style="align-self:center">or</span>');
+  $('#hstat').textContent=`Pick how to split ${s} into two Book weights.`});
+$('#hsplits').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||Hs.sel<0)return;
+  Hs.stones.splice(Hs.sel,1,+b.dataset.a,+b.dataset.c);Hs.stones.sort((u,v)=>u-v);Hs.sel=-1;$('#hsplits').innerHTML='';drawH();
+  if(Hs.stones.every(hprime)){const key=Hs.stones.join(' · ');const tot=allF(Hs.n).length;
+    if(Hs.found.has(key)){$('#hstat').textContent=`${Hs.n} = ${key}. You found this breaking already. Start over and split differently.`}
+    else{Hs.found.add(key);const li=document.createElement('li');li.textContent=`${Hs.n} = ${key}`;$('#hfound').appendChild(li);
+      $('#hstat').textContent=Hs.found.size===tot?(tot>1?`All ${tot} breakings found! The law of the mountain does not hold in the Market.`:`Only one breaking for ${Hs.n}. In this round the Market behaves like the mountain. Try the next round.`):`A breaking! ${tot-Hs.found.size} more to find. Press "Start over".`}}
+  else $('#hstat').textContent='Keep splitting the white stones.'});
+$('#hagain').addEventListener('click',hAgain);$('#hround').addEventListener('change',hNew);
+$('#hhint').addEventListener('click',()=>{const real=fstr(factor(Hs.n));$('#hstat').textContent=`Lucía: "On the mountain, ${Hs.n} = ${real}. The Market can only sell the 3-mod-4 atoms in pairs. How many ways can you pair them up?"`});
+hNew();
+
+/* ---------- stone cutter ---------- */
+function cut(){const n=parseInt($('#fn').value,10);
+  if(!(n>=1&&n<=999999999)){$('#fres').textContent='Enter a whole number from 1 to 999,999,999.';$('#fdiv').textContent='';return}
+  if(n===1){$('#fres').textContent='1 has no prime factors: it is the empty product.\nτ(1) = 1, so door 1 ends open (1 is a square).';$('#fdiv').textContent='1';return}
+  const f=factor(n);let tau=1,sigma=1;f.forEach(([p,e])=>{tau*=e+1;sigma*=(Math.pow(p,e+1)-1)/(p-1)});
+  const divs=[1];f.forEach(([p,e])=>{const cur=divs.slice();let pw=1;for(let k=1;k<=e;k++){pw*=p;cur.forEach(d=>divs.push(d*pw))}});divs.sort((a,b)=>a-b);
+  const prop=sigma-n,kind=prop===n?'perfect':prop>n?'abundant (its proper divisors add up to more)':'deficient (its proper divisors add up to less)';
+  const sq=f.every(([,e])=>e%2===0);
+  $('#fres').textContent=`${n} = ${fstr(f)}${f.length===1&&f[0][1]===1?'  (prime)':''}\nτ(${n}) = ${f.map(([,e])=>'('+e+' + 1)').join('')} = ${tau} divisors: ${tau%2?'odd, so '+n+' is a square and door '+n+' ends open':'even, so door '+n+' ends closed'}.\nProper divisors add up to ${prop}: ${n} is ${kind}.`;
+  $('#fdiv').textContent=divs.length>240?divs.slice(0,240).join(', ')+', … ('+divs.length+' in all)':divs.join(', ')}
+$('#frun').addEventListener('click',cut);$('#fn').addEventListener('keydown',e=>{if(e.key==='Enter')cut()});
+$('#f28').addEventListener('click',()=>{$('#fn').value=28;cut()});$('#f100').addEventListener('click',()=>{$('#fn').value=100;cut()});cut();
+
+/* ---------- prime counting plot ---------- */
+const MAXP=100000,sv=new Uint8Array(MAXP+1);sv[0]=sv[1]=1;for(let i=2;i*i<=MAXP;i++)if(!sv[i])for(let j=i*i;j<=MAXP;j+=i)sv[j]=1;
+const PI=new Uint32Array(MAXP+1);for(let i=1;i<=MAXP;i++)PI[i]=PI[i-1]+(sv[i]?0:1);
+function plotP(){const X=+$('#px').value,cv=$('#pplot');
+  const W=cv.clientWidth||480,H=cv.clientHeight||360,dpr=window.devicePixelRatio||1;cv.width=W*dpr;cv.height=H*dpr;const g=cv.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,W,H);
+  const L=46,B=28,T=14,R=14,Y=PI[X]*1.08;const sx=x=>L+(x/X)*(W-L-R),sy=y=>H-B-(y/Y)*(H-B-T);
+  g.strokeStyle=col('--mute');g.lineWidth=1;g.beginPath();g.moveTo(L,T);g.lineTo(L,H-B);g.lineTo(W-R,H-B);g.stroke();
+  g.fillStyle=col('--mute');g.font='12px Roboto, sans-serif';g.textAlign='right';g.fillText(String(PI[X]),L-6,sy(PI[X])+4);g.fillText('0',L-6,H-B+4);g.textAlign='center';g.fillText(X.toLocaleString('en-US'),W-R-14,H-B+18);g.fillText('x',(L+W-R)/2,H-B+18);
+  g.strokeStyle=col('--brass');g.lineWidth=2;g.beginPath();g.moveTo(sx(0),sy(0));const step=Math.max(1,Math.floor(X/1500));for(let x=2;x<=X;x+=step){g.lineTo(sx(x),sy(PI[x-1]));g.lineTo(sx(x),sy(PI[x]))}g.stroke();
+  g.strokeStyle=col('--sea');g.setLineDash([6,4]);g.beginPath();for(let k=0;k<=300;k++){const x=3+(X-3)*k/300;const y=x/Math.log(x);k?g.lineTo(sx(x),sy(y)):g.moveTo(sx(x),sy(y))}g.stroke();g.setLineDash([]);
+  g.textAlign='left';g.font='13px Roboto, sans-serif';g.fillStyle=col('--brass');g.fillText('π(x), solid',L+10,T+14);g.fillStyle=col('--sea');g.fillText('x / ln x, dashed',L+10,T+32);
+  const est=X/Math.log(X);$('#pres').textContent=`π(${X.toLocaleString('en-US')}) = ${PI[X].toLocaleString('en-US')}\nx / ln x ≈ ${Math.round(est).toLocaleString('en-US')}\nratio = ${(PI[X]/est).toFixed(3)}`;
+  cv.setAttribute('aria-label',`Chart up to x = ${X}: the prime count reaches ${PI[X]}, while x over ln x reaches about ${Math.round(est)}; ratio ${(PI[X]/est).toFixed(3)}.`)}
+$('#px').addEventListener('change',plotP);new ResizeObserver(plotP).observe($('#pplot'));MW.onTheme(plotP);
+
+/* ---------- Python cells ---------- */
+const CELLS=[
+{t:'Cell 1 · the sieve of Eratosthenes',c:`def sieve(n):
+    alive = [True] * (n + 1)
+    alive[0] = alive[1] = False
+    p = 2
+    while p * p <= n:
+        if alive[p]:
+            for m in range(p * p, n + 1, p):
+                alive[m] = False
+        p += 1
+    return [k for k in range(n + 1) if alive[k]]
+
+P = sieve(200)
+print(len(P), "primes up to 200")
+print(P)`},
+{t:'Cell 2 · factor, count divisors, test a prophecy',c:`def factor(n):
+    f, p = {}, 2
+    while p * p <= n:
+        while n % p == 0:
+            f[p] = f.get(p, 0) + 1
+            n //= p
+        p += 1
+    if n > 1:
+        f[n] = f.get(n, 0) + 1
+    return f
+
+def tau(n):
+    t = 1
+    for e in factor(n).values():
+        t *= e + 1
+    return t
+
+print(factor(360), tau(360))
+print("open doors:", [n for n in range(1, 101) if tau(n) % 2 == 1])
+
+# Prophecy 5.2: is n*n + n + 41 always prime?
+for n in range(0, 50):
+    v = n * n + n + 41
+    if len(factor(v)) > 1 or list(factor(v).values()) != [1]:
+        print("breaks at n =", n, ":", v, "=", factor(v))
+        break`},
+{t:'Cell 3 · the Hilbert Market',c:`def book(n): return n % 4 == 1
+
+def splits(n):
+    return [(d, n // d) for d in range(5, int(n**0.5) + 1, 4) if n % d == 0 and book(n // d)]
+
+def breakings(n, memo={}):
+    if n in memo: return memo[n]
+    s = splits(n)
+    if not s:
+        out = {(n,)}
+    else:
+        out = set()
+        for a, b in s:
+            for x in breakings(a):
+                for y in breakings(b):
+                    out.add(tuple(sorted(x + y)))
+    memo[n] = out
+    return out
+
+print([n for n in range(5, 120, 4) if not splits(n)], "<- the first Book primes")
+many = [n for n in range(5, 3000, 4) if len(breakings(n)) > 1]
+print(many[:10])
+print(4389, breakings(4389))`},
+{t:'Cell 4 · prime gaps and the prime number theorem',c:`import math
+P = sieve(100000)
+record = 0
+for a, b in zip(P, P[1:]):
+    if b - a > record:
+        record = b - a
+        print("new record gap", record, "after", a)
+
+for x in [10**2, 10**3, 10**4, 10**5]:
+    pi = sum(1 for p in P if p <= x)
+    print(x, pi, round(x / math.log(x)), round(pi / (x / math.log(x)), 3))`},
+{t:'Cell 5 · perfect numbers from Mersenne primes',c:`def is_prime(n):
+    return n > 1 and all(n % d for d in range(2, int(n**0.5) + 1))
+
+for k in range(1, 20):
+    q = 2**(k + 1) - 1
+    if is_prime(q):
+        n = 2**k * q
+        print(n, "is perfect:", sum(d for d in range(1, n) if n % d == 0) == n if n < 10**6 else "(too big to check by brute force)")`}];
+const SETUP=`def sieve(n):
+    alive = [True] * (n + 1)
+    alive[0] = alive[1] = False
+    p = 2
+    while p * p <= n:
+        if alive[p]:
+            for m in range(p * p, n + 1, p):
+                alive[m] = False
+        p += 1
+    return [k for k in range(n + 1) if alive[k]]
+`;
+MW.cells($('#cells'),CELLS,{setup:SETUP,status:$('#pystat')});
+}
+</script>
+</body>
+</html>
