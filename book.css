@@ -143,3 +143,5 @@ a.btn.primary{background:var(--sea);border-color:var(--sea);color:var(--bg);font
 a.btn:hover{border-color:var(--sea)}
 .lab{background:var(--ember-soft)}
 .lab h3{color:var(--ember)}
+.opener{margin:0;background:var(--bg)}
+.opener img{display:block;width:100%;height:auto;max-height:min(50vw,620px);object-fit:cover}
