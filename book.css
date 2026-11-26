@@ -146,3 +146,13 @@ a.btn:hover{border-color:var(--sea)}
 .opener{margin:0;background:var(--bg)}
 .opener img{display:block;width:100%;height:auto;max-height:min(50vw,620px);object-fit:cover}
 footer .credit{font-size:13px}
+/* two schedules: core vs semester-only */
+.path{display:inline-block;font-family:Roboto,sans-serif;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:999px;padding:3px 10px;margin-left:10px;vertical-align:middle;white-space:nowrap}
+.path.core{background:var(--sea-soft);color:var(--sea);border:1px solid var(--sea)}
+.path.ext{background:var(--bg);color:var(--brass);border:1.5px dashed var(--brass)}
+.path.opt{background:var(--bg);color:var(--mute);border:1px solid var(--mute)}
+details.sched{margin:0}
+details.sched summary{cursor:pointer;font-weight:700;color:var(--sea);font-size:17px}
+details.sched .two{margin-top:12px}
+details.sched ol{margin:6px 0 0;padding-left:22px}
+details.sched li{margin:4px 0}

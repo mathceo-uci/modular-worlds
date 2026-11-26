@@ -54,10 +54,17 @@
 </div>
 </section>
 </div></header>
+<section class="band"><div class="wrap"><details class="box sched"><summary>Two schedules: quarter (3 sessions) or semester (3 sessions)</summary>
+<p class="small" style="margin:8px 0 0">Sections marked <span class="path core">Core</span> are taught on both schedules. <span class="path ext">Semester</span> sections are taught in class on the semester schedule and are reading on the quarter schedule. <span class="path opt">Optional</span> code quests can replace Navigator problems on either schedule. On the quarter schedule, Lab notes, Studio corners, strategy questions and Navigator or Cartographer problems are extensions students choose.</p>
+<div class="two"><div><h3 style="margin:0">Quarter (10 weeks)</h3><ol><li>The smiths' balance, prophecies, Euclid's algorithm by hand</li><li>Lemma 3.1, running Euclid backwards, Bézout (3.2–3.3)</li><li>Euclid's Game (20 min), culture (8 min), logbook</li></ol></div>
+<div><h3 style="margin:0">Semester (15–16 weeks)</h3><ol><li>The smiths' balance, prophecies, Euclid by hand</li><li>Lemma 3.1, Bézout, both proofs; Navigator problems in crews</li><li>Euclid's Game with its strategy question, Studio quilt, culture discussion</li></ol></div></div>
+<p class="small" style="margin:10px 0 0">Each session is 50 minutes. <a href="index.html#instructors">Both full schedules</a></p>
+</details></div></section>
+
 
 <section class="band" id="explore"><div class="wrap two">
 <div>
-<h2>Explore: what can the smiths balance?</h2>
+<h2>Explore: what can the smiths balance? <span class="path core">Core</span></h2>
 <p>A weight on the same pan as the bead counts against it; a weight on the other pan counts for it. So a balance with <i class="v">x</i> oxygen weights and <i class="v">y</i> nitrogen weights is a solution of</p>
 <div class="math">bead = 5x + 7y,   where x, y can be negative</div>
 <p>(negative means "on the bead's pan").</p>
@@ -77,13 +84,13 @@
 </div></section>
 
 <section class="band alt" id="prophecies"><div class="wrap">
-<h2>Prophecies to seal</h2>
+<h2>Prophecies to seal <span class="path core">Core</span></h2>
 <p>Pick a confidence for each card before you read the theory. Your choices stay in this browser only. Each card names the section that settles it.</p>
 <div class="cards" id="cards"></div>
 </div></section>
 
 <section class="band" id="theory"><div class="wrap">
-<h2>Theory: greatest common divisors</h2>
+<h2>Theory: greatest common divisors <span class="path core">Core</span></h2>
 <div class="two">
 <div>
 <p>Write <i class="v">d</i> | <i class="v">a</i> ("<i class="v">d</i> divides <i class="v">a</i>") when <i class="v">a</i> = <i class="v">dk</i> for some integer <i class="v">k</i>. For integers <i class="v">a</i>, <i class="v">b</i> not both 0, the <b>greatest common divisor</b> gcd(<i class="v">a</i>, <i class="v">b</i>) is the largest integer that divides both.</p>
@@ -125,7 +132,7 @@
 
 <section class="band alt" id="arena"><div class="wrap game">
 <div>
-<h2>Arena: Euclid's Game</h2>
+<h2>Arena: Euclid's Game <span class="path core">Core</span></h2>
 <p>Two numbers on the board. On your turn, subtract any positive multiple of the smaller number from the larger, without going below 0. Whoever makes a 0 wins.</p>
 <p>You move first against El Gran Pesado. He never makes a mistake. Some starting pairs are winnable; some are not. Play several, then answer the strategy question below the board.</p>
 <div class="ctrl" style="margin-top:6px">
@@ -147,7 +154,7 @@
 
 <section class="band" id="culture"><div class="wrap two">
 <div>
-<h2>Culture: one algorithm, many forges</h2>
+<h2>Culture: one algorithm, many forges <span class="path core">Core</span></h2>
 <p><b>Greece, about 300 BCE.</b> Euclid's <i>Elements</i>, Book VII, opens with this exact procedure: repeatedly subtract the smaller number from the larger to find the greatest common measure of two numbers.</p>
 <p><b>China, the <i>Nine Chapters on the Mathematical Art</i>.</b> A method called "mutual subtraction" finds the same common divisor, used there to simplify fractions.</p>
 <p><b>India, 499 CE.</b> Āryabhaṭa's <i>kuṭṭaka</i> ("the pulverizer") runs the same divisions and works backwards through them to solve equations like 5<i class="v">x</i> + 7<i class="v">y</i> = <i class="v">c</i>. That is next week's land.</p>
@@ -161,7 +168,7 @@
 </div></section>
 
 <section class="band alt" id="problems"><div class="wrap">
-<h2>Problems</h2>
+<h2>Problems <span class="path core">Core</span></h2>
 <p>Deckhand problems are for everyone. Navigator and Cartographer problems are where you stretch.</p>
 <div class="tiers">
 <div class="tier"><h3>Deckhand</h3><ol>
@@ -192,7 +199,7 @@
 <div class="box tool"><h3>Studio corner</h3><p style="margin:0">Sew Euclid's algorithm into a quilt: every colour is one step, and the smallest square is the gcd. Try two neighbouring Fibonacci numbers. <a class="btn" href="studio.html#quilt">Open the Studio</a></p></div>
 </div></section>
 <section class="band" id="code"><div class="wrap">
-<h2>Code quest: build the forge in Python</h2>
+<h2>Code quest: build the forge in Python <span class="path opt">Optional</span></h2>
 <p>These cells run real Python in your browser. The first run loads Python (about 10 MB, once). Edit anything and run again.</p>
 <div id="cells"></div>
 <p class="small" id="pystat" aria-live="polite"></p>
@@ -201,7 +208,7 @@
 <section class="band"><div class="wrap"><div class="box thm"><h3>Proof Lab</h3><p style="margin:0">Produce half of the forge lemma: every common divisor of b and r also divides qb + r. Three routes, one lab report each. <a class="btn" href="lab.html#recipes">Open the Proof Lab</a></p></div></div></section>
 <section class="band alt" id="logbook"><div class="wrap two">
 <div>
-<h2>Logbook</h2>
+<h2>Logbook <span class="path core">Core</span></h2>
 <ul class="log2">
 <li><b>Lemma 3.1:</b> if <i class="v">a</i> = <i class="v">qb</i> + <i class="v">r</i>, then gcd(<i class="v">a</i>, <i class="v">b</i>) = gcd(<i class="v">b</i>, <i class="v">r</i>).</li>
 <li><b>Euclid's algorithm:</b> divide and keep the remainder; the last nonzero remainder is the gcd. It always stops.</li>

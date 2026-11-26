@@ -58,10 +58,17 @@
 <div class="strip" id="bookstrip" aria-label="The first pages of the Book"></div>
 </section>
 </div></header>
+<section class="band"><div class="wrap"><details class="box sched"><summary>Two schedules: quarter (2 sessions) or semester (4 sessions)</summary>
+<p class="small" style="margin:8px 0 0">Sections marked <span class="path core">Core</span> are taught on both schedules. <span class="path ext">Semester</span> sections are taught in class on the semester schedule and are reading on the quarter schedule. <span class="path opt">Optional</span> code quests can replace Navigator problems on either schedule. On the quarter schedule, Lab notes, Studio corners, strategy questions and Navigator or Cartographer problems are extensions students choose.</p>
+<div class="two"><div><h3 style="margin:0">Quarter (10 weeks)</h3><ol><li>Explore with the legend tester, seal the Prophecy Vault, Theorem 1.1 (division algorithm)</li><li>Theorems 1.2 and 1.3 by induction, El Gran Pesado's weigh-in (15 min)</li></ol></div>
+<div><h3 style="margin:0">Semester (15–16 weeks)</h3><ol><li>Explore and the legend tester, seal the Prophecy Vault</li><li>Theorem 1.1, the division algorithm, with the well-ordering proof</li><li>Induction: Theorems 1.2 and 1.3, the contrapositive toolkit</li><li>Weigh-in arena, proof wrestling, culture discussion</li></ol></div></div>
+<p class="small" style="margin:10px 0 0">Each session is 50 minutes. <a href="index.html#instructors">Both full schedules</a></p>
+</details></div></section>
+
 
 <section class="band" id="explore"><div class="wrap two">
 <div>
-<h2>Explore: reading the Book</h2>
+<h2>Explore: reading the Book <span class="path core">Core</span></h2>
 <p>In Mojadito, a water molecule is H–O–H. Oxygen weighs 5. Each hydrogen weighs the same positive even number <i class="v">h</i>, so a molecule weighs <i class="v">h</i> + 5 + <i class="v">h</i>.</p>
 <ol>
 <li>List the first ten weights in the Book. What do they have in common? Find two different patterns.</li>
@@ -91,13 +98,13 @@
 </div></section>
 
 <section class="band alt" id="vault"><div class="wrap">
-<h2>The Prophecy Vault</h2>
+<h2>The Prophecy Vault <span class="path core">Core</span></h2>
 <p>Seal these prophecies for the whole voyage. Mark how sure your crew is now; you will open each one in the chapter that gives you the tools. Your choices stay in this browser only. Some will break. A broken prophecy you predicted would break is a win.</p>
 <div class="cards" id="cards"></div>
 </div></section>
 
 <section class="band" id="theory"><div class="wrap">
-<h2>Theory: divisibility and the division algorithm</h2>
+<h2>Theory: divisibility and the division algorithm <span class="path core">Core</span></h2>
 <div class="two">
 <div>
 <p>For integers <i class="v">a</i> and <i class="v">d</i>, write <i class="v">d</i> | <i class="v">a</i> ("<i class="v">d</i> divides <i class="v">a</i>") if <i class="v">a</i> = <i class="v">dk</i> for some integer <i class="v">k</i>. An integer is <b>even</b> if 2 | <i class="v">n</i>, and <b>odd</b> if <i class="v">n</i> = 2<i class="v">k</i> + 1 for some integer <i class="v">k</i>.</p>
@@ -125,7 +132,7 @@
 
 <section class="band alt" id="arena"><div class="wrap game">
 <div>
-<h2>Arena: El Gran Pesado's weigh-in</h2>
+<h2>Arena: El Gran Pesado's weigh-in <span class="path core">Core</span></h2>
 <p>El Gran Pesado shouts a weight. Is it real water? If it is, name the weight of each hydrogen. If not, shout "¡Imposible!" Your crew's streak counts every right call in a row.</p>
 <p>In class, play it as lucha rounds: one student announces the weight, every pair shows its answer at once ("¡3, 2, 1, lucha!"), and a different student explains each round. No points against each other: the whole room plays against El Gran Pesado.</p>
 <div class="box tool" style="margin-top:18px">
@@ -149,7 +156,7 @@
 
 <section class="band" id="culture"><div class="wrap two">
 <div>
-<h2>Culture: prophecies old and new</h2>
+<h2>Culture: prophecies old and new <span class="path core">Core</span></h2>
 <p><b>The Maya codices.</b> Only four Maya books survive from before the Spanish conquest. The Dresden Codex is full of counted cycles of days, used to predict the movements of Venus, eclipses and seasons of rain. Its scribes made prophecies the way you will: find a pattern, trust the arithmetic, write it down.</p>
 <p><b>Odd and even in Euclid.</b> Book IX of Euclid's <i>Elements</i> proves facts about odd and even numbers like the ones in this chapter, for example that an odd number times an odd number is odd.</p>
 <p><b>Forecasts as prophecies.</b> Today's El Niño forecasts are prophecies built from data: weaker Pacific winds, warmer water spreading east, then a prediction of storms in Southern California and droughts elsewhere. Like your Vault, they are tested when the season arrives.</p>
@@ -162,7 +169,7 @@
 </div></section>
 
 <section class="band alt" id="problems"><div class="wrap">
-<h2>Problems</h2>
+<h2>Problems <span class="path core">Core</span></h2>
 <div class="tiers">
 <div class="tier"><h3>Deckhand</h3><ol>
 <li>Is 2025 in the Book? If so, what does each hydrogen weigh? Is 2026?
@@ -188,7 +195,7 @@
 </div></section>
 
 <section class="band" id="code"><div class="wrap">
-<h2>Code quest: the Book in Python</h2>
+<h2>Code quest: the Book in Python <span class="path opt">Optional</span></h2>
 <p>These cells run real Python in your browser. The first run loads Python (about 10 MB, once).</p>
 <div id="cells"></div>
 <p class="small" id="pystat" aria-live="polite"></p>
@@ -198,7 +205,7 @@
 <section class="band alt"><div class="wrap"><div class="box tool"><h3>Studio corner</h3><p style="margin:0">The division algorithm in the rooms: <a href="poets.html#stanzas">stanza crates</a> (n = q × d + r, with the leftovers as a coda), <a href="loom.html#khipu">the khipu</a> (every digit is a leftover), and <a href="games.html#potato">hot potato</a>, a puzzle for strong induction.</p></div></div></section>
 <section class="band alt" id="logbook"><div class="wrap two">
 <div>
-<h2>Logbook</h2>
+<h2>Logbook <span class="path core">Core</span></h2>
 <ul class="log2">
 <li><b>Division algorithm (1.1):</b> <i class="v">a</i> = <i class="v">qb</i> + <i class="v">r</i> with 0 ≤ <i class="v">r</i> &lt; <i class="v">b</i>, and <i class="v">q</i>, <i class="v">r</i> are unique.</li>
 <li><b>The Book (1.2):</b> the water weights are exactly 4<i class="v">m</i> + 1 with <i class="v">m</i> ≥ 2: 9, 13, 17, 21, …</li>

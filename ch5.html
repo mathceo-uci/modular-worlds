@@ -73,10 +73,17 @@
 <div class="status st2" id="sstat" aria-live="polite" style="margin-top:10px"></div>
 </section>
 </div></header>
+<section class="band"><div class="wrap"><details class="box sched"><summary>Two schedules: quarter (3 sessions) or semester (5 sessions)</summary>
+<p class="small" style="margin:8px 0 0">Sections marked <span class="path core">Core</span> are taught on both schedules. <span class="path ext">Semester</span> sections are taught in class on the semester schedule and are reading on the quarter schedule. <span class="path opt">Optional</span> code quests can replace Navigator problems on either schedule. On the quarter schedule, Lab notes, Studio corners, strategy questions and Navigator or Cartographer problems are extensions students choose.</p>
+<div class="two"><div><h3 style="margin:0">Quarter (10 weeks)</h3><ol><li>Sieve fields, Explore 1–3, prophecies, Lemma 5.1 to Proposition 5.3</li><li>Lemma 5.4 and the Fundamental Theorem, where the Market cheats</li><li>Factor duel (20 min), culture (10 min), logbook</li></ol></div>
+<div><h3 style="margin:0">Semester (15–16 weeks)</h3><ol><li>Sieve fields and Explore, prophecies</li><li>Primes forever (5.1–5.3), Lab note on formula numbers</li><li>The Fundamental Theorem (5.4–5.5), where the Market cheats</li><li>Factor duel and its strategy questions</li><li>The Hundred Doors return, perfect numbers, how many primes, culture discussion (twin primes)</li></ol></div></div>
+<p class="small" style="margin:10px 0 0">Each session is 50 minutes. <a href="index.html#instructors">Both full schedules</a></p>
+</details></div></section>
+
 
 <section class="band" id="explore"><div class="wrap two">
 <div>
-<h2>Explore: run the sieve</h2>
+<h2>Explore: run the sieve <span class="path core">Core</span></h2>
 <p>A <b>prime</b> is a whole number greater than 1 whose only positive divisors are 1 and itself. A number greater than 1 that is not prime is <b>composite</b>. The number 1 is neither: it is the "empty" stone.</p>
 <ol>
 <li>Run the sieve on 1 to 120 one prime at a time. When you sieve with 7, which multiple of 7 is the first one that was <b>not</b> already crossed out? Why that one?</li>
@@ -94,14 +101,14 @@
 </div></section>
 
 <section class="band alt" id="prophecies"><div class="wrap">
-<h2>Prophecies to seal</h2>
+<h2>Prophecies to seal <span class="path core">Core</span></h2>
 <p>Pick a confidence for each card before you read on. Your choices stay in this browser only. Each card names the section that settles it.</p>
 <div class="cards" id="cards"></div>
 </div></section>
 
 <section class="band" id="theory"><div class="wrap two">
 <div>
-<h2>Primes forever</h2>
+<h2>Primes forever <span class="path core">Core</span></h2>
 <div class="box thm"><h3>Lemma 5.1 (every number has a prime divisor)</h3>
 <p style="margin:0">Every integer <i class="v">n</i> &gt; 1 is divisible by some prime.</p></div>
 <div class="pf"><p><b>Proof.</b> The set of divisors of <i class="v">n</i> that are bigger than 1 is not empty (it contains <i class="v">n</i>), so it has a smallest element <i class="v">q</i>. If <i class="v">q</i> were composite, <i class="v">q</i> = <i class="v">ab</i> with 1 &lt; <i class="v">a</i> &lt; <i class="v">q</i>, and <i class="v">a</i> would divide <i class="v">n</i> too: a smaller divisor bigger than 1. That is impossible, so <i class="v">q</i> is prime.</p></div>
@@ -124,7 +131,7 @@
 
 <section class="band alt" id="fta"><div class="wrap two">
 <div>
-<h2>One way only: the law of the mountain</h2>
+<h2>One way only: the law of the mountain <span class="path core">Core</span></h2>
 <p>In the Entrance Exam you broke the prophecy "if <i class="v">a</i> | <i class="v">bc</i> then <i class="v">a</i> | <i class="v">b</i> or <i class="v">a</i> | <i class="v">c</i>" (6 divides 4 · 9 but neither 4 nor 9). Here is its repair.</p>
 <div class="box thm"><h3>Lemma 5.4 (Euclid's lemma for primes)</h3>
 <p style="margin:0">If a prime <i class="v">p</i> divides <i class="v">ab</i>, then <i class="v">p</i> | <i class="v">a</i> or <i class="v">p</i> | <i class="v">b</i>. More generally, if <i class="v">p</i> divides a product of several numbers, it divides one of them.</p></div>
@@ -147,7 +154,7 @@
 
 <section class="band" id="arena"><div class="wrap game">
 <div>
-<h2>Arena: the factor duel</h2>
+<h2>Arena: the factor duel <span class="path core">Core</span></h2>
 <p>El Gran Pesado brings a Book weight to the Hilbert Market. Break it into Book primes: press a stone to see how it splits into two Book weights, and pick one. Stones that cannot split turn gold. When everything is gold, you have one breaking.</p>
 <p>Then <b>start over</b> and find a different one. El Gran Pesado says how many breakings exist. Find them all to win the round.</p>
 <div class="ctrl" style="margin-top:6px">
@@ -172,7 +179,7 @@
 
 <section class="band alt" id="doors"><div class="wrap two">
 <div>
-<h2>Side quest: the Hundred Doors return</h2>
+<h2>Side quest: the Hundred Doors return <span class="path ext">Semester</span></h2>
 <p>Once you know the primes of <i class="v">n</i>, you know all its divisors.</p>
 <div class="box thm"><h3>Corollary 5.6 (divisors from primes)</h3>
 <p style="margin:0">If <i class="v">n</i> = <i class="v">p</i><sub>1</sub><sup><i class="v">e</i>₁</sup> ⋯ <i class="v">p</i><sub>k</sub><sup><i class="v">e</i><sub>k</sub></sup>, the positive divisors of <i class="v">n</i> are the numbers <i class="v">p</i><sub>1</sub><sup><i class="v">f</i>₁</sup> ⋯ <i class="v">p</i><sub>k</sub><sup><i class="v">f</i><sub>k</sub></sup> with 0 ≤ <i class="v">f</i><sub>i</sub> ≤ <i class="v">e</i><sub>i</sub>. So <i class="v">n</i> has τ(<i class="v">n</i>) = (<i class="v">e</i>₁ + 1)⋯(<i class="v">e</i><sub>k</sub> + 1) divisors.</p></div>
@@ -204,7 +211,7 @@
 
 <section class="band" id="count"><div class="wrap two">
 <div>
-<h2>How many primes are there below <i class="v">x</i>?</h2>
+<h2>How many primes are there below <i class="v">x</i>? <span class="path ext">Semester</span></h2>
 <p>Write π(<i class="v">x</i>) for the number of primes up to <i class="v">x</i> (no relation to 3.14…). The sieve showed rows getting emptier. How much emptier?</p>
 <div class="box thm"><h3>The Prime Number Theorem (stated, not proved)</h3>
 <p style="margin:0">As <i class="v">x</i> grows, π(<i class="v">x</i>) divided by <i class="v">x</i> / ln <i class="v">x</i> gets closer and closer to 1.</p></div>
@@ -225,7 +232,7 @@
 
 <section class="band alt" id="culture"><div class="wrap two">
 <div>
-<h2>Culture: the people who climbed</h2>
+<h2>Culture: the people who climbed <span class="path core">Core</span></h2>
 <p><b>Alexandria, about 300 BCE.</b> Euclid's <i>Elements</i>, Book IX, proves that the primes outnumber any finite list (Proposition 20) and builds perfect numbers from primes of the form 2<sup><i class="v">k</i>+1</sup> − 1 (Proposition 36).</p>
 <p><b>Cyrene and Alexandria, 3rd century BCE.</b> Eratosthenes, who also estimated the size of the Earth, is credited with the sieve. The method reaches us through Nicomachus of Gerasa, writing about 100 CE.</p>
 <p><b>Baghdad, 9th century.</b> Thābit ibn Qurra found a rule that builds <b>amicable</b> pairs, two numbers where each is the sum of the other's proper divisors, like 220 and 284.</p>
@@ -241,7 +248,7 @@
 </div></section>
 
 <section class="band" id="problems"><div class="wrap">
-<h2>Problems</h2>
+<h2>Problems <span class="path core">Core</span></h2>
 <p>Deckhand problems are for everyone. Navigator and Cartographer problems are where you stretch.</p>
 <div class="tiers">
 <div class="tier"><h3>Deckhand</h3><ol>
@@ -271,7 +278,7 @@
 </div></section>
 
 <section class="band alt" id="code"><div class="wrap">
-<h2>Code quest: the mountain in Python</h2>
+<h2>Code quest: the mountain in Python <span class="path opt">Optional</span></h2>
 <p>These cells run real Python in your browser. The first run loads Python (about 10 MB, once). Edit anything and run again.</p>
 <div id="cells"></div>
 <p class="small" id="pystat" aria-live="polite"></p>
@@ -279,7 +286,7 @@
 
 <section class="band" id="logbook"><div class="wrap two">
 <div>
-<h2>Logbook</h2>
+<h2>Logbook <span class="path core">Core</span></h2>
 <ul class="log2">
 <li><b>Prime divisor (5.1):</b> every <i class="v">n</i> &gt; 1 has a prime divisor; the smallest divisor above 1 is prime.</li>
 <li><b>Euclid (5.2):</b> there are infinitely many primes.</li>
