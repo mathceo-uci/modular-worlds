@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clockwork Isles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="book.css">
+<style>
+.dial{width:100%;max-width:420px;aspect-ratio:1;display:block;margin:6px auto 0}
+.dial .rim{fill:var(--panel);stroke:var(--line);stroke-width:2}
+.dial .tick{fill:var(--bg);stroke:var(--mute);stroke-width:1.5}
+.dial .tick.seen{fill:var(--brass-soft);stroke:var(--brass);stroke-width:3}
+.dial .tick.here{fill:var(--ember-soft);stroke:var(--ember);stroke-width:4}
+.dial text{font-family:"Roboto Mono",monospace;font-size:15px;fill:var(--ink);text-anchor:middle;dominant-baseline:central}
+.dial text.seen{font-weight:700}
+.dial .hop{fill:none;stroke:var(--sea);stroke-width:2;opacity:.75}
+.dial .hand{stroke:var(--ember);stroke-width:4;stroke-linecap:round}
+.legend2{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--mute);margin:4px 0 0}
+.legend2 span{display:inline-flex;align-items:center;gap:6px}
+.legend2 i{display:inline-block;width:16px;height:16px;border-radius:50%;border:1.5px solid var(--mute);background:var(--bg)}
+.legend2 i.seen{background:var(--brass-soft);border:3px solid var(--brass)}
+.legend2 i.here{background:var(--ember-soft);border:4px solid var(--ember)}
+.status.st2{white-space:pre-line;text-align:left;font-family:"Roboto Mono",monospace;font-size:15px;font-weight:400;background:var(--code);border-radius:10px;padding:10px 12px}
+.mtab{border-collapse:collapse;font-family:"Roboto Mono",monospace;font-size:14px;width:auto;margin:8px 0}
+.mtab th,.mtab td{border:1px solid var(--line);padding:4px 7px;text-align:center;min-width:2.1em}
+.mtab th{background:var(--panel);color:var(--mute);font-weight:500}
+.mtab th.unit{color:var(--sea);font-weight:700}
+.mtab td.one{background:var(--sea-soft);font-weight:700;outline:2px solid var(--sea);outline-offset:-2px}
+.mtab td.zero{color:var(--mute);background:var(--bg)}
+.keys{list-style:none;padding:0;margin:6px 0;display:flex;flex-wrap:wrap;gap:6px}
+.keys li{font-family:"Roboto Mono",monospace;background:var(--sea-soft);border:1px solid var(--sea);border-radius:8px;padding:4px 10px}
+.lock{font-family:"Roboto Flex",sans-serif;font-size:clamp(26px,4vw,36px);font-weight:900;text-align:center;margin:8px 0;padding:12px;border-radius:12px;background:var(--panel)}
+.score{display:flex;justify-content:center;gap:24px;font-size:17px;margin:6px 0}
+.score b{font-family:"Roboto Flex",sans-serif;font-size:26px}
+.digits{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0}
+.digits span{display:inline-flex;flex-direction:column;align-items:center;min-width:34px;padding:4px 2px;border-radius:7px;border:1px solid var(--line);background:var(--bg);font-family:"Roboto Mono",monospace;font-size:18px;font-weight:700}
+.digits span small{font-size:11px;font-weight:400;color:var(--mute)}
+.digits span.chk{border:2.5px solid var(--brass);background:var(--brass-soft)}
+.digits span.bad{border:2.5px dashed var(--ember);background:var(--ember-soft)}
+input.code{font-family:"Roboto Mono",monospace;width:16em;min-height:44px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:0 10px}
+</style>
+</head>
+<body>
+
+<nav class="toc" aria-label="Chapter sections"><div class="wrap">
+<a class="brand" href="index.html">Modular Worlds</a><a href="#landing">Landing</a><a href="#explore">Explore</a><a href="#prophecies">Prophecies</a><a href="#theory">Clock arithmetic</a><a href="#remember">What the clock remembers</a><a href="#inverse">Undoing the clock</a><a href="#arena">The Clockmaker's Lock</a><a href="#digits">Check digits</a><a href="#luhn">Luhn</a><a href="#culture">Culture</a><a href="#problems">Problems</a><a href="#code">Code quest</a><a href="#logbook">Logbook</a>
+</div></nav>
+
+<figure class="opener"><img src="art/ch6.jpg" width="1600" height="800" alt="Watercolor of the Clockwork Isles at dusk: a chain of small round islands in a teal sea, each crowned by a clock tower whose face has a different number of marks, 4, 7, 9, 10, 11 and 12. Brass gears half-sunk in the shallows turn the tide. In the foreground a stone gate with a round dial lock is carved: 3x ≡ 4 (mod 7). A sign on the jetty reads: CLOCKWORK ISLES, EVERY NUMBER COMES BACK AROUND."></figure>
+<header class="band hero" id="landing"><div class="wrap">
+<div>
+<div class="kicker">Modular Worlds · Chapter 6</div>
+<h1>Clockwork Isles</h1>
+<p class="lede">An archipelago where every island keeps its own clock, numbers never get bigger than the dial, and the gates only open for those who can run time backwards.</p>
+<div class="episode" aria-label="Episode 6 opening scene">
+<p class="stage">Night crossing. The sea below Prime Peaks is full of ticking. Islands rise out of the dark, each with a tower and a lit clock face, and no two faces have the same number of marks.</p>
+<p><span class="who">Ana</span> <span class="stage">(counting through binoculars)</span>: That one has seven marks. That one has twelve. The small one has four.</p>
+<p><span class="who">Diego:</span> Four hours in a day. I'd finally have time for nothing.</p>
+<p class="stage">The ship scrapes a jetty. Above it, a stone gate. Instead of a keyhole, a dial with seven marks, and words carved around it: 3x ≡ 4.</p>
+<p><span class="who">El Gran Pesado</span> <span class="stage">(seated on the gate, swinging his boots)</span>: On these islands a number is only where it lands on the dial. Twenty-five is four on the seven-clock. Twenty-five is one on the twelve-clock. Every gate here asks you to turn the dial backwards. Most of you never will.</p>
+<p><span class="who">Mateo:</span> And if a gate can't be opened?</p>
+<p><span class="who">El Gran Pesado:</span> Then say so. Be right, and it falls. Be wrong, and you stay on this rock until the clocks rust.</p>
+<p><span class="who">Lucía</span> <span class="stage">(already turning the dial)</span>: Times three, four times… We've done this before. This is the Forge again, wearing a clock.</p>
+</div>
+</div>
+
+<section class="forge" aria-labelledby="cw-h">
+<h3 id="cw-h" style="margin:0 0 4px">The clock wheel</h3>
+<p class="small" style="margin:0">A clock with <i class="v">m</i> marks. Start somewhere, then hop forward by the same step again and again. Which marks do you ever land on?</p>
+<div class="ctrl" style="margin-top:8px">
+<div><label for="cm">Marks (m)</label><input id="cm" type="number" min="2" max="24" value="12"></div>
+<div><label for="cs">Step</label><input id="cs" type="number" min="-99" max="99" value="8"></div>
+<div><label for="c0">Start</label><input id="c0" type="number" min="-999" max="999" value="0"></div>
+</div>
+<div class="ctrl">
+<button class="primary" id="chop">Hop once</button>
+<button id="call">Hop until it repeats</button>
+<button id="creset">Reset</button>
+</div>
+<svg class="dial" id="dial" viewBox="0 0 400 400" role="img" aria-label="Clock wheel"></svg>
+<div class="legend2"><span><i class="here"></i>where you are now</span><span><i class="seen"></i>visited (bold number)</span><span><i></i>not visited</span></div>
+<div class="status st2" id="cstat" aria-live="polite" style="margin-top:10px"></div>
+</section>
+</div></header>
+
+<section class="band"><div class="wrap"><details class="box sched"><summary>Two schedules: quarter (3 sessions) or semester (4 sessions)</summary>
+<p class="small" style="margin:8px 0 0">Sections marked <span class="path core">Core</span> are taught on both schedules. <span class="path ext">Semester</span> sections are taught in class on the semester schedule and are reading on the quarter schedule. <span class="path opt">Optional</span> code quests can replace Navigator problems on either schedule. On the quarter schedule, Lab notes, Studio corners, strategy questions and Navigator or Cartographer problems are extensions students choose.</p>
+<div class="two"><div><h3 style="margin:0">Quarter (10 weeks)</h3><ol><li>Clock wheel, Explore 1–4, prophecies, Theorems 6.1 and 6.2, the Book in clock language</li><li>Undoing the clock: Theorem 6.5, Corollary 6.6 and Theorem 6.7, then the Clockmaker's Lock (20 min)</li><li>Check digits: Theorems 6.8 and 6.9 with the code inspector, culture (10 min), logbook</li></ol></div>
+<div><h3 style="margin:0">Semester (15–16 weeks)</h3><ol><li>Clock wheel and Explore, prophecies, Theorems 6.1 and 6.2, the Book in clock language</li><li>What the clock remembers: casting out nines and elevens (6.3), squares on the clock (6.4), the Vault notes</li><li>Undoing the clock (6.5–6.7), the Clockmaker's Lock and its strategy question</li><li>Check digits (6.8, 6.9) and the Luhn side quest, culture discussion (the mistakes people make)</li></ol></div></div>
+<p class="small" style="margin:10px 0 0">Each session is 50 minutes. <a href="index.html#instructors">Both full schedules</a></p>
+</details></div></section>
+
+
+<section class="band" id="explore"><div class="wrap two">
+<div>
+<h2>Explore: hop around the clock <span class="path core">Core</span></h2>
+<p>On a clock with <i class="v">m</i> marks, labelled 0 to <i class="v">m</i> − 1, a number lands on its <b>remainder</b> when divided by <i class="v">m</i> (the division algorithm, Theorem 1.1). So 25 lands on 1 on the 12-clock, because 25 = 2 · 12 + 1. A negative number lands by going backwards: −1 lands on 11.</p>
+<ol>
+<li>On the 12-clock, hop by 8 from 0. How many marks do you visit before you repeat? Try steps 1, 2, 3, …, 11. Which steps visit every mark? What do those steps have in common with 12?</li>
+<li>Predict how many marks step 6 visits on the 20-clock, then check. Find a formula in terms of <i class="v">m</i> and the step. (Chapter 2 and Chapter 3 both know this number.)</li>
+<li>On the 7-clock, every step from 1 to 6 visits every mark. Why might 7 be so generous? Try 11 and 13, then 9 and 15.</li>
+<li>Find a step <i class="v">x</i> on the 7-clock so that three hops of size <i class="v">x</i> from 0 land on 4. That is the gate on the jetty: 3<i class="v">x</i> ≡ 4. Is there more than one answer between 0 and 6?</li>
+<li>On the 4-clock, put the Book of Water: 9, 13, 17, 21, … Where do they all land? Where do the odd squares 9, 25, 49 land?</li>
+</ol>
+</div>
+<aside class="box tool">
+<h3>Proof toolkit: replace by a neighbour on the clock</h3>
+<p>When only the remainder matters, you may swap any number for another one that lands on the same mark, as early and as often as you like. Big numbers never have to appear.</p>
+<p style="margin:0"><b>Example.</b> What is the last digit of 7<sup>2026</sup>? On the 10-clock, 7² = 49 lands on 9, so 7⁴ lands where 9 · 9 = 81 lands: on 1. Then 7<sup>2024</sup> = (7⁴)<sup>506</sup> lands on 1, and 7<sup>2026</sup> lands on 1 · 49, on 9. Theorem 6.2 says why this is allowed.</p>
+</aside>
+</div></section>
+
+<section class="band alt" id="prophecies"><div class="wrap">
+<h2>Prophecies to seal <span class="path core">Core</span></h2>
+<p>Pick a confidence for each card before you read on. Your choices stay in this browser only. Each card names the section that settles it. This chapter also opens three old cards from the Vault in a new language; they are in "The Book in clock language".</p>
+<div class="cards" id="cards"></div>
+</div></section>
+
+<section class="band" id="theory"><div class="wrap two">
+<div>
+<h2>Clock arithmetic <span class="path core">Core</span></h2>
+<p>Let <i class="v">m</i> ≥ 2 be an integer, the <b>modulus</b>. We say <i class="v">a</i> is <b>congruent</b> to <i class="v">b</i> modulo <i class="v">m</i>, and write</p>
+<div class="math">a ≡ b (mod m)    when    m | a − b.</div>
+<p>You met this in Chapter 0 for <i class="v">m</i> = 3, with Doña Trina's trios, and Chapter 4 sorted tolls into columns by their remainder. The columns now get their name: the <b>congruence class</b> of <i class="v">a</i> is the set of all integers congruent to <i class="v">a</i>, one mark on the clock.</p>
+<div class="box thm"><h3>Theorem 6.1 (same mark, same class)</h3>
+<p style="margin:0">(a) <i class="v">a</i> ≡ <i class="v">b</i> (mod <i class="v">m</i>) exactly when <i class="v">a</i> and <i class="v">b</i> leave the same remainder when divided by <i class="v">m</i>. (b) Congruence behaves like equality: <i class="v">a</i> ≡ <i class="v">a</i>; if <i class="v">a</i> ≡ <i class="v">b</i> then <i class="v">b</i> ≡ <i class="v">a</i>; if <i class="v">a</i> ≡ <i class="v">b</i> and <i class="v">b</i> ≡ <i class="v">c</i> then <i class="v">a</i> ≡ <i class="v">c</i>. So the integers split into exactly <i class="v">m</i> classes, one for each remainder 0, 1, …, <i class="v">m</i> − 1.</p></div>
+<div class="pf"><p><b>Proof.</b> (a) Write <i class="v">a</i> = <i class="v">qm</i> + <i class="v">r</i> and <i class="v">b</i> = <i class="v">q'm</i> + <i class="v">r'</i> with 0 ≤ <i class="v">r</i>, <i class="v">r'</i> &lt; <i class="v">m</i>. Then <i class="v">a</i> − <i class="v">b</i> = (<i class="v">q</i> − <i class="v">q'</i>)<i class="v">m</i> + (<i class="v">r</i> − <i class="v">r'</i>). If <i class="v">r</i> = <i class="v">r'</i>, this is a multiple of <i class="v">m</i>. Conversely, if <i class="v">m</i> | <i class="v">a</i> − <i class="v">b</i>, then <i class="v">m</i> | <i class="v">r</i> − <i class="v">r'</i>, and |<i class="v">r</i> − <i class="v">r'</i>| &lt; <i class="v">m</i>, so <i class="v">r</i> − <i class="v">r'</i> = 0.</p>
+<p>(b) Each property is now a property of "same remainder", and equality of remainders is reflexive, symmetric and transitive. By the division algorithm, every integer has exactly one remainder, so it lies in exactly one of the <i class="v">m</i> classes.</p></div>
+<div class="box thm"><h3>Theorem 6.2 (the clock rules)</h3>
+<p style="margin:0">If <i class="v">a</i> ≡ <i class="v">b</i> and <i class="v">c</i> ≡ <i class="v">d</i> (mod <i class="v">m</i>), then <i class="v">a</i> + <i class="v">c</i> ≡ <i class="v">b</i> + <i class="v">d</i>, <i class="v">a</i> − <i class="v">c</i> ≡ <i class="v">b</i> − <i class="v">d</i>, and <i class="v">ac</i> ≡ <i class="v">bd</i> (mod <i class="v">m</i>). In particular <i class="v">a</i><sup><i class="v">k</i></sup> ≡ <i class="v">b</i><sup><i class="v">k</i></sup> (mod <i class="v">m</i>) for every <i class="v">k</i> ≥ 1.</p></div>
+<div class="pf"><p><b>Proof.</b> We know <i class="v">m</i> | <i class="v">a</i> − <i class="v">b</i> and <i class="v">m</i> | <i class="v">c</i> − <i class="v">d</i>. Sums: (<i class="v">a</i> + <i class="v">c</i>) − (<i class="v">b</i> + <i class="v">d</i>) = (<i class="v">a</i> − <i class="v">b</i>) + (<i class="v">c</i> − <i class="v">d</i>), a sum of multiples of <i class="v">m</i> (Chapter 1: crates add up). Differences are the same. Products, with a trick: add and subtract <i class="v">ad</i>,</p>
+<div class="math">ac − bd = a(c − d) + d(a − b),</div>
+<p>and both terms are multiples of <i class="v">m</i>. Powers follow by induction on <i class="v">k</i>, using the product rule with <i class="v">c</i> = <i class="v">a</i><sup><i class="v">k</i>−1</sup> and <i class="v">d</i> = <i class="v">b</i><sup><i class="v">k</i>−1</sup>.</p></div>
+<p><b>Careful:</b> the rules say nothing about division or about exponents. 2 ≡ 7 (mod 5), but 2<sup>2</sup> = 4 and 2<sup>7</sup> = 128 ≡ 3. Exponents live on a different clock, and Fermat's Lighthouse (Chapter 8) finds which one.</p>
+</div>
+<div>
+<div class="box thm" id="book"><h3>The Book in clock language</h3>
+<p>Every page of this voyage so far has been a congruence in disguise.</p>
+<ul class="log2" style="margin:0;padding-left:20px">
+<li><b>The Book of Water</b> (Theorem 1.2) is the class of 1 mod 4, from 9 up: <i class="v">W</i> ≡ 1 (mod 4).</li>
+<li><b>Vault card V1</b>, "the product of two Book weights is in the Book", takes one line now: 1 · 1 ≡ 1 (mod 4). The Hilbert Market of Chapter 5 can multiply for the same reason.</li>
+<li><b>Vault card V2</b>, broken in Chapter 2: the Books 4<i class="v">n</i> + 1 and 4<i class="v">n</i> + 3 never meet because they sit on different marks of the 4-clock, and classes never overlap (Theorem 6.1).</li>
+<li><b>The Book of Ammonia</b> (13, 19, 25, …) is the class of 1 mod 6. A weight in both Books is ≡ 1 mod 4 and ≡ 1 mod 6, and Chapter 2 found that these are the weights ≡ 1 mod 12. Which pairs of clocks can always be read together is the question of the Calendar Isles (Chapter 7).</li>
+</ul>
+</div>
+<h3>Try it: the clock calculator</h3>
+<p class="small" style="margin-top:0">Compute <i class="v">a</i><sup><i class="v">k</i></sup> on the <i class="v">m</i>-clock by multiplying one step at a time and landing on the dial after every step. The numbers never grow past <i class="v">m</i>².</p>
+<div class="ctrl" style="margin-top:0">
+<div><label for="pa">a</label><input id="pa" type="number" value="7" min="-9999" max="9999"></div>
+<div><label for="pk">k</label><input id="pk" type="number" value="2026" min="1" max="100000"></div>
+<div><label for="pm">m</label><input id="pm" type="number" value="10" min="2" max="100000"></div>
+<button class="primary" id="prun">Land it</button>
+</div>
+<div class="status st2" id="pres" aria-live="polite"></div>
+<div class="box lab"><h3>Lab note: a clock in every molecule's name</h3>
+<p style="margin:0">Every chemical substance has a CAS Registry Number, and its last digit is a check digit computed on the 10-clock. Water is 7732-18-5: take the other digits from the right, times 1, 2, 3, …, and add: 8·1 + 1·2 + 2·3 + 3·4 + 7·5 + 7·6 = 105, which lands on 5. Ethanol, 64-17-5, lands on 5 too. Check digits get their own section below.</p></div>
+</div>
+</div></section>
+
+<section class="band alt" id="remember"><div class="wrap two">
+<div>
+<h2>Side quest: what the clock remembers <span class="path ext">Semester</span></h2>
+<p>A number written in base ten is a sum of digits times powers of 10. On the 9-clock, 10 ≡ 1, and on the 11-clock, 10 ≡ −1. Theorem 6.2 does the rest.</p>
+<div class="box thm"><h3>Corollary 6.3 (casting out nines and elevens)</h3>
+<p style="margin:0">If <i class="v">n</i> has digits <i class="v">d</i><sub>k</sub> … <i class="v">d</i><sub>1</sub><i class="v">d</i><sub>0</sub>, then <i class="v">n</i> ≡ <i class="v">d</i><sub>0</sub> + <i class="v">d</i><sub>1</sub> + ⋯ + <i class="v">d</i><sub>k</sub> (mod 9), and <i class="v">n</i> ≡ <i class="v">d</i><sub>0</sub> − <i class="v">d</i><sub>1</sub> + <i class="v">d</i><sub>2</sub> − ⋯ (mod 11).</p></div>
+<div class="pf"><p><b>Proof.</b> <i class="v">n</i> = Σ <i class="v">d</i><sub>i</sub> 10<sup><i class="v">i</i></sup>. Since 10 ≡ 1 (mod 9), each 10<sup><i class="v">i</i></sup> ≡ 1, so <i class="v">n</i> ≡ Σ <i class="v">d</i><sub>i</sub>. Since 10 ≡ −1 (mod 11), each 10<sup><i class="v">i</i></sup> ≡ (−1)<sup><i class="v">i</i></sup>.</p></div>
+<p><b>Checking arithmetic.</b> If 4,729 × 386 = 1,825,394 were right, the digit sums would agree mod 9: 4 + 7 + 2 + 9 = 22 ≡ 4 and 3 + 8 + 6 = 17 ≡ 8, so the product should be ≡ 4 · 8 = 32 ≡ 5. And 1 + 8 + 2 + 5 + 3 + 9 + 4 = 32 ≡ 5. The check passes, and the product is in fact right. Now swap two digits of the answer: the digit sum does not change, so <b>casting out nines can never see a swap</b>. That weakness is the whole story of the check digits below.</p>
+<div class="box thm"><h3>Proposition 6.4 (squares on the clock)</h3>
+<p style="margin:0">Every square is ≡ 0 or 1 (mod 4). Every odd square is ≡ 1 (mod 8).</p></div>
+<div class="pf"><p><b>Proof.</b> Mod 4, every integer is ≡ 0, 1, 2 or 3, and their squares are 0, 1, 4 ≡ 0, 9 ≡ 1. For odd <i class="v">n</i> = 2<i class="v">k</i> + 1, <i class="v">n</i>² = 4<i class="v">k</i>(<i class="v">k</i> + 1) + 1, and <i class="v">k</i>(<i class="v">k</i> + 1) is even (one of two neighbours is even, Chapter 0), so 8 | <i class="v">n</i>² − 1.</p></div>
+</div>
+<div>
+<h3>What it opens</h3>
+<ul class="log2">
+<li><b>Prophecy 6.4 is fulfilled:</b> no square lands on 3 on the 4-clock.</li>
+<li><b>Chapter 1's legend</b> "every odd square from 9 up is in the Book" is now a theorem: odd squares are ≡ 1 mod 8, so certainly ≡ 1 mod 4.</li>
+<li><b>Half of Vault card V7.</b> A sum of two squares lands on 0 + 0, 0 + 1 or 1 + 1 on the 4-clock, never on 3. So a prime that is a sum of two squares (other than 2 = 1 + 1) must be ≡ 1 mod 4: it must be in the Book of Water. Card V7 claims the converse, that <i class="v">every</i> prime in the Book is a sum of two squares. That half waits for Chapter 10.</li>
+<li><b>Three squares:</b> by the same count mod 8, a sum of three squares never lands on 7. So 7, 15, 23, … are never sums of three squares. (Legendre proved that the numbers that are not sums of three squares are exactly those of the form 4<sup><i class="v">a</i></sup>(8<i class="v">b</i> + 7).)</li>
+</ul>
+<div class="box tool"><h3>Studio corner</h3><p style="margin:0">Join each point <i class="v">k</i> on a clock of 200 points to 2<i class="v">k</i> and a heart appears: the <a href="studio.html#circle">times-table circle</a>. Walk the 12-note piano clock by steps of 7 (the circle of fifths) and you hear every note before coming home, because gcd(7, 12) = 1: <a href="sound.html#clock">the note clock</a>. Weave the clock's remainders into cloth: <a href="studio.html#weave">residue weave</a>.</p></div>
+</div>
+</div></section>
+
+<section class="band" id="inverse"><div class="wrap two">
+<div>
+<h2>Undoing the clock: inverses <span class="path core">Core</span></h2>
+<p>Adding is easy to undo on a clock: subtract. Multiplying is not. On the 4-clock,</p>
+<div class="math">2 · 1 = 2   and   2 · 3 = 6 ≡ 2 (mod 4),</div>
+<p>so you cannot cancel the 2: Prophecy 6.1 is <b>broken</b>. Worse, 2 · 2 ≡ 0 (mod 4): two marks that are not 0 multiply to 0. To undo "times <i class="v">a</i>" we need a number that multiplies <i class="v">a</i> back to 1.</p>
+<p>An <b>inverse</b> of <i class="v">a</i> modulo <i class="v">m</i> is an integer <i class="v">x</i> with <i class="v">ax</i> ≡ 1 (mod <i class="v">m</i>). We write <i class="v">x</i> = <i class="v">a</i><sup>−1</sup> (mod <i class="v">m</i>); it is a whole number, not a fraction. On the 7-clock, 3<sup>−1</sup> = 5, because 3 · 5 = 15 ≡ 1.</p>
+<div class="box thm"><h3>Theorem 6.5 (who can be undone)</h3>
+<p style="margin:0"><i class="v">a</i> has an inverse modulo <i class="v">m</i> if and only if gcd(<i class="v">a</i>, <i class="v">m</i>) = 1. The inverse is unique on the clock: any two inverses are congruent mod <i class="v">m</i>.</p></div>
+<div class="pf"><p><b>Proof.</b> If gcd(<i class="v">a</i>, <i class="v">m</i>) = 1, Bézout (Theorem 3.2) gives integers <i class="v">x</i>, <i class="v">y</i> with <i class="v">ax</i> + <i class="v">my</i> = 1. Then <i class="v">ax</i> − 1 = −<i class="v">my</i> is a multiple of <i class="v">m</i>, so <i class="v">ax</i> ≡ 1. Conversely, if <i class="v">ax</i> ≡ 1, then <i class="v">ax</i> − 1 = <i class="v">mk</i> for some <i class="v">k</i>, and any common divisor of <i class="v">a</i> and <i class="v">m</i> divides <i class="v">ax</i> − <i class="v">mk</i> = 1.</p>
+<p>Uniqueness: if <i class="v">ax</i> ≡ 1 ≡ <i class="v">ax'</i>, multiply both sides by <i class="v">x</i>: <i class="v">x'</i> ≡ (<i class="v">xa</i>)<i class="v">x'</i> = <i class="v">x</i>(<i class="v">ax'</i>) ≡ <i class="v">x</i>.</p></div>
+<div class="box thm"><h3>Corollary 6.6 (cancelling, repaired)</h3>
+<p style="margin:0">(a) If gcd(<i class="v">c</i>, <i class="v">m</i>) = 1 and <i class="v">ac</i> ≡ <i class="v">bc</i> (mod <i class="v">m</i>), then <i class="v">a</i> ≡ <i class="v">b</i> (mod <i class="v">m</i>). (b) If <i class="v">p</i> is prime, every <i class="v">a</i> ≢ 0 (mod <i class="v">p</i>) has an inverse mod <i class="v">p</i>.</p></div>
+<div class="pf"><p><b>Proof.</b> (a) Multiply both sides by <i class="v">c</i><sup>−1</sup> (Theorem 6.5 and Theorem 6.2). (b) The only positive divisors of <i class="v">p</i> are 1 and <i class="v">p</i>, and <i class="v">p</i> ∤ <i class="v">a</i>, so gcd(<i class="v">a</i>, <i class="v">p</i>) = 1.</p></div>
+<p>So Prophecy 6.2 is <b>broken</b> on the 4-clock (2 has no inverse) but <b>fulfilled</b> on every prime clock. That is why the 7-clock was so generous in Explore 3.</p>
+<div class="box thm"><h3>Theorem 6.7 (the gate theorem)</h3>
+<p style="margin:0">Let <i class="v">g</i> = gcd(<i class="v">a</i>, <i class="v">m</i>). The congruence <i class="v">ax</i> ≡ <i class="v">b</i> (mod <i class="v">m</i>) has a solution if and only if <i class="v">g</i> | <i class="v">b</i>. In that case it has exactly <i class="v">g</i> solutions on the <i class="v">m</i>-clock: if <i class="v">x</i><sub>0</sub> is one, they are <i class="v">x</i><sub>0</sub>, <i class="v">x</i><sub>0</sub> + <i class="v">m</i>/<i class="v">g</i>, <i class="v">x</i><sub>0</sub> + 2<i class="v">m</i>/<i class="v">g</i>, …, <i class="v">x</i><sub>0</sub> + (<i class="v">g</i> − 1)<i class="v">m</i>/<i class="v">g</i>.</p></div>
+<div class="pf"><p><b>Proof.</b> <i class="v">ax</i> ≡ <i class="v">b</i> (mod <i class="v">m</i>) means <i class="v">ax</i> − <i class="v">my</i> = <i class="v">b</i> for some integer <i class="v">y</i>: a linear Diophantine equation. By Chapter 4 it is solvable exactly when <i class="v">g</i> | <i class="v">b</i>, and by Theorem 4.2 every solution has <i class="v">x</i> = <i class="v">x</i><sub>0</sub> + <i class="v">t</i> · <i class="v">m</i>/<i class="v">g</i> for an integer <i class="v">t</i>. Two of these values land on the same mark exactly when <i class="v">m</i> divides (<i class="v">t</i> − <i class="v">t'</i>) · <i class="v">m</i>/<i class="v">g</i>, that is, when <i class="v">g</i> | <i class="v">t</i> − <i class="v">t'</i>. So <i class="v">t</i> = 0, 1, …, <i class="v">g</i> − 1 give all the different marks.</p></div>
+<p><b>The jetty gate:</b> 3<i class="v">x</i> ≡ 4 (mod 7). Here gcd(3, 7) = 1, so there is one solution: multiply by 3<sup>−1</sup> = 5 to get <i class="v">x</i> ≡ 20 ≡ 6. Check: 3 · 6 = 18 ≡ 4.</p>
+</div>
+<div>
+<h3>Try it: the times table of a clock</h3>
+<div class="ctrl" style="margin-top:0">
+<div><label for="tm">Clock (m)</label><select id="tm"></select></div>
+</div>
+<div class="scroll"><table class="mtab" id="mtab"></table></div>
+<p class="small">Cells that land on 1 are outlined and bold. A row with a 1 belongs to a number that has an inverse; its label is marked with ★. Rows without ★ have no 1 at all, and every such row also has a 0 somewhere other than column 0.</p>
+<div class="status st2" id="tstat" aria-live="polite"></div>
+<h3>Try it: the inverse finder</h3>
+<p class="small" style="margin-top:0">Euclid's algorithm forward, then Bézout backwards, as in the Forge.</p>
+<div class="ctrl" style="margin-top:0">
+<div><label for="ia">a</label><input id="ia" type="number" value="17" min="-99999" max="99999"></div>
+<div><label for="im">m</label><input id="im" type="number" value="60" min="2" max="99999"></div>
+<button class="primary" id="irun">Find a⁻¹</button>
+</div>
+<div class="status st2" id="ires" aria-live="polite"></div>
+</div>
+</div></section>
+
+<section class="band alt" id="arena"><div class="wrap game">
+<div>
+<h2>Arena: the Clockmaker's Lock <span class="path core">Core</span></h2>
+<p>El Gran Pesado guards the gates of the Isles. Each gate has a lock <i class="v">ax</i> ≡ <i class="v">b</i> (mod <i class="v">m</i>) and a ring of keyholes. Every mark <i class="v">x</i> on the clock that solves the lock is a keyhole. The whole room plays together, against him:</p>
+<ul class="log2">
+<li>Try a key: type any integer. A key that opens a keyhole wins the room 1 point. A key that fails gives El Gran Pesado 1 point.</li>
+<li>When you think you have found every keyhole, press <b>All keyholes found</b>. Right: the room scores 3. Missed one: El Gran Pesado scores 3.</li>
+<li>If no key can work, shout <b>¡Imposible!</b> Right: the room scores 3 and the gate falls. Wrong: El Gran Pesado scores 3.</li>
+</ul>
+<p>Guessing every mark will open the gate, but it feeds El Gran Pesado. Theorem 6.7 tells you how many keyholes there are before you try a single key.</p>
+<div class="ctrl" style="margin-top:6px">
+<div><label for="lround">Gate</label><select id="lround"></select></div>
+<button id="lnew">Reset this gate</button>
+<button id="lhint">Ask Diego</button>
+</div>
+<div class="box tool" style="margin-top:18px">
+<h3>Strategy questions (Cartographer)</h3>
+<p style="margin:0">What is the smallest number of points El Gran Pesado can be held to on every gate, if the room reasons first? Prove it. Then build a gate on the 30-clock with exactly 6 keyholes, and one on the 30-clock that looks solvable but is ¡Imposible!</p>
+</div>
+</div>
+<div>
+<div class="score" aria-live="polite"><span>Room <b id="sroom">0</b></span><span>El Gran Pesado <b id="segp">0</b></span></div>
+<div class="lock" id="lock" aria-live="polite"></div>
+<div class="ctrl" style="margin-top:0">
+<div><label for="lkey">Key x</label><input id="lkey" type="number" value="" min="-99999" max="99999"></div>
+<button class="primary" id="ltry">Try this key</button>
+<button class="o" id="limp">¡Imposible!</button>
+<button class="n" id="ldone">All keyholes found</button>
+</div>
+<p class="small" style="margin:10px 0 0">Keyholes opened at this gate:</p>
+<ul class="keys" id="lkeys" aria-label="Keyholes opened"></ul>
+<div class="status" id="lstat" aria-live="polite"></div>
+<ol class="log" id="llog" aria-label="Moves at this gate"></ol>
+</div>
+</div></section>
+
+<section class="band" id="digits"><div class="wrap two">
+<div>
+<h2>Check digits: the clock that catches mistakes <span class="path core">Core</span></h2>
+<p>People copy long numbers all the time: book codes, barcodes, card numbers, chemical IDs. A <b>check digit</b> is one extra digit chosen so that a weighted sum of all the digits lands on 0 on some clock. A typo almost always knocks the sum off 0, and the computer refuses the number before anything goes wrong.</p>
+<h3>ISBN-10: the 11-clock</h3>
+<p>A 10-digit book number <i class="v">d</i><sub>1</sub><i class="v">d</i><sub>2</sub>…<i class="v">d</i><sub>10</sub> is valid when</p>
+<div class="math">10·d1 + 9·d2 + 8·d3 + ⋯ + 2·d9 + 1·d10 ≡ 0 (mod 11).</div>
+<p>The last digit can need the value 10, written X. Example: 0-306-40615-2 gives 0 + 27 + 0 + 42 + 24 + 0 + 24 + 3 + 10 + 2 = 132 = 12 · 11.</p>
+<div class="box thm"><h3>Theorem 6.8 (ISBN-10 catches every typo and every swap)</h3>
+<p style="margin:0">If one digit of a valid ISBN-10 is changed, or if any two different digits are swapped, the result is not valid.</p></div>
+<div class="pf"><p><b>Proof.</b> Changing <i class="v">d</i> to <i class="v">d'</i> at a place with weight <i class="v">w</i> changes the sum by <i class="v">w</i>(<i class="v">d'</i> − <i class="v">d</i>). Both <i class="v">w</i> and <i class="v">d'</i> − <i class="v">d</i> are between −10 and 10 and not 0, so neither is divisible by the prime 11, and by Euclid's lemma (Lemma 5.4) neither is their product. Swapping digits <i class="v">d</i> ≠ <i class="v">e</i> at places with weights <i class="v">w</i> ≠ <i class="v">v</i> changes the sum by (<i class="v">w</i> − <i class="v">v</i>)(<i class="v">e</i> − <i class="v">d</i>), again a product of two numbers that 11 does not divide. Either way the sum moves off 0.</p></div>
+<h3>UPC and ISBN-13: the 10-clock</h3>
+<p>The 12-digit barcode on groceries (UPC-A) weighs its digits 3, 1, 3, 1, …, 3, 1 and asks for a sum ≡ 0 (mod 10). Since 2007, books carry 13-digit ISBNs that use the same idea with weights 1, 3, 1, 3, … Example: 0-36000-29145-2 gives 3·(0 + 6 + 0 + 2 + 1 + 5) + (3 + 0 + 0 + 9 + 4 + 2) = 42 + 18 = 60.</p>
+<div class="box thm"><h3>Theorem 6.9 (what the barcode misses)</h3>
+<p style="margin:0">The UPC catches every single-digit typo. It catches a swap of two neighbouring digits <i class="v">d</i> and <i class="v">e</i> unless <i class="v">d</i> − <i class="v">e</i> = ±5.</p></div>
+<div class="pf"><p><b>Proof.</b> A typo changes the sum by <i class="v">w</i>(<i class="v">d'</i> − <i class="v">d</i>) with <i class="v">w</i> = 1 or 3. Both are units on the 10-clock (gcd with 10 is 1), so by Corollary 6.6 this is ≡ 0 only when <i class="v">d'</i> ≡ <i class="v">d</i>, which is impossible for two different digits. A neighbour swap changes the sum by (3 − 1)(<i class="v">e</i> − <i class="v">d</i>) or (1 − 3)(<i class="v">e</i> − <i class="v">d</i>), that is ±2(<i class="v">e</i> − <i class="v">d</i>). And 10 | 2(<i class="v">e</i> − <i class="v">d</i>) exactly when 5 | <i class="v">e</i> − <i class="v">d</i>. For two different digits, that means <i class="v">e</i> − <i class="v">d</i> = ±5.</p></div>
+<p>So Prophecy 6.3 is <b>broken</b>: swap 0 and 5, or 2 and 7, and the barcode says nothing. The problem is that 2 is not a unit mod 10. The 11-clock has no such problem, because 11 is prime: the price is the extra symbol X.</p>
+</div>
+<div>
+<h3>Try it: the code inspector</h3>
+<p class="small" style="margin-top:0">Type a code without its check digit and let the inspector add it, or type a full code to inspect it. Then let El Gran Pesado tamper with it.</p>
+<div class="ctrl" style="margin-top:0">
+<div><label for="ksch">Code</label><select id="ksch"><option value="isbn">ISBN-10 (mod 11)</option><option value="upc" selected>UPC-A barcode (mod 10)</option><option value="luhn">Card number, Luhn (mod 10)</option></select></div>
+<div><label for="kin">Digits</label><input id="kin" class="code" type="text" inputmode="numeric" value="03600029145" autocomplete="off" spellcheck="false"></div>
+</div>
+<div class="ctrl">
+<button class="primary" id="kadd">Add the check digit</button>
+<button id="kchk">Inspect as a full code</button>
+</div>
+<div class="digits" id="kdig" aria-label="Digits of the code"></div>
+<div class="status st2" id="kres" aria-live="polite"></div>
+<div class="ctrl">
+<button class="o" id="ktypo">El Gran Pesado smudges a digit</button>
+<button class="o" id="kswap">He swaps two neighbours</button>
+<button id="kall">Test every neighbour swap</button>
+</div>
+<div class="status st2" id="ktam" aria-live="polite"></div>
+<p class="small">The check digit has a thick border. A tampered digit has a dashed border and is named in the report, so nothing depends on colour.</p>
+</div>
+</div></section>
+
+<section class="band alt" id="luhn"><div class="wrap two">
+<div>
+<h2>Side quest: Luhn's doubling trick <span class="path ext">Semester</span></h2>
+<p>Credit and debit card numbers, and many ID numbers, end with a <b>Luhn</b> check digit. Starting from the check digit and moving left, double every second digit; if a doubled digit is 10 or more, add its two digits (equivalently, subtract 9). The number is valid when the total is ≡ 0 (mod 10).</p>
+<p>Example: 7992739871<b>3</b>. From the right: 3, then 1 doubled is 2, then 7, then 8 doubled is 16 → 7, then 9, then 3 doubled is 6, then 7, then 2 doubled is 4, then 9, then 9 doubled is 18 → 9, then 7. The total is 70.</p>
+<p>Why the strange doubling? Weights must be units mod 10 to catch typos, so 2 alone would fail. But the map <i class="v">d</i> ↦ "double and add the digits" sends 0, 1, …, 9 to 0, 2, 4, 6, 8, 1, 3, 5, 7, 9: every digit to a different digit. So every single typo is still caught. Neighbour swaps are caught too, except 09 ↔ 90.</p>
+<div class="box tool"><h3>Proof toolkit: check a finite list</h3>
+<p style="margin:0">"Every typo is caught" is a statement about all card numbers, but it reduces to a claim about the ten digits 0 to 9: does doubling-and-adding hit each value once? When a proof reduces a claim to finitely many cases, checking them all is a complete proof. Try the same for swaps: there are 45 pairs of different digits to check (Cartographer problem 2).</p></div>
+</div>
+<div>
+<div class="box lab"><h3>Lab note: ID numbers in the lab</h3>
+<p style="margin:0">The CAS check digit uses weights 1, 2, 3, 4, … on the 10-clock. Weights 2, 4, 5, 6 and 8 are not units mod 10, so some typos slip through: the fifth digit to the left of the check digit has weight 5, so it can be off by 2 and nobody notices. Chemists rely on other checks too, like the formula and the name. Navigator problem 5 finds every blind spot.</p></div>
+<div class="box tool"><h3>Field Station</h3><p style="margin:0">Where check digits are used: barcodes and books, card numbers, chemical IDs, and a computer clock that runs out in 2038. <a class="btn" href="field.html#ch6">Open the Field Station</a></p></div>
+<div class="box tool"><h3>Studio corner</h3><p style="margin:0">Inverses in disguise: the <a href="cipher.html#affine">affine cipher</a> multiplies letters on the 26-clock, and a key can be undone exactly when it has an inverse. Scramble a picture by multiplying pixel positions in the <a href="pixels.html#scramble">Pixel Room</a>, and see why only some multipliers can be unscrambled.</p></div>
+</div>
+</div></section>
+
+<section class="band" id="culture"><div class="wrap two">
+<div>
+<h2>Culture: the keepers of the clocks <span class="path core">Core</span></h2>
+<p><b>Around the world, 3rd to 13th centuries.</b> Hippolytus of Rome (3rd century) described digit sums, but not as a check. The first surviving use of casting out nines to <i>check</i> a calculation is in the <i>Mahāsiddhānta</i> of the Indian astronomer Āryabhaṭa II, around 950. Ibn Sīnā (Avicenna) gave full details around 1020, and Fibonacci's <i>Liber Abaci</i> (1202) taught the check to European merchants.</p>
+<p><b>Brunswick, 1801.</b> Carl Friedrich Gauss, 24 years old, published <i>Disquisitiones Arithmeticae</i>. Its first pages define congruence and introduce the symbol ≡, the notation in this chapter.</p>
+<p><b>Paris, 1804 to 1809.</b> Sophie Germain, who was not allowed to study at the École Polytechnique because she was a woman, read the <i>Disquisitiones</i> and wrote to Gauss under a man's name, "Monsieur LeBlanc". Gauss learned who she was only after the French occupation of his city in 1806, when she asked a French general, a friend of her family, to make sure Gauss was safe. He wrote back with warm admiration. Her later work on Fermat's Last Theorem is still studied.</p>
+<p><b>London, 1965 to 1970.</b> The statistician Gordon Foster, commissioned by the bookseller W H Smith, devised the 9-digit Standard Book Number. It grew into the 10-digit ISBN, an international standard (ISO 2108) from 1970, and books switched to 13 digits on 1 January 2007.</p>
+<p><b>New York and Troy, Ohio, 1950s to 1974.</b> At IBM, Hans Peter Luhn devised his check in the 1950s and patented it in 1960. George Laurer, also at IBM, designed the barcode chosen as the UPC. The first UPC ever scanned at a store checkout was a pack of chewing gum, at a supermarket in Troy, Ohio, on 26 June 1974.</p>
+</div>
+<aside class="box thm">
+<h3>Discuss with your crew</h3>
+<p>In 1969 the Dutch mathematician Jacobus Verhoeff studied 12,112 real copying errors in six-digit numbers from the Dutch postal service. About 79% were single wrong digits and about 10% were swaps of neighbours. He then designed a decimal check digit, built from the symmetries of a pentagon instead of a clock, that catches every single error and every neighbour swap, something no weighted sum on the 10-clock can do (Cartographer problem 2).</p>
+<p style="margin:0">A good check is designed around the mistakes real people make. Who gets hurt when a check is weak: a wrong book shipped, a payment sent to the wrong account, a medicine label misread? And Sophie Germain did mathematics under someone else's name to be read at all. Whose work might we still be missing today, and what would make it easier to be heard?</p>
+</aside>
+</div></section>
+
+<section class="band alt" id="problems"><div class="wrap">
+<h2>Problems <span class="path core">Core</span></h2>
+<p>Deckhand problems are for everyone. Navigator and Cartographer problems are where you stretch.</p>
+<div class="tiers">
+<div class="tier"><h3>Deckhand</h3><ol>
+<li>Where do 2026, −17 and 10<sup>100</sup> land on the 7-clock, the 5-clock and the 9-clock respectively?
+<details><summary>Answer</summary>2026 = 289 · 7 + 3, so 3. −17 = −4 · 5 + 3, so 3. 10 ≡ 1 (mod 9), so 10¹⁰⁰ ≡ 1.</details></li>
+<li>What day of the week will it be 1000 days after a Thursday?
+<details><summary>Answer</summary>1000 = 142 · 7 + 6, so six days after Thursday: Wednesday.</details></li>
+<li>Find 5<sup>−1</sup> mod 12 and 7<sup>−1</sup> mod 26. Explain why 4 has no inverse mod 26.
+<details><summary>Answer</summary>5 · 5 = 25 ≡ 1, so 5⁻¹ = 5. 7 · 15 = 105 = 4 · 26 + 1, so 7⁻¹ = 15. gcd(4, 26) = 2 ≠ 1 (Theorem 6.5).</details></li>
+<li>Solve 4<i class="v">x</i> ≡ 6 (mod 10) and 6<i class="v">x</i> ≡ 4 (mod 9). How many solutions on each clock?
+<details><summary>Answer</summary>gcd(4, 10) = 2 divides 6: two solutions, x ≡ 4 and x ≡ 9. gcd(6, 9) = 3 does not divide 4: ¡Imposible!</details></li>
+<li>Find the check digit of the ISBN-10 that starts 1-56619-909.
+<details><summary>Answer</summary>10·1 + 9·5 + 8·6 + 7·6 + 6·1 + 5·9 + 4·9 + 3·0 + 2·9 = 250 ≡ 8 (mod 11), so the check digit d needs 8 + d ≡ 0: d = 3.</details></li>
+<li>Show that 2027 is not a sum of two squares, without trying any squares.
+<details><summary>Answer</summary>2027 ≡ 3 (mod 4), and a sum of two squares is ≡ 0, 1 or 2 (Proposition 6.4).</details></li>
+</ol></div>
+<div class="tier"><h3>Navigator</h3><ol>
+<li>Prove that 6 divides <i class="v">n</i>³ − <i class="v">n</i> for every integer <i class="v">n</i>, by checking every mark on the 2-clock and the 3-clock.
+<details><summary>Hint</summary>n³ − n = (n − 1)n(n + 1). On the 3-clock one of the three factors is ≡ 0. Then use that 2 and 3 both divide it, and gcd(2, 3) = 1 (Chapter 2 or Euclid's lemma).</details></li>
+<li>Prove that 11 | 10<sup><i class="v">n</i></sup> − (−1)<sup><i class="v">n</i></sup> for all <i class="v">n</i> ≥ 0, once by induction and once with Theorem 6.2.</li>
+<li>Prove that if <i class="v">p</i> is prime and <i class="v">x</i>² ≡ 1 (mod <i class="v">p</i>), then <i class="v">x</i> ≡ 1 or <i class="v">x</i> ≡ −1. Show that the 8-clock has four square roots of 1.
+<details><summary>Hint</summary>p | (x − 1)(x + 1): use Lemma 5.4. On the 8-clock, 1, 3, 5 and 7 all square to 1.</details></li>
+<li>Prove that if <i class="v">a</i> ≡ <i class="v">b</i> (mod <i class="v">m</i>) then gcd(<i class="v">a</i>, <i class="v">m</i>) = gcd(<i class="v">b</i>, <i class="v">m</i>). Why does this make "has an inverse" a property of a whole mark, not of one number?</li>
+<li>For the CAS weights 1, 2, 3, …, list every place and every size of typo that the check misses.
+<details><summary>Hint</summary>A typo of size e at weight w is missed when 10 | we. Weights ≡ 2, 4, 6 or 8 (mod 10) miss e = ±5; weight ≡ 5 misses e = ±2, ±4, ±6, ±8; weight ≡ 0 misses everything.</details></li>
+<li>Many computers count seconds since 1 January 1970 in a signed 32-bit number, which works on the clock of 2<sup>32</sup> marks with marks from −2<sup>31</sup> to 2<sup>31</sup> − 1. In which year does the count jump from the largest mark to the most negative one?
+<details><summary>Answer</summary>2³¹ seconds ≈ 2,147,483,648 / 31,556,952 ≈ 68.05 years after 1970: in January 2038.</details></li>
+</ol></div>
+<div class="tier"><h3>Cartographer</h3><ol>
+<li><b>Wilson's clock.</b> Compute (<i class="v">m</i> − 1)! mod <i class="v">m</i> for <i class="v">m</i> = 2 to 20 (code quest, cell 5). Conjecture what happens for primes and for composites, and prove the prime case by pairing every mark with its inverse.</li>
+<li><b>No perfect barcode.</b> Prove that no choice of weights <i class="v">w</i><sub>1</sub>, …, <i class="v">w</i><sub>n</sub> on the 10-clock catches every typo and every neighbour swap. (Typos force every weight to be odd. What does that do to <i class="v">w</i><sub>i</sub> − <i class="v">w</i><sub>i+1</sub>?) Then show by checking all 45 pairs that Luhn misses only 09 ↔ 90.</li>
+<li><b>Square roots of −1.</b> For which primes <i class="v">p</i> below 100 does <i class="v">x</i>² ≡ −1 (mod <i class="v">p</i>) have a solution? Compare your list with the Book of Water, and with Vault card V7. Make a conjecture; Chapter 10 proves it.</li>
+</ol></div>
+</div>
+</div></section>
+
+<section class="band" id="code"><div class="wrap">
+<h2>Code quest: the clockworks in Python <span class="path opt">Optional</span></h2>
+<p>These cells run real Python in your browser. The first run loads Python (about 10 MB, once). Edit anything and run again. In Python, <code>a % m</code> lands <i class="v">a</i> on the <i class="v">m</i>-clock, and <code>pow(a, k, m)</code> computes powers on the clock.</p>
+<div id="cells"></div>
+<p class="small" id="pystat" aria-live="polite"></p>
+</div></section>
+
+<section class="band alt"><div class="wrap"><div class="box thm"><h3>Proof Lab</h3><p style="margin:0">Produce the clock rules step by step: if <i class="v">m</i> divides <i class="v">a</i> − <i class="v">b</i> and <i class="v">c</i> − <i class="v">d</i>, then it divides (<i class="v">a</i> + <i class="v">c</i>) − (<i class="v">b</i> + <i class="v">d</i>) and <i class="v">ac</i> − <i class="v">bd</i>. Each recipe has more than one route and ends with a lab report. <a class="btn" href="lab.html#recipes">Open the Proof Lab</a></p></div></div></section>
+
+<section class="band" id="logbook"><div class="wrap two">
+<div>
+<h2>Logbook <span class="path core">Core</span></h2>
+<ul class="log2">
+<li><b>Congruence:</b> <i class="v">a</i> ≡ <i class="v">b</i> (mod <i class="v">m</i>) means <i class="v">m</i> | <i class="v">a</i> − <i class="v">b</i>; the same as having the same remainder (6.1). There are exactly <i class="v">m</i> classes.</li>
+<li><b>Clock rules (6.2):</b> congruences can be added, subtracted, multiplied and raised to powers. Not divided, and exponents cannot be reduced mod <i class="v">m</i>.</li>
+<li><b>Nines and elevens (6.3):</b> <i class="v">n</i> ≡ digit sum (mod 9), <i class="v">n</i> ≡ alternating digit sum (mod 11).</li>
+<li><b>Squares (6.4):</b> squares are ≡ 0 or 1 (mod 4); odd squares are ≡ 1 (mod 8).</li>
+<li><b>Inverses (6.5):</b> <i class="v">a</i> has an inverse mod <i class="v">m</i> exactly when gcd(<i class="v">a</i>, <i class="v">m</i>) = 1; find it with Euclid and Bézout.</li>
+<li><b>Cancelling (6.6):</b> allowed for numbers coprime to <i class="v">m</i>; on a prime clock every nonzero mark has an inverse.</li>
+<li><b>The gate theorem (6.7):</b> <i class="v">ax</i> ≡ <i class="v">b</i> (mod <i class="v">m</i>) is solvable exactly when <i class="v">g</i> = gcd(<i class="v">a</i>, <i class="v">m</i>) divides <i class="v">b</i>, with <i class="v">g</i> solutions, spaced <i class="v">m</i>/<i class="v">g</i> apart.</li>
+<li><b>Check digits (6.8, 6.9):</b> the 11-clock catches every typo and swap; the 10-clock barcode misses neighbour swaps that differ by 5.</li>
+</ul>
+</div>
+<div>
+<h3>Prophecies opened in this chapter</h3>
+<ul class="log2">
+<li>"If <i class="v">ac</i> ≡ <i class="v">bc</i> and <i class="v">c</i> ≢ 0, then <i class="v">a</i> ≡ <i class="v">b</i>": <b>broken</b> (2 · 1 ≡ 2 · 3 mod 4). Repaired: true when gcd(<i class="v">c</i>, <i class="v">m</i>) = 1 (Corollary 6.6).</li>
+<li>"On every clock, every nonzero mark has an inverse": <b>broken</b> on the 4-clock. Repaired: true on every prime clock (Corollary 6.6).</li>
+<li>"A check digit on the 10-clock can catch every swap of two neighbouring digits": <b>broken</b> for the UPC (Theorem 6.9), and in fact for every weighted sum (Cartographer problem 2).</li>
+<li>"No perfect square lands on 3 on the 4-clock": <b>fulfilled</b> (Proposition 6.4).</li>
+<li>Vault cards V1 and V2, reread: one line each on the 4-clock. Vault card V7: half of it now follows from Proposition 6.4; the other half waits for Chapter 10.</li>
+</ul>
+<p class="stage" style="margin-top:16px">The last gate falls with a sound like a dropped wrench. El Gran Pesado climbs down, unimpressed, and taps the biggest tower. Its face has two dials, one with 260 marks and one with 365. "Out there," he says, pointing east, "they read two clocks at once. Let's see you do that." Kevin is already counting: "Thirteen times twenty… and three hundred sixty-five is five times seventy-three…"</p>
+</div>
+</div></section>
+
+<section class="band"><div class="wrap pager"><a href="ch5.html">← Chapter 5: Prime Peaks</a><a href="index.html">Contents</a><a href="index.html#map">Chapter 7: The Calendar Isles (coming) →</a></div></section>
+<footer class="band"><div class="wrap">Modular Worlds, Chapter 6 · draft · UCI Math CEO<br><span class="credit">Watercolor style after Roberto Forero's illustrations for Math CEO.</span></div></footer>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js" defer></script>
+<script src="book.js"></script>
+<script>
+{
+const {$,esc,gcd,egcd,mod}=MW;
+const int=(id,lo,hi,def)=>{let v=parseInt($(id).value,10);if(!Number.isFinite(v))v=def;v=Math.max(lo,Math.min(hi,v));$(id).value=v;return v};
+
+/* ---------- clock wheel ---------- */
+const CW={m:12,s:8,x:0,seen:[],hops:[]};
+function cwReset(){CW.m=int('#cm',2,24,12);CW.s=int('#cs',-99,99,8);const st=int('#c0',-999,999,0);CW.x=mod(st,CW.m);CW.seen=[CW.x];CW.hops=[];drawCW();
+  $('#cstat').textContent=`Start ${st} lands on ${CW.x} on the ${CW.m}-clock${st!==CW.x?` (${st} = ${Math.floor(st/CW.m)}·${CW.m} + ${CW.x})`:''}.\nPress "Hop once".`}
+function cwHop(){const nx=mod(CW.x+CW.s,CW.m);CW.hops.push([CW.x,nx]);const rep=CW.seen.includes(nx);CW.x=nx;if(!rep)CW.seen.push(nx);drawCW();return rep}
+function cwReport(rep){const g=gcd(CW.s,CW.m),n=CW.seen.length;
+  let t=`Now at ${CW.x}. Visited ${n} of ${CW.m} marks: ${CW.seen.slice().sort((a,b)=>a-b).join(', ')}.`;
+  if(rep){t+=`\nBack on a mark you visited: from here the hops repeat forever.\nThe step ${CW.s} visits ${CW.m} / gcd(${CW.s}, ${CW.m}) = ${CW.m} / ${g} = ${CW.m/g} marks.`+(g===1?` Every mark: ${CW.s} and ${CW.m} share no factor.`:` The marks visited are spaced ${g} apart.`)}
+  $('#cstat').textContent=t}
+function drawCW(){const m=CW.m,cx=200,cy=200,R=150;const P=k=>{const a=-Math.PI/2+2*Math.PI*k/m;return[cx+R*Math.cos(a),cy+R*Math.sin(a)]};
+  let s=`<circle class="rim" cx="${cx}" cy="${cy}" r="${R+28}"/>`;
+  CW.hops.forEach(([a,b])=>{const [x1,y1]=P(a),[x2,y2]=P(b);s+=`<line class="hop" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`});
+  const [hx,hy]=P(CW.x);s+=`<line class="hand" x1="${cx}" y1="${cy}" x2="${cx+(hx-cx)*0.62}" y2="${cy+(hy-cy)*0.62}"/><circle cx="${cx}" cy="${cy}" r="6" fill="currentColor" style="color:var(--ember)"/>`;
+  const r=m>16?14:17;
+  for(let k=0;k<m;k++){const [x,y]=P(k),c=k===CW.x?'tick here':CW.seen.includes(k)?'tick seen':'tick';s+=`<circle class="${c}" cx="${x}" cy="${y}" r="${r}"/><text x="${x}" y="${y}" class="${CW.seen.includes(k)?'seen':''}">${k}</text>`}
+  $('#dial').innerHTML=s;
+  $('#dial').setAttribute('aria-label',`Clock with ${m} marks, step ${CW.s}. Hand on ${CW.x}. Visited marks: ${CW.seen.slice().sort((a,b)=>a-b).join(', ')}.`)}
+$('#chop').addEventListener('click',()=>cwReport(cwHop()));
+$('#call').addEventListener('click',()=>{let rep=false,g=0;while(!rep&&g++<60)rep=cwHop();cwReport(rep)});
+$('#creset').addEventListener('click',cwReset);['#cm','#cs','#c0'].forEach(id=>$(id).addEventListener('change',cwReset));cwReset();
+
+/* ---------- prophecies ---------- */
+MW.cards($('#cards'),[
+ {id:'p61',t:'If ac ≡ bc (mod m) and c ≢ 0, then a ≡ b (mod m): you can always cancel.',s:'Settled in "Undoing the clock"'},
+ {id:'p62',t:'On every clock, every nonzero mark has an inverse.',s:'Settled by Theorem 6.5 and Corollary 6.6'},
+ {id:'p63',t:'A check digit on the 10-clock can catch every swap of two neighbouring digits.',s:'Settled by Theorem 6.9 and Cartographer problem 2'},
+ {id:'p64',t:'No perfect square lands on 3 on the 4-clock.',s:'Settled by Proposition 6.4'}],'mw-ch6',i=>'Prophecy 6.'+(i+1));
+
+/* ---------- clock calculator ---------- */
+function powRun(){const a=int('#pa',-9999,9999,7),k=int('#pk',1,100000,2026),m=int('#pm',2,100000,10);
+  const b=mod(a,m);const seq=[1];let x=1,cyc=-1,start=-1;const first=new Map([[1,0]]);
+  for(let i=1;i<=k;i++){x=(x*b)%m;seq.push(x);if(first.has(x)&&cyc<0){start=first.get(x);cyc=i-start;break}first.set(x,i)}
+  let t=`${a} lands on ${b} on the ${m}-clock.\nPowers of ${b}, landing after each step:\n`;
+  const show=seq.slice(1,Math.min(seq.length,13)).map((v,i)=>`${b}^${i+1} ≡ ${v}`).join('\n');t+=show+(seq.length>13?'\n…':'');
+  let ans;if(cyc>0){const idx=k<start?k:start+((k-start)%cyc);ans=seq[idx];
+    t+=`\nThe powers repeat: from exponent ${start} on, every ${cyc} steps.\n${k} = ${start} + ${cyc}·${Math.floor((k-start)/cyc)} + ${(k-start)%cyc}, so ${a}^${k} ≡ ${b}^${idx} ≡ ${ans} (mod ${m}).`}
+  else{ans=seq[k];t+=`\nSo ${a}^${k} ≡ ${ans} (mod ${m}).`}
+  $('#pres').textContent=t}
+$('#prun').addEventListener('click',powRun);['#pa','#pk','#pm'].forEach(id=>$(id).addEventListener('keydown',e=>{if(e.key==='Enter')powRun()}));powRun();
+
+/* ---------- times table ---------- */
+$('#tm').innerHTML=Array.from({length:14},(_,i)=>i+2).map(m=>`<option value="${m}"${m===10?' selected':''}>${m}</option>`).join('');
+function drawT(){const m=+$('#tm').value;const unit=a=>gcd(a,m)===1;
+  let h=`<caption class="small" style="text-align:left;caption-side:top">Times table on the ${m}-clock: row a, column b, cell a·b mod ${m}</caption><thead><tr><th scope="col">×</th>`;
+  for(let b=0;b<m;b++)h+=`<th scope="col">${b}</th>`;h+='</tr></thead><tbody>';
+  for(let a=0;a<m;a++){h+=`<tr><th scope="row" class="${unit(a)?'unit':''}">${unit(a)?'★ ':''}${a}</th>`;
+    for(let b=0;b<m;b++){const v=a*b%m;h+=`<td class="${v===1?'one':v===0?'zero':''}"${v===1?` aria-label="${a} times ${b} is 1"`:''}>${v}</td>`}h+='</tr>'}
+  $('#mtab').innerHTML=h+'</tbody>';
+  const U=[];for(let a=1;a<m;a++)if(unit(a))U.push(`${a}⁻¹ = ${mod(egcd(a,m)[1],m)}`);
+  const Z=[];for(let a=1;a<m;a++)if(!unit(a))Z.push(a);
+  $('#tstat').textContent=`${U.length} of the ${m-1} nonzero marks have inverses:\n${U.join(', ')}`+(Z.length?`\nNo inverse: ${Z.join(', ')} (each shares a factor with ${m}).`:`\n${m} is prime: every nonzero mark has an inverse.`)}
+$('#tm').addEventListener('change',drawT);drawT();
+
+/* ---------- inverse finder ---------- */
+function invRun(){const a0=int('#ia',-99999,99999,17),m=int('#im',2,99999,60);const a=mod(a0,m);
+  const rows=[];let x=m,y=a;while(y){rows.push(`${x} = ${Math.floor(x/y)}·${y} + ${x%y}`);[x,y]=[y,x%y]}
+  const g=x;let t=`${a0} lands on ${a} on the ${m}-clock.\nEuclid:\n`+(rows.length>8?rows.slice(0,8).join('\n')+'\n…':rows.join('\n'))+`\ngcd(${a}, ${m}) = ${g}.\n`;
+  if(g!==1){t+=`Not 1, so ${a0} has no inverse mod ${m} (Theorem 6.5).\nEvery multiple of ${a} lands on a multiple of ${g}, never on 1.`}
+  else{const [,u,v]=egcd(a,m);const inv=mod(u,m);t+=`Bézout backwards: ${a}·(${u}) + ${m}·(${v}) = 1.\nSo ${a0}⁻¹ ≡ ${u} ≡ ${inv} (mod ${m}).\nCheck: ${a}·${inv} = ${a*inv} = ${Math.floor(a*inv/m)}·${m} + 1.`}
+  $('#ires').textContent=t}
+$('#irun').addEventListener('click',invRun);['#ia','#im'].forEach(id=>$(id).addEventListener('keydown',e=>{if(e.key==='Enter')invRun()}));invRun();
+
+/* ---------- Arena: the Clockmaker's Lock ---------- */
+const GATES=[[3,4,7],[4,6,10],[6,4,9],[7,3,12],[9,6,12],[5,10,15],[10,5,14],[8,12,20],[12,18,30],[14,21,35]];
+$('#lround').innerHTML=GATES.map(([a,b,m],i)=>`<option value="${i}">Gate ${i+1}: ${a}x ≡ ${b} (mod ${m})</option>`).join('')+'<option value="r">A random gate</option>';
+const L={a:3,b:4,m:7,sols:[],open:[],done:false,room:0,egp:0,hint:0};
+const sols=(a,b,m)=>{const s=[];for(let x=0;x<m;x++)if(mod(a*x-b,m)===0)s.push(x);return s};
+function score(r,e){L.room+=r;L.egp+=e;$('#sroom').textContent=L.room;$('#segp').textContent=L.egp}
+function logL(t){const li=document.createElement('li');li.textContent=t;$('#llog').prepend(li)}
+function lNew(){const v=$('#lround').value;let a,b,m;
+  if(v==='r'){m=6+Math.floor(Math.random()*25);a=2+Math.floor(Math.random()*(m-2));b=1+Math.floor(Math.random()*(m-1))}else[a,b,m]=GATES[+v];
+  Object.assign(L,{a,b,m,sols:sols(a,b,m),open:[],done:false,hint:0});
+  $('#lock').textContent=`${a}x ≡ ${b} (mod ${m})`;$('#lkeys').innerHTML='';$('#llog').innerHTML='';$('#lkey').value='';
+  $('#lstat').textContent='Try a key, declare ¡Imposible!, or reason first.';$('#lstat').className='status'}
+function lEnd(win,msg){L.done=true;$('#lstat').textContent=msg;$('#lstat').className='status'+(win?' ok':'')}
+$('#ltry').addEventListener('click',()=>{if(L.done){$('#lstat').textContent='This gate is settled. Pick another gate or reset it.';return}
+  const raw=parseInt($('#lkey').value,10);if(!Number.isFinite(raw)){$('#lstat').textContent='Type a whole number for the key.';return}
+  const x=mod(raw,L.m),land=mod(L.a*raw,L.m);const where=raw!==x?` (${raw} lands on ${x})`:'';
+  if(L.sols.includes(x)){if(L.open.includes(x)){$('#lstat').textContent=`Keyhole ${x} is already open${where}. A key on the same mark opens the same keyhole.`;return}
+    L.open.push(x);L.open.sort((p,q)=>p-q);$('#lkeys').innerHTML=L.open.map(k=>`<li>x ≡ ${k}</li>`).join('');score(1,0);
+    logL(`Key ${raw}: ${L.a}·${raw} ≡ ${land}. Opens keyhole ${x}. Room +1.`);$('#lstat').textContent=`Click. ${L.a}·${x} ≡ ${L.b}: keyhole ${x} opens${where}.`;$('#lstat').className='status ok'}
+  else{score(0,1);logL(`Key ${raw}: ${L.a}·${raw} ≡ ${land}, not ${L.b}. El Gran Pesado +1.`);$('#lstat').textContent=`El Gran Pesado grins: ${L.a}·${raw} lands on ${land}, not ${L.b}.`;$('#lstat').className='status'}});
+$('#lkey').addEventListener('keydown',e=>{if(e.key==='Enter')$('#ltry').click()});
+$('#limp').addEventListener('click',()=>{if(L.done)return;const g=gcd(L.a,L.m);
+  if(!L.sols.length){score(3,0);logL('¡Imposible! Correct. Room +3.');lEnd(true,`¡Imposible! gcd(${L.a}, ${L.m}) = ${g} does not divide ${L.b}. The gate falls. Room +3.`)}
+  else{score(0,3);logL('¡Imposible! Wrong. El Gran Pesado +3.');lEnd(false,`El Gran Pesado laughs: x ≡ ${L.sols[0]} works, since ${L.a}·${L.sols[0]} = ${L.a*L.sols[0]} ≡ ${L.b}. El Gran Pesado +3.`)}});
+$('#ldone').addEventListener('click',()=>{if(L.done)return;
+  if(!L.sols.length){score(0,3);logL('"All found" on an impossible gate. El Gran Pesado +3.');lEnd(false,`There were no keyholes at all: gcd(${L.a}, ${L.m}) = ${gcd(L.a,L.m)} does not divide ${L.b}. You should have shouted ¡Imposible! El Gran Pesado +3.`);return}
+  const miss=L.sols.filter(x=>!L.open.includes(x));
+  if(!miss.length){score(3,0);logL('All keyholes found. Room +3.');lEnd(true,`The gate swings open: all ${L.sols.length} keyhole${L.sols.length>1?'s':''}, ${L.sols.join(', ')}, spaced ${L.m/gcd(L.a,L.m)} apart. Room +3.`)}
+  else{score(0,3);logL(`Missed ${miss.join(', ')}. El Gran Pesado +3.`);lEnd(false,`Not yet: the gate has ${L.sols.length} keyholes. Still closed: ${miss.join(', ')}. El Gran Pesado +3.`)}});
+$('#lhint').addEventListener('click',()=>{const g=gcd(L.a,L.m);L.hint++;
+  if(L.hint===1){$('#lstat').textContent=`Diego: "gcd(${L.a}, ${L.m}) = ${g}. Does ${g} divide ${L.b}? Theorem 6.7 says that decides everything, even how many keyholes."`}
+  else if(g>1&&L.b%g===0){$('#lstat').textContent=`Diego: "Divide everything by ${g}: ${L.a/g}x ≡ ${L.b/g} (mod ${L.m/g}). Now ${L.a/g} has an inverse mod ${L.m/g}."`}
+  else if(g===1){$('#lstat').textContent=`Diego: "${L.a} has an inverse mod ${L.m}. Multiply both sides by it. The inverse finder above can help."`}
+  else $('#lstat').textContent=`Diego: "Every ${L.a}x lands on a multiple of ${g} on this clock. Is ${L.b} one?"`;
+  $('#lstat').className='status'});
+$('#lround').addEventListener('change',lNew);$('#lnew').addEventListener('click',lNew);lNew();
+
+/* ---------- check digits ---------- */
+const SCH={
+ isbn:{n:10,name:'ISBN-10',sym:d=>d===10?'X':String(d),
+   w:(i,n)=>n-i, /* weight of position i (0-based) in a full code of length n */
+   sum:ds=>ds.reduce((s,d,i)=>s+(10-i)*d,0),ok:ds=>SCH.isbn.sum(ds)%11===0,
+   check:ds=>{const s=ds.reduce((t,d,i)=>t+(10-i)*d,0);return mod(-s,11)},mod:11,
+   expl:ds=>`${ds.map((d,i)=>`${10-i}·${d===10?'X':d}`).join(' + ')} = ${SCH.isbn.sum(ds)}`},
+ upc:{n:12,name:'UPC-A',sym:String,
+   sum:ds=>ds.reduce((s,d,i)=>s+(i%2===0?3:1)*d,0),ok:ds=>SCH.upc.sum(ds)%10===0,
+   check:ds=>mod(-ds.reduce((t,d,i)=>t+(i%2===0?3:1)*d,0),10),mod:10,
+   expl:ds=>`${ds.map((d,i)=>`${i%2===0?3:1}·${d}`).join(' + ')} = ${SCH.upc.sum(ds)}`},
+ luhn:{n:0,name:'Luhn',sym:String,
+   dbl:d=>d*2>9?d*2-9:d*2,
+   sum:ds=>ds.slice().reverse().reduce((s,d,i)=>s+(i%2===1?SCH.luhn.dbl(d):d),0),ok:ds=>SCH.luhn.sum(ds)%10===0,
+   check:ds=>{for(let c=0;c<10;c++)if(SCH.luhn.ok(ds.concat([c])))return c},mod:10,
+   expl:ds=>{const r=ds.slice().reverse().map((d,i)=>i%2===1?`${SCH.luhn.dbl(d)}${d*2>9?'*':''}`:String(d));return `from the right: ${r.join(' + ')} = ${SCH.luhn.sum(ds)} (* = doubled, minus 9)`}}};
+const K={code:[],bad:[]};
+const parse=(s,allowX)=>{const out=[];for(const ch of s.replace(/[\s-]/g,'')){if(/[0-9]/.test(ch))out.push(+ch);else if(allowX&&/[xX]/.test(ch))out.push(10);else return null}return out};
+function drawK(){const S=SCH[$('#ksch').value];
+  $('#kdig').innerHTML=K.code.map((d,i)=>`<span class="${i===K.code.length-1?'chk':''}${K.bad.includes(i)?' bad':''}" aria-label="Digit ${i+1}: ${S.sym(d)}${i===K.code.length-1?', check digit':''}${K.bad.includes(i)?', tampered':''}">${S.sym(d)}<small>${i+1}</small></span>`).join('')}
+function inspect(ds){const S=SCH[$('#ksch').value];const s=S.sum(ds);return {ok:S.ok(ds),txt:`${S.expl(ds)}\n${s} ≡ ${mod(s,S.mod)} (mod ${S.mod}): ${S.ok(ds)?'valid ✓':'INVALID ✗'}`}}
+function kAdd(){const sc=$('#ksch').value,S=SCH[sc];const ds=parse($('#kin').value,false);$('#ktam').textContent='';
+  if(!ds||!ds.length){$('#kres').textContent='Type digits only (spaces and dashes are fine).';return}
+  if(S.n&&ds.length!==S.n-1){$('#kres').textContent=`${S.name} needs ${S.n-1} digits before the check digit. You typed ${ds.length}.`;return}
+  if(ds.length>30){$('#kres').textContent='Up to 30 digits, please.';return}
+  const c=S.check(ds);K.code=ds.concat([c]);K.bad=[];drawK();
+  $('#kres').textContent=`Check digit: ${S.sym(c)}${c===10?' (the value 10)':''}.\nFull code: ${K.code.map(S.sym).join('')}\n`+inspect(K.code).txt}
+function kChk(){const sc=$('#ksch').value,S=SCH[sc];const ds=parse($('#kin').value,sc==='isbn');$('#ktam').textContent='';
+  if(!ds||ds.length<2){$('#kres').textContent='Type the full code, digits only'+(sc==='isbn'?' (X allowed at the end)':'')+'.';return}
+  if(S.n&&ds.length!==S.n){$('#kres').textContent=`A full ${S.name} has ${S.n} digits. You typed ${ds.length}.`;return}
+  if(ds.slice(0,-1).includes(10)){$('#kres').textContent='X can only be the last symbol of an ISBN-10.';return}
+  K.code=ds;K.bad=[];drawK();$('#kres').textContent=inspect(ds).txt}
+function needCode(){if(K.code.length<2){$('#ktam').textContent='Make or inspect a code first.';return false}return true}
+$('#ktypo').addEventListener('click',()=>{if(!needCode())return;const S=SCH[$('#ksch').value];const i=Math.floor(Math.random()*K.code.length);
+  const maxd=$('#ksch').value==='isbn'&&i===K.code.length-1?10:9;let d;do{d=Math.floor(Math.random()*(maxd+1))}while(d===K.code[i]);
+  const t=K.code.slice();t[i]=d;const r=inspect(t);K.bad=[i];const save=K.code;K.code=t;drawK();K.code=save;
+  $('#ktam').textContent=`El Gran Pesado changes digit ${i+1} from ${S.sym(save[i])} to ${S.sym(d)}.\n${r.txt}\n${r.ok?'He got away with it!':'Caught! The inspector refuses the code.'}`});
+$('#kswap').addEventListener('click',()=>{if(!needCode())return;const S=SCH[$('#ksch').value];const pairs=[];for(let i=0;i+1<K.code.length;i++)if(K.code[i]!==K.code[i+1])pairs.push(i);
+  if(!pairs.length){$('#ktam').textContent='Every neighbour pair is equal, so swaps change nothing.';return}
+  const i=pairs[Math.floor(Math.random()*pairs.length)];const t=K.code.slice();[t[i],t[i+1]]=[t[i+1],t[i]];const r=inspect(t);K.bad=[i,i+1];const save=K.code;K.code=t;drawK();K.code=save;
+  $('#ktam').textContent=`El Gran Pesado swaps digits ${i+1} and ${i+2} (${S.sym(save[i])} and ${S.sym(save[i+1])}).\n${r.txt}\n${r.ok?'He got away with it!':'Caught! The inspector refuses the code.'}`});
+$('#kall').addEventListener('click',()=>{if(!needCode())return;const S=SCH[$('#ksch').value];let tot=0,caught=0;const missed=[];
+  for(let i=0;i+1<K.code.length;i++){if(K.code[i]===K.code[i+1])continue;tot++;const t=K.code.slice();[t[i],t[i+1]]=[t[i+1],t[i]];if(!S.ok(t))caught++;else missed.push(`${i+1}–${i+2} (${S.sym(K.code[i])}${S.sym(K.code[i+1])})`)}
+  K.bad=[];drawK();$('#ktam').textContent=`${tot} neighbour swaps change this code. Caught: ${caught}.`+(missed.length?`\nMissed: ${missed.join(', ')}.`:'\nEvery one caught.')});
+$('#kadd').addEventListener('click',kAdd);$('#kchk').addEventListener('click',kChk);
+$('#ksch').addEventListener('change',()=>{const v=$('#ksch').value;$('#kin').value=v==='isbn'?'030640615':v==='upc'?'03600029145':'7992739871';kAdd()});
+$('#kin').addEventListener('keydown',e=>{if(e.key==='Enter')kAdd()});kAdd();
+
+/* ---------- Python cells ---------- */
+const CELLS=[
+{t:'Cell 1 · landing on the clock',c:`# a % m lands a on the m-clock (always 0..m-1 in Python, even for negative a)
+print(25 % 12, 25 % 7, -1 % 12)
+
+# Theorem 6.2: reduce early, the answer is the same
+a, b, m = 123456789, 987654321, 97
+print((a * b) % m, ((a % m) * (b % m)) % m)
+
+# pow(a, k, m) lands the power without ever building the huge number
+print("last digit of 7^2026:", pow(7, 2026, 10))
+print("2^1000 on the 13-clock:", pow(2, 1000, 13))
+
+# the clock wheel: which marks does step s visit on the m-clock?
+def visited(s, m):
+    return sorted({(s * k) % m for k in range(m)})
+
+for s in range(1, 12):
+    print("step", s, "visits", len(visited(s, 12)), "of 12")`},
+{t:'Cell 2 · inverses with Euclid and Bézout',c:`def egcd(a, b):
+    if b == 0:
+        return a, 1, 0
+    g, x, y = egcd(b, a % b)
+    return g, y, x - (a // b) * y
+
+def inverse(a, m):
+    g, x, _ = egcd(a % m, m)
+    if g != 1:
+        return None          # Theorem 6.5: no inverse
+    return x % m
+
+for m in [7, 10, 12, 26]:
+    units = {a: inverse(a, m) for a in range(1, m) if inverse(a, m) is not None}
+    print(m, units)
+
+print(pow(17, -1, 60))       # Python can do it too (3.8 and later)`},
+{t:'Cell 3 · open every gate',c:`from math import gcd
+
+def gate(a, b, m):
+    g = gcd(a, m)
+    if b % g:
+        return "¡Imposible!"
+    return [x for x in range(m) if (a * x - b) % m == 0]
+
+for a, b, m in [(3, 4, 7), (4, 6, 10), (6, 4, 9), (12, 18, 30), (14, 21, 35)]:
+    print(f"{a}x ≡ {b} (mod {m}):", gate(a, b, m), " gcd =", gcd(a, m))
+
+# Theorem 6.7 says the number of keyholes is gcd(a, m) or 0. Test it on many gates.
+bad = [(a, b, m) for m in range(2, 40) for a in range(1, m) for b in range(m)
+       if gate(a, b, m) != "¡Imposible!" and len(gate(a, b, m)) != gcd(a, m)]
+print("counterexamples:", bad)`},
+{t:'Cell 4 · check digits and their blind spots',c:`def isbn10_ok(d):  return sum((10 - i) * x for i, x in enumerate(d)) % 11 == 0
+def upc_ok(d):     return sum((3 if i % 2 == 0 else 1) * x for i, x in enumerate(d)) % 10 == 0
+def luhn_ok(d):
+    s = 0
+    for i, x in enumerate(reversed(d)):
+        if i % 2 == 1:
+            x = 2 * x - 9 if 2 * x > 9 else 2 * x
+        s += x
+    return s % 10 == 0
+
+print(isbn10_ok([0,3,0,6,4,0,6,1,5,2]), upc_ok([0,3,6,0,0,0,2,9,1,4,5,2]), luhn_ok([7,9,9,2,7,3,9,8,7,1,3]))
+
+# Which neighbour swaps "ab" -> "ba" does each check miss? Put a, b at places i, i+1,
+# make the code valid with the right last symbol, swap, and see if it still passes.
+def missed_swaps(ok, n, top=10):
+    miss = set()
+    for a in range(10):
+        for b in range(10):
+            if a == b: continue
+            for i in range(n - 2):          # keep the check symbol out of the swap
+                for c in range(top):
+                    code = [0] * n
+                    code[i], code[i + 1], code[-1] = a, b, c
+                    if ok(code):
+                        code[i], code[i + 1] = b, a
+                        if ok(code): miss.add((a, b))
+                        break
+    return sorted(miss)
+
+print("UPC misses:", missed_swaps(upc_ok, 12))
+print("Luhn misses:", missed_swaps(luhn_ok, 12))
+print("ISBN-10 misses:", missed_swaps(isbn10_ok, 10, top=11))`},
+{t:'Cell 5 · Wilson and the square roots of −1',c:`from math import factorial
+
+for m in range(2, 21):
+    print(m, factorial(m - 1) % m)
+
+def is_prime(n):
+    return n > 1 and all(n % d for d in range(2, int(n**0.5) + 1))
+
+has_root = [p for p in range(3, 100) if is_prime(p) and any((x * x + 1) % p == 0 for x in range(p))]
+print("x^2 = -1 has a solution mod:", has_root)
+print("their remainders mod 4:", sorted({p % 4 for p in has_root}))`}];
+MW.cells($('#cells'),CELLS,{status:$('#pystat')});
+}
+</script>
+</body>
+</html>
