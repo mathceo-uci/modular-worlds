@@ -75,7 +75,7 @@
 </section>
 </div></header>
 <section class="band"><div class="wrap"><details class="box sched"><summary>Two schedules: quarter (3 sessions) or semester (4 sessions)</summary>
-<p class="small" style="margin:8px 0 0">Sections marked <span class="path core">Core</span> are taught on both schedules. <span class="path ext">Semester</span> sections are taught in class on the semester schedule and are reading on the quarter schedule. <span class="path opt">Optional</span> code quests can replace Navigator problems on either schedule. On the quarter schedule, Lab notes, Studio corners, strategy questions and Navigator or Cartographer problems are extensions students choose.</p>
+<p class="small" style="margin:8px 0 0">Sections marked <span class="path core">Core</span> are taught on both schedules. <span class="path ext">Semester</span> sections are taught in class on the semester schedule and are reading on the quarter schedule. <span class="path opt">Optional</span> code quests can replace Navigator problems on either schedule. On the quarter schedule, Lab notes, Paradox notes, puzzles, Studio corners, strategy questions and Navigator or Cartographer problems are extensions students choose.</p>
 <div class="two"><div><h3 style="margin:0">Quarter (10 weeks)</h3><ol><li>Dance of Pairs, prophecies, Broken Floor</li><li>Unmeasurable Diagonal, Crate Market</li><li>Hall of a Hundred Doors, culture (10 min), logbook</li></ol></div>
 <div><h3 style="margin:0">Semester (15–16 weeks)</h3><ol><li>Dance of Pairs (with the handshake rule), prophecies</li><li>Broken Floor, Unmeasurable Diagonal</li><li>Crate Market with its Lab note and market legends, Hall of a Hundred Doors</li><li>Doña Trina's Trios and the Last Atom game, culture discussion, logbook</li></ol></div></div>
 <p class="small" style="margin:10px 0 0">Each session is 50 minutes. <a href="index.html#instructors">Both full schedules</a></p>
@@ -123,6 +123,8 @@
 <aside class="box lab"><h3>Lab note: real chemistry</h3>
 <p style="margin:0">Real atoms bond by sharing electrons in pairs. A molecule with an odd number of electrons cannot pair them all: one electron is left alone. Chemists call such molecules <b>radicals</b>, and they are restless and reactive. Nitric oxide, NO, has 7 + 8 = 15 electrons, and it is a radical. It forms in car engines and lightning, and helps make smog.</p></aside>
 </div></section>
+<section class="band"><div class="wrap"><aside class="box note" aria-labelledby="n-sq8"><span class="nk">Paradox note</span><h3 id="n-sq8">The number 1 has four square roots</h3><p>Everyone knows 1 has two square roots, 1 and −1. On a clock with 8 hours, it has four.</p><div class="guess" data-for="rv-sq8" data-right="a"><span class="q">Do 3 × 3, 5 × 5 and 7 × 7 all land on 1 on an 8-hour clock?</span><button data-g="a" aria-pressed="false">I think so</button><button data-g="b" aria-pressed="false">No way</button></div><div class="reveal" id="rv-sq8" hidden><p class="verdict" data-msg="9, 25 and 49 are each 1 more than a multiple of 8, so all four odd hours square to 1."></p><div class="ctrl"><div><label for="sq8n">Try any number</label><input id="sq8n" type="number" value="13" min="1" max="99999"></div><button id="sq8go">Square it</button></div><div class="nout" id="sq8out" aria-live="polite"></div><p style="margin-top:10px"><b>Why.</b> An odd number is 2<i class="v">k</i> + 1, and (2<i class="v">k</i> + 1)² = 4<i class="v">k</i>(<i class="v">k</i> + 1) + 1. One of the neighbours <i class="v">k</i> and <i class="v">k</i> + 1 is even, so 4<i class="v">k</i>(<i class="v">k</i> + 1) is a multiple of 8. Every odd square is 1 more than a multiple of 8. Clock arithmetic gets its full treatment in Chapter 6.</p></div></aside></div></section>
+
 
 <section class="band trial alt" id="t2"><div class="wrap two">
 <div>
@@ -300,6 +302,8 @@
 </ol>
 </div>
 </section>
+<section class="band alt"><div class="wrap"><aside class="box note" aria-labelledby="n-cham"><span class="nk">Puzzle · goes with Doña Trina's trios</span><h3 id="n-cham">The chameleons of Isla Tres <span class="path ext">Semester</span></h3><p>Doña Trina's island has 13 red, 15 green and 17 blue chameleons. When two chameleons of different colors meet, both change to the third color. Can the whole island ever turn one color?</p><div class="ctrl" style="flex-wrap:wrap"><button id="chrg">Red meets green</button><button id="chrb">Red meets blue</button><button id="chgb">Green meets blue</button></div><div class="nout" id="chout" aria-live="polite"></div><details style="margin-top:10px"><summary>Change the island</summary><div class="ctrl" style="flex-wrap:wrap"><div><label for="chR">Red</label><input id="chR" type="number" value="13" min="0" max="99"></div><div><label for="chG">Green</label><input id="chG" type="number" value="15" min="0" max="99"></div><div><label for="chB">Blue</label><input id="chB" type="number" value="17" min="0" max="99"></div><button id="chgo">New island</button></div></details><details style="margin-top:6px"><summary>Answer</summary><p style="margin:6px 0 0">Never. A meeting changes the counts by −1, −1 and +2, so each difference between two counts changes by 0 or by 3. The remainders of the differences when divided by 3 are an <b>invariant</b>. At the start none of them is 0 (they are 2, 2 and 1). An island of one color has two counts equal to 0, a difference of 0. Which starting islands <i>can</i> turn one color?</p></details></aside></div></section>
+
 
 <section class="band" id="culture"><div class="wrap two">
 <div>
@@ -535,5 +539,6 @@ for n in range(1, 31):
 print("losing piles:", lose)`}],{status:$('#pystat')});
 }
 </script>
+<script src="notes.js"></script>
 </body>
 </html>

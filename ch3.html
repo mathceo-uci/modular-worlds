@@ -55,7 +55,7 @@
 </section>
 </div></header>
 <section class="band"><div class="wrap"><details class="box sched"><summary>Two schedules: quarter (3 sessions) or semester (3 sessions)</summary>
-<p class="small" style="margin:8px 0 0">Sections marked <span class="path core">Core</span> are taught on both schedules. <span class="path ext">Semester</span> sections are taught in class on the semester schedule and are reading on the quarter schedule. <span class="path opt">Optional</span> code quests can replace Navigator problems on either schedule. On the quarter schedule, Lab notes, Studio corners, strategy questions and Navigator or Cartographer problems are extensions students choose.</p>
+<p class="small" style="margin:8px 0 0">Sections marked <span class="path core">Core</span> are taught on both schedules. <span class="path ext">Semester</span> sections are taught in class on the semester schedule and are reading on the quarter schedule. <span class="path opt">Optional</span> code quests can replace Navigator problems on either schedule. On the quarter schedule, Lab notes, Paradox notes, puzzles, Studio corners, strategy questions and Navigator or Cartographer problems are extensions students choose.</p>
 <div class="two"><div><h3 style="margin:0">Quarter (10 weeks)</h3><ol><li>The smiths' balance, prophecies, Euclid's algorithm by hand</li><li>Lemma 3.1, running Euclid backwards, Bézout (3.2–3.3)</li><li>Euclid's Game (20 min), culture (8 min), logbook</li></ol></div>
 <div><h3 style="margin:0">Semester (15–16 weeks)</h3><ol><li>The smiths' balance, prophecies, Euclid by hand</li><li>Lemma 3.1, Bézout, both proofs; Navigator problems in crews</li><li>Euclid's Game with its strategy question, Studio quilt, culture discussion</li></ol></div></div>
 <p class="small" style="margin:10px 0 0">Each session is 50 minutes. <a href="index.html#instructors">Both full schedules</a></p>
@@ -129,6 +129,8 @@
 <div class="scroll" style="margin-top:12px"><table id="etab" aria-label="Steps of Euclid's algorithm"></table></div>
 <p id="eres" style="margin-top:10px" aria-live="polite"></p>
 </div></section>
+<section class="band"><div class="wrap"><aside class="box note" aria-labelledby="n-half"><span class="nk">Paradox note</span><h3 id="n-half">On a 7-hour clock, half of 1 is 4</h3><p>Halves are fractions, and a clock only has whole hours. So you cannot halve 1 o'clock.</p><div class="guess" data-for="rv-half" data-right="b"><span class="q">On a clock with 7 hours, is there an hour that doubles to 1?</span><button data-g="a" aria-pressed="false">Impossible</button><button data-g="b" aria-pressed="false">Maybe</button></div><div class="reveal" id="rv-half" hidden><p class="verdict" data-msg="4 + 4 = 8, one full turn plus 1. On a 7-hour clock, doubling 4 lands on 1."></p><div class="ctrl"><div><label for="hfn">Clock size</label><input id="hfn" type="number" value="7" min="2" max="999"></div><div><label for="hfa">Divide 1 by</label><input id="hfa" type="number" value="2" min="1" max="998"></div><button id="hfgo">Find it</button></div><div class="nout" id="hfout" aria-live="polite"></div><p style="margin-top:10px"><b>Why.</b> An hour <i class="v">x</i> with <i class="v">a</i> · <i class="v">x</i> landing on 1 means <i class="v">a</i><i class="v">x</i> = 1 + <i class="v">n</i><i class="v">k</i>, which is Bézout's identity <i class="v">a</i><i class="v">x</i> + <i class="v">n</i><i class="v">y</i> = 1 (Theorem 3.2). It has a solution exactly when gcd(<i class="v">a</i>, <i class="v">n</i>) = 1. On a 10-hour clock, 2 has no "half of 1": 2<i class="v">x</i> is always even, but every number that lands on 1 (11, 21, 31, …) is odd. Chapter 6 calls this an <b>inverse</b>.</p></div></aside></div></section>
+
 
 <section class="band alt" id="arena"><div class="wrap game">
 <div>
@@ -388,5 +390,6 @@ def ext_gcd(a, b):
 MW.cells($('#cells'),CELLS,{setup:SETUP,status:$('#pystat')});
 }
 </script>
+<script src="notes.js"></script>
 </body>
 </html>

@@ -61,7 +61,7 @@
 </section>
 </div></header>
 <section class="band"><div class="wrap"><details class="box sched"><summary>Two schedules: quarter (1 session) or semester (3 sessions)</summary>
-<p class="small" style="margin:8px 0 0">Sections marked <span class="path core">Core</span> are taught on both schedules. <span class="path ext">Semester</span> sections are taught in class on the semester schedule and are reading on the quarter schedule. <span class="path opt">Optional</span> code quests can replace Navigator problems on either schedule. On the quarter schedule, Lab notes, Studio corners, strategy questions and Navigator or Cartographer problems are extensions students choose.</p>
+<p class="small" style="margin:8px 0 0">Sections marked <span class="path core">Core</span> are taught on both schedules. <span class="path ext">Semester</span> sections are taught in class on the semester schedule and are reading on the quarter schedule. <span class="path opt">Optional</span> code quests can replace Navigator problems on either schedule. On the quarter schedule, Lab notes, Paradox notes, puzzles, Studio corners, strategy questions and Navigator or Cartographer problems are extensions students choose.</p>
 <div class="two"><div><h3 style="margin:0">Quarter (10 weeks)</h3><ol><li>Book collision explore, Theorems 2.1–2.3 (one proof in full), Collision race (15 min)</li></ol></div>
 <div><h3 style="margin:0">Semester (15–16 weeks)</h3><ol><li>Book collision explore, the “if and only if” toolkit, prophecies</li><li>Theorems 2.1–2.3 with full proofs, water meets ammonia</li><li>Collision race and its strategy question, culture discussion (what ammonia costs)</li></ol></div></div>
 <p class="small" style="margin:10px 0 0">Each session is 50 minutes. <a href="index.html#instructors">Both full schedules</a></p>
@@ -116,6 +116,8 @@
 </div>
 </div>
 </div></section>
+<section class="band"><div class="wrap"><aside class="box note" aria-labelledby="n-f13"><span class="nk">Paradox note</span><h3 id="n-f13">Friday the 13th is the most common 13th</h3><p>The 13th of a month should fall on each weekday equally often, one time in seven.</p><div class="guess" data-for="rv-f13" data-right="b"><span class="q">Is the 13th equally likely to be any weekday?</span><button data-g="a" aria-pressed="false">Yes, it evens out</button><button data-g="b" aria-pressed="false">No</button></div><div class="reveal" id="rv-f13" hidden><p class="verdict" data-msg="Over the calendar's 400-year cycle there are 4800 thirteenths, and Friday gets the most: 688."></p><div class="nout" id="f13bars" role="img" aria-label="Thirteenths in a 400-year cycle by weekday: Sunday 687, Monday 685, Tuesday 685, Wednesday 687, Thursday 684, Friday 688, Saturday 684."></div><div class="ctrl"><div><label for="f13y">Year</label><input id="f13y" type="number" value="2027" min="1600" max="3000"></div><button id="f13go">Find its Friday the 13ths</button></div><div class="nout" id="f13out" aria-live="polite"></div><p style="margin-top:10px"><b>Why.</b> The leap-year rule repeats every 400 years, and those 400 years hold 146,097 days, exactly 20,871 weeks: that is when the calendar and the week meet again, a common multiple like the ones in this chapter. So the whole pattern repeats with the same counts forever. And 4800 = 7 · 685 + 5, so the 13ths cannot split evenly over 7 weekdays: some days must get more. Bonus: every year has at least one Friday the 13th. Can you see why?</p></div></aside></div></section>
+
 
 <section class="band alt" id="arena"><div class="wrap game">
 <div>
@@ -288,5 +290,6 @@ for a, b in [(4, 6), (6, 9), (12, 18), (7, 13), (20, 30), (21, 6)]:
 {status:$('#pystat')});
 }
 </script>
+<script src="notes.js"></script>
 </body>
 </html>
