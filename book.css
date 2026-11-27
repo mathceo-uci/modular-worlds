@@ -167,3 +167,23 @@ details.sched li{margin:4px 0}
 .reveal input[type=number]{width:7em}
 .nout{white-space:pre-line;font-family:"Roboto Mono",monospace;font-size:14px;line-height:1.6;margin:8px 0 0;background:var(--bg);border-radius:10px;padding:8px 10px}
 .verdict{font-weight:700;margin:6px 0}
+/* practice: worked examples, check yourself, bigger problem sets */
+.ex{background:var(--panel);border-radius:12px;padding:14px 16px;margin:12px 0;border-left:4px solid var(--sea)}
+.ex h3{margin:0 0 6px;font-size:17px}
+.ex p{margin:6px 0}
+.exgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px}
+.box.cy{background:var(--bg);border:2px solid var(--sea)}
+.box.cy h3{margin-top:0}
+.cyq{padding:10px 0;border-top:1px solid var(--line)}
+.cyq:first-of-type{border-top:0}
+.cyq label{display:block;font-weight:500;margin-bottom:6px}
+.cyq .row2{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.cyq input{width:9em;font-family:"Roboto Mono",monospace;font-size:16px}
+.cyq input.wide{width:14em}
+.cyq .fb{margin-top:6px;font-size:15px;min-height:1.2em}
+.cyq .fb.ok{color:var(--sea);font-weight:700}
+.cyq .fb.no{color:var(--ember)}
+.tiers.full{grid-template-columns:minmax(0,1fr)}
+.tiers.full .tier ol{columns:2 360px;column-gap:36px}
+.tiers.full .tier li{break-inside:avoid}
+.tiers.full .tier li details{margin-top:2px}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Practice Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="book.css">
+<style>
+.skills{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,360px),1fr));gap:16px;margin-top:12px}
+.skill{background:var(--panel);border-radius:14px;padding:16px 18px;border:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.skill h3{margin:0;font-size:18px}
+.skill .pq{font-size:17px;margin:0}
+.skill .flds{display:flex;flex-wrap:wrap;gap:8px;align-items:end}
+.skill .flds label{display:flex;flex-direction:column;font-size:14px;color:var(--mute);gap:2px}
+.skill input{width:8em;font-family:"Roboto Mono",monospace;font-size:16px}
+.skill input.wide{width:13em}
+.skill .btns{display:flex;flex-wrap:wrap;gap:8px}
+.skill .fb{min-height:1.3em;font-size:15px}
+.skill .fb.ok{color:var(--sea);font-weight:700}
+.skill .fb.no{color:var(--ember)}
+.skill .sol{white-space:pre-line;font-family:"Roboto Mono",monospace;font-size:14px;background:var(--bg);border-radius:10px;padding:8px 10px}
+.skill .streak{font-size:13px;color:var(--brass);font-weight:700}
+</style>
+</head>
+<body>
+<nav class="toc" aria-label="Practice Deck sections"><div class="wrap"><a class="brand" href="index.html">Modular Worlds</a><a href="#ch0">Ch 0</a><a href="#ch1">Ch 1</a><a href="#ch2">Ch 2</a><a href="#ch3">Ch 3</a><a href="#ch4">Ch 4</a><a href="#ch5">Ch 5</a><a href="rooms.html">Labs and rooms</a></div></nav>
+<header class="band hero"><div class="wrap two">
+<div><div class="kicker">Modular Worlds · The labs</div><h1>The Practice Deck</h1>
+<p class="lede">Before every landing, the crew drills on deck. Each card below makes a fresh problem every time you press <b>New problem</b>, checks your answer instantly, and shows a worked solution when you want one.</p></div>
+<aside class="box thm"><h3>How to use it</h3><p style="margin:0">Aim for a streak of 5 on a card before you move on. Wrong answers are fine: read the solution, then try a new one. Nothing you type is saved or sent anywhere.</p></aside>
+</div></header>
+<section class="band" id="ch0"><div class="wrap"><h2>Chapter 0 · The Entrance Exam</h2><p class="small"><a href="ch0.html">Back to the chapter</a></p><div class="skills" data-ch="ch0"></div></div></section>
+<section class="band alt" id="ch1"><div class="wrap"><h2>Chapter 1 · Mojadito</h2><p class="small"><a href="ch1.html">Back to the chapter</a></p><div class="skills" data-ch="ch1"></div></div></section>
+<section class="band" id="ch2"><div class="wrap"><h2>Chapter 2 · Ammonia Bay</h2><p class="small"><a href="ch2.html">Back to the chapter</a></p><div class="skills" data-ch="ch2"></div></div></section>
+<section class="band alt" id="ch3"><div class="wrap"><h2>Chapter 3 · Euclid's Forge</h2><p class="small"><a href="ch3.html">Back to the chapter</a></p><div class="skills" data-ch="ch3"></div></div></section>
+<section class="band" id="ch4"><div class="wrap"><h2>Chapter 4 · Diophantine Delta</h2><p class="small"><a href="ch4.html">Back to the chapter</a></p><div class="skills" data-ch="ch4"></div></div></section>
+<section class="band alt" id="ch5"><div class="wrap"><h2>Chapter 5 · Prime Peaks</h2><p class="small"><a href="ch5.html">Back to the chapter</a></p><div class="skills" data-ch="ch5"></div></div></section>
+<section class="band"><div class="wrap pager"><a href="rooms.html">← Labs and rooms</a><a href="index.html">Contents →</a></div></section>
+<footer class="band"><div class="wrap">Modular Worlds · The Practice Deck · draft · UCI Math CEO</div></footer>
+<script src="book.js"></script>
+<script src="drills.js"></script>
+</body>
+</html>

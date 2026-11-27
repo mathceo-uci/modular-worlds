@@ -128,6 +128,8 @@
 <p style="margin:0">Going back from 30000 to the atoms works only because a number breaks into primes in one way (Theorem 5.5). But the formula is not the molecule: ethanol and dimethyl ether are both C<sub>2</sub>H<sub>6</sub>O, formula number 2880, with their atoms joined in different ways.</p></div>
 </div>
 </div></section>
+<section class="band"><div class="wrap"><h2>Worked example and check yourself: testing for primes</h2><div class="exgrid"><div class="ex"><h3>Example 5.1: is 437 prime?</h3><p><b>Solution.</b> √437 ≈ 20.9, so by Proposition 5.3 we only test the primes 2, 3, 5, 7, 11, 13, 17, 19. The last one works: 437 = 19 · 23. Composite.</p></div></div><div class="box cy"><h3>Check yourself</h3><p class="small" style="margin:0 0 4px">Type an answer and press Check. A hint appears if it is not right yet.</p><div class="cyq" data-kind="num" data-a="17" data-hint="Test primes up to √391 ≈ 19.8." data-show="17 (391 = 17 · 23)"><label for="cy26">What is the smallest prime factor of 391?</label><div class="row2"><input id="cy26" autocomplete="off"><button class="ck">Check</button></div><div class="fb" aria-live="polite"></div></div><div class="cyq" data-kind="word" data-a="yes" data-hint="Test the primes up to 31, since 31² = 961 and 37² = 1369." data-show="yes"><label for="cy27">Is 997 prime? (yes or no)</label><div class="row2"><input id="cy27" autocomplete="off"><button class="ck">Check</button></div><div class="fb" aria-live="polite"></div></div></div></div></section>
+
 
 <section class="band alt" id="fta"><div class="wrap two">
 <div>
@@ -151,6 +153,8 @@
 <p style="margin:0">In the full integers, 441 = 3 · 3 · 7 · 7, one way only. The real atoms 3 and 7 leave remainder 3 mod 4, so the Market never sees them alone, only in pairs: 3·3 = 9, 3·7 = 21, 7·7 = 49. Pairing the same four atoms in two ways is exactly what gives two breakings.</p></div>
 </div>
 </div></section>
+<section class="band alt"><div class="wrap"><h2>Worked examples and check yourself: factoring</h2><div class="exgrid"><div class="ex"><h3>Example 5.2: factor and count divisors</h3><p><b>Question.</b> Factor 1960 and count its divisors.</p><p><b>Solution.</b> 1960 = 2³ · 5 · 7². By Corollary 5.6 it has (3 + 1)(1 + 1)(2 + 1) = 24 divisors.</p></div><div class="ex"><h3>Example 5.3: gcd and lcm from primes</h3><p><b>Question.</b> Find gcd(360, 84) and lcm(360, 84).</p><p><b>Solution.</b> 360 = 2³ · 3² · 5 and 84 = 2² · 3 · 7. Take the smaller power of each prime for the gcd, 2² · 3 = 12, and the larger power for the lcm, 2³ · 3² · 5 · 7 = 2520.</p></div></div><div class="box cy"><h3>Check yourself</h3><p class="small" style="margin:0 0 4px">Type an answer and press Check. A hint appears if it is not right yet.</p><div class="cyq" data-kind="num" data-a="24" data-hint="360 = 2³ · 3² · 5." data-show="24 = 4 · 3 · 2"><label for="cy28">How many divisors does 360 have?</label><div class="row2"><input id="cy28" autocomplete="off"><button class="ck">Check</button></div><div class="fb" aria-live="polite"></div></div><div class="cyq" data-kind="word" data-a="no" data-hint="Try dividing by 23." data-show="no: 2047 = 23 · 89"><label for="cy29">Is 2¹¹ − 1 = 2047 prime? (yes or no)</label><div class="row2"><input id="cy29" autocomplete="off"><button class="ck">Check</button></div><div class="fb" aria-live="polite"></div></div><div class="cyq" data-kind="num" data-a="33" data-hint="693 ÷ 21." data-show="33"><label for="cy30">In the Hilbert Market, 693 = 9 · 77 = 21 · ?</label><div class="row2"><input id="cy30" autocomplete="off"><button class="ck">Check</button></div><div class="fb" aria-live="polite"></div></div></div></div></section>
+
 <section class="band alt"><div class="wrap"><aside class="box note" aria-labelledby="n-zero"><span class="nk">Paradox note</span><h3 id="n-zero">Two numbers that are not zero multiply to zero</h3><p>If a product is 0, one of the factors must be 0. Everyone learns that in school.</p><div class="guess" data-for="rv-zero" data-right="b"><span class="q">On a 10-hour clock (where 10 counts as 0), can two nonzero hours multiply to 0?</span><button data-g="a" aria-pressed="false">Never</button><button data-g="b" aria-pressed="false">Yes</button></div><div class="reveal" id="rv-zero" hidden><p class="verdict" data-msg="2 × 5 = 10 lands on 0. And the trouble spreads: 2 × 3 and 2 × 8 both land on 6, so you cannot cancel the 2."></p><div class="ctrl"><div><label for="zpn">Clock size</label><input id="zpn" type="number" value="10" min="2" max="60"></div><button id="zpgo">Find zero products</button></div><div class="nout" id="zpout" aria-live="polite"></div><p style="margin-top:10px"><b>Why.</b> <i class="v">a</i> × <i class="v">b</i> lands on 0 exactly when <i class="v">n</i> divides <i class="v">ab</i>. If <i class="v">n</i> is prime, Euclid's lemma (Lemma 5.4) says <i class="v">n</i> divides <i class="v">a</i> or <i class="v">b</i>, so one factor was already 0: the school rule holds. If <i class="v">n</i> = <i class="v">ab</i> is composite, it fails. Try clock sizes 7, 11, 12 and 13. The school rule is really a fact about primes.</p></div></aside></div></section>
 
 
@@ -252,31 +256,13 @@
 <section class="band" id="problems"><div class="wrap">
 <h2>Problems <span class="path core">Core</span></h2>
 <p>Deckhand problems are for everyone. Navigator and Cartographer problems are where you stretch.</p>
-<div class="tiers">
-<div class="tier"><h3>Deckhand</h3><ol>
-<li>Factor 360, 1001 and 2310 into primes. How many divisors does each have?
-<details><summary>Answer</summary>360 = 2³·3²·5, 24 divisors. 1001 = 7·11·13, 8 divisors. 2310 = 2·3·5·7·11, 32 divisors.</details></li>
-<li>Which primes must you test to decide whether 391 is prime? Decide.
-<details><summary>Answer</summary>The primes up to 19 (since 19² = 361 ≤ 391 &lt; 23²). 391 = 17 · 23, so it is composite.</details></li>
-<li>Find the two smallest Book weights with two different breakings into Book primes.
-<details><summary>Answer</summary>441 = 9·49 = 21·21 and 693 = 9·77 = 21·33.</details></li>
-<li>Check that 496 is perfect, and write it in the form of Theorem 5.7.
-<details><summary>Answer</summary>496 = 2⁴ · 31, and 31 = 2⁵ − 1 is prime.</details></li>
-</ol></div>
-<div class="tier"><h3>Navigator</h3><ol>
-<li>Prove that if 2<sup><i class="v">m</i></sup> − 1 is prime then <i class="v">m</i> is prime. Is the converse true?
-<details><summary>Hint</summary>If m = ab, then 2^a − 1 divides 2^(ab) − 1. The converse fails: 2¹¹ − 1 = 2047 = 23 · 89.</details></li>
-<li>Prove that there are infinitely many primes that leave remainder 3 when divided by 4.
-<details><summary>Hint</summary>Use N = 4·p₁⋯p_k − 1. A product of numbers that each leave remainder 1 also leaves remainder 1.</details></li>
-<li>Prove that √<i class="v">n</i> is irrational unless <i class="v">n</i> is a perfect square, using unique factorization.</li>
-<li>Show that for any <i class="v">k</i>, there are <i class="v">k</i> consecutive composite numbers. (Look at (<i class="v">k</i> + 1)! + 2, …, (<i class="v">k</i> + 1)! + <i class="v">k</i> + 1.)</li>
-</ol></div>
-<div class="tier"><h3>Cartographer</h3><ol>
-<li>"<i class="v">n</i>² + <i class="v">n</i> + 41 is always prime": test it with the code quest, find where it breaks, and explain why it <i>must</i> break at that <i class="v">n</i>. Can any polynomial with integer coefficients give only primes?</li>
-<li>Find all Book weights below 10,000 with three or more breakings. What do their real prime factorizations have in common?</li>
-<li>Explore how far apart consecutive primes can be below 100,000 (code quest, cell 4). Where are the record gaps?</li>
-</ol></div>
-</div>
+<p class="small">Short answers for every Deckhand problem and hints for the Navigator problems open with a click. For unlimited drills with instant checking, use the <a href="practice.html#ch5">Practice Deck</a>.</p><div class="tiers full"><div class="tier"><h3>Deckhand</h3><ol><li>Factor 360, 1001 and 2310 into primes. How many divisors does each have?
+<details><summary>Answer</summary>360 = 2³·3²·5, 24 divisors. 1001 = 7·11·13, 8 divisors. 2310 = 2·3·5·7·11, 32 divisors.</details></li><li>Which primes must you test to decide whether 391 is prime? Decide.
+<details><summary>Answer</summary>The primes up to 19 (since 19² = 361 ≤ 391 &lt; 23²). 391 = 17 · 23, so it is composite.</details></li><li>Find the two smallest Book weights with two different breakings into Book primes.
+<details><summary>Answer</summary>441 = 9·49 = 21·21 and 693 = 9·77 = 21·33.</details></li><li>Check that 496 is perfect, and write it in the form of Theorem 5.7.
+<details><summary>Answer</summary>496 = 2⁴ · 31, and 31 = 2⁵ − 1 is prime.</details></li><li>Is 221 prime? Which primes did you need to test?<details><summary>Answer</summary>221 = 13 · 17. Primes up to 14 suffice (√221 ≈ 14.9).</details></li><li>Factor 2026 and 9999.<details><summary>Answer</summary>2026 = 2 · 1013 (1013 is prime) and 9999 = 3² · 11 · 101.</details></li><li>How many divisors does 720 have?<details><summary>Answer</summary>720 = 2⁴ · 3² · 5, so 5 · 3 · 2 = 30.</details></li><li>Find the smallest number with exactly 6 divisors.<details><summary>Answer</summary>12 = 2² · 3, with (2 + 1)(1 + 1) = 6 divisors.</details></li><li>Is 2⁷ − 1 prime? Is 2⁹ − 1?<details><summary>Answer</summary>127 is prime. 511 = 7 · 73 is not (9 is not prime).</details></li><li>List the Book primes below 50 (Book weights 5, 9, 13, … that are not products of two smaller Book weights).<details><summary>Answer</summary>5, 9, 13, 17, 21, 29, 33, 37, 41, 49. Only 25 = 5 · 5 and 45 = 5 · 9 break.</details></li><li>Is 8128 perfect? Use Theorem 5.7.<details><summary>Answer</summary>Yes: 8128 = 2⁶ · 127, and 127 = 2⁷ − 1 is prime.</details></li><li>Find gcd and lcm of 2² · 3⁵ · 7 and 2⁴ · 3 · 11 without multiplying out first.<details><summary>Answer</summary>gcd = 2² · 3 = 12 and lcm = 2⁴ · 3⁵ · 7 · 11.</details></li></ol></div><div class="tier"><h3>Navigator</h3><ol><li>Prove that if 2<sup><i class="v">m</i></sup> − 1 is prime then <i class="v">m</i> is prime. Is the converse true?
+<details><summary>Hint</summary>If m = ab, then 2^a − 1 divides 2^(ab) − 1. The converse fails: 2¹¹ − 1 = 2047 = 23 · 89.</details></li><li>Prove that there are infinitely many primes that leave remainder 3 when divided by 4.
+<details><summary>Hint</summary>Use N = 4·p₁⋯p_k − 1. A product of numbers that each leave remainder 1 also leaves remainder 1.</details></li><li>Prove that √<i class="v">n</i> is irrational unless <i class="v">n</i> is a perfect square, using unique factorization.<details><summary>Hint</summary>If √<i class="v">n</i> = <i class="v">p</i>/<i class="v">q</i>, then <i class="v">n</i><i class="v">q</i>² = <i class="v">p</i>². In <i class="v">p</i>² and <i class="v">q</i>² every prime appears an even number of times, so the same holds for <i class="v">n</i>.</details></li><li>Show that for any <i class="v">k</i>, there are <i class="v">k</i> consecutive composite numbers. (Look at (<i class="v">k</i> + 1)! + 2, …, (<i class="v">k</i> + 1)! + <i class="v">k</i> + 1.)</li><li>Prove that if a prime <i class="v">p</i> divides <i class="v">a</i>², then <i class="v">p</i> divides <i class="v">a</i>.<details><summary>Hint</summary>Lemma 5.4 with <i class="v">b</i> = <i class="v">a</i>.</details></li><li>Prove that every prime greater than 3 has the form 6<i class="v">k</i> + 1 or 6<i class="v">k</i> − 1.<details><summary>Hint</summary>Write the prime as 6<i class="v">k</i> + <i class="v">r</i> with <i class="v">r</i> = 0, …, 5, and rule out 0, 2, 3, 4.</details></li><li>Prove that if 2<sup><i class="v">n</i></sup> + 1 is prime, then <i class="v">n</i> is a power of 2.<details><summary>Hint</summary>If <i class="v">n</i> has an odd factor <i class="v">m</i> &gt; 1, then <i class="v">x</i><sup><i class="v">m</i></sup> + 1 is divisible by <i class="v">x</i> + 1.</details></li></ol></div><div class="tier"><h3>Cartographer</h3><ol><li>"<i class="v">n</i>² + <i class="v">n</i> + 41 is always prime": test it with the code quest, find where it breaks, and explain why it <i>must</i> break at that <i class="v">n</i>. Can any polynomial with integer coefficients give only primes?</li><li>Find all Book weights below 10,000 with three or more breakings. What do their real prime factorizations have in common?</li><li>Explore how far apart consecutive primes can be below 100,000 (code quest, cell 4). Where are the record gaps?</li></ol></div></div>
 </div></section>
 
 <section class="band alt" id="code"><div class="wrap">
@@ -511,5 +497,6 @@ MW.cells($('#cells'),CELLS,{setup:SETUP,status:$('#pystat')});
 }
 </script>
 <script src="notes.js"></script>
+<script src="practice.js"></script>
 </body>
 </html>
