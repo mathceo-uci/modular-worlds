@@ -34,6 +34,8 @@
 .moves{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 4px}
 .moves button{min-height:40px;font-size:15px}
 .moves button small{color:var(--mute);font-weight:400}
+.moves button.off{opacity:.45;border-style:dashed;cursor:not-allowed;background:var(--bg)}
+.moves button.off:hover,.moves button.off:focus-visible{opacity:.7}
 .say{font-size:15px;line-height:1.55;padding:10px 12px;border-radius:10px;margin:8px 0;background:var(--bg);border:1px solid var(--line);min-height:1.6em}
 .say.bad{background:var(--ember-soft);border-color:var(--ember)}
 .say.good{background:var(--sea-soft);border-color:var(--sea)}
@@ -266,7 +268,7 @@ function draw(){
   const btn=(x,id)=>`<button class="term" data-id="${id}" aria-pressed="${sel.includes(id)}" aria-label="${esc(alg(x))}, ${x.t==='grp'?'groups':x.t}">${termHTML(x)}</button>`;
   if(S.mode==='sum')$('#expr').innerHTML=S.terms.map((x,i)=>btn(x,String(i))).join('<span class="plus" aria-hidden="true">+</span>');
   else $('#expr').innerHTML=S.factors.map((f,fi)=>`<div class="factor" aria-label="Factor ${fi+1}">${f.map((x,i)=>btn(x,fi+':'+i)).join('<span class="plus" aria-hidden="true">+</span>')}</div>`).join('<span class="par" aria-hidden="true">×</span>');
-  const r=P.routes[C.id]||[];$('#badges').innerHTML=C.routes.map(k=>`<span class="badge${r.includes(k)?' on':''}">${RN[k]}${r.includes(k)?' ✓':''}</span>`).join('')}
+  const r=P.routes[C.id]||[];$('#badges').innerHTML=C.routes.map(k=>`<span class="badge${r.includes(k)?' on':''}">${RN[k]}${r.includes(k)?' ✓':''}</span>`).join('');gate()}
 $('#expr').addEventListener('click',e=>{const b=e.target.closest('.term');if(!b)return;const id=b.dataset.id;
   sel=sel.includes(id)?sel.filter(j=>j!==id):sel.concat(id).slice(-2);draw()});
 function get(id){if(S.mode==='sum')return S.terms[+id];const[f,i]=id.split(':').map(Number);return S.factors[f][i]}
@@ -277,6 +279,34 @@ function need(n,msg){if(sel.length!==n){say(msg,'bad');return false}return true}
 function sameBox(){if(S.mode==='sum')return true;return sel.every(s=>s.split(':')[0]===sel[0].split(':')[0])}
 const shuffle=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
 function log(r){LOG.push({s:now(),r})}
+/* Grey out moves that cannot be used right now. They stay clickable: a click, hover or keyboard focus shows why. */
+function why(id){
+  const n=sel.length,ts=sel.map(get);
+  switch(id){
+  case 'mUnpack':{if(n!==1)return 'Select one flask whose label you want to read.';const x=ts[0];
+    if(x.t==='int')return 'Its label only says "integer". There is nothing more to read.';
+    if(x.t==='mul'){const ps=x.parts||[];return ps.some(p=>p.t==='self'||(p.t==='mult'&&p.of===C.g))?null:'No label in this product says anything about '+C.g+'. Try a lab rule.'}
+    return (x.t==='mult'?multDef(x):DEF[x.t])?null:'That flask is already open.'}
+  case 'mSplit':if(n!==1)return 'Select one odd flask to split.';return ts[0].t==='odd'?null:'Split off an atom works on an odd flask.';
+  case 'mBond':if(n!==2)return 'Select two flasks of loose atoms.';if(!sameBox()||!ts.every(x=>x.t==='one'))return 'Bond loose atoms needs two flasks of loose atoms, side by side in the same sum.';
+    return S.mode==='prod'?'Expand the product first: inside one factor there is only one loose flask.':null;
+  case 'mPour':if(n!==2)return 'Select two flasks of '+GN()+'.';if(S.mode==='prod')return 'Expand the product first.';
+    return ts.every(x=>x.t==='grp')?null:'Pour together needs two flasks of '+GN()+'. A labelled flask can be opened first with Read a label.';
+  case 'mExpand':return S.mode==='prod'?null:'There is no product left to expand.';
+  case 'mBez':return (S.mode==='sum'&&S.terms.length===1&&S.terms[0].n==='c')?null:'Bézout is used once, at the start, on c.';
+  case 'mRule':return C.g===3?'The lab has no rules for trios yet. Use the definitions.':null;
+  case 'mUndo':return hist.length?null:'Nothing to undo yet.';
+  }return null}
+const GATED=['mUnpack','mSplit','mBond','mPour','mExpand','mBez','mRule','mUndo'];
+function gate(){if(!C)return;GATED.forEach(id=>{const b=document.getElementById(id),w=why(id);b.classList.toggle('off',!!w);
+  if(w){b.setAttribute('aria-disabled','true');b.dataset.why=w}else{b.removeAttribute('aria-disabled');delete b.dataset.why}})}
+let sayBefore=null;
+GATED.forEach(id=>{const b=document.getElementById(id);
+  const show=()=>{if(!b.dataset.why)return;const e=$('#say');if(sayBefore===null)sayBefore={t:e.textContent,c:e.className};say(b.dataset.why,'bad')};
+  const hide=()=>{if(sayBefore===null)return;const e=$('#say');if(e.textContent===b.dataset.why||!b.dataset.why){e.textContent=sayBefore.t;e.className=sayBefore.c}sayBefore=null};
+  b.addEventListener('mouseenter',show);b.addEventListener('focus',show);b.addEventListener('mouseleave',hide);b.addEventListener('blur',hide);
+  b.addEventListener('click',()=>{sayBefore=null},true)});
+
 
 $('#mUnpack').onclick=()=>{if(!need(1,'Select one flask whose label you want to read.'))return;const id=sel[0],x=get(id);
   if(x.t==='int'){say('Its label only says "integer". There is nothing more to read.','bad');return}
