@@ -15,7 +15,14 @@
 .map img{display:block;width:100%;height:auto}
 .how{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px}
 .how div{border-top:4px solid var(--sea);padding-top:10px}
-.how div:nth-child(2){border-color:var(--brass)}.how div:nth-child(3){border-color:var(--ember)}.how div:nth-child(4){border-color:var(--mute)}
+.how h4{margin:0 0 4px;font-size:17px}
+.how p{margin:0}
+.howgroup{margin:26px 0 0}
+.howgroup>h3{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 4px}
+.howgroup>h3 .sub{font-size:15px;font-weight:400;color:var(--mute)}
+.howgroup>p.small{margin:0 0 12px}
+.g-ch .how div{border-color:var(--sea)}.g-lab .how div{border-color:var(--brass)}.g-room .how div{border-color:var(--ember)}.g-use .how div{border-color:var(--mute)}
+.howintro{max-width:72ch}
 </style>
 </head>
 <body>
@@ -43,17 +50,21 @@
 
 <section class="band alt" id="how"><div class="wrap">
 <h2>How this book works</h2>
-<div class="how">
-<div><h3>Prophecies</h3><p>Chapter 1 seals a Vault of conjectures about the whole voyage. Each chapter opens some of them. Breaking a prophecy, and repairing it, counts as a discovery.</p></div>
-<div><h3>Three paths</h3><p>Every chapter's problems come in three tiers. Deckhand problems are for everyone; Navigator problems stretch your proofs; Cartographer problems are open explorations.</p></div>
-<div><h3>Arenas and episodes</h3><p>Each land has a game you can play on the page and in class, and opens with a scene from the crew's voyage. The games always pit the whole room against El Gran Pesado, never students against each other.</p></div>
-<div><h3>Code quests</h3><p>Optional Python cells that run right in the page. Turn a theorem into code, and turn experiments into new conjectures. No installation needed.</p></div>
-<div><h3>The Proof Lab</h3><p>Produce proofs like a chemist: read the labels, bond loose atoms, use rules you proved before. Every route you find comes with a lab report: the essence in plain words, then the formal proof. <a href="lab.html">Open the Proof Lab</a>.</p></div>
-<div><h3>The Practice Deck</h3><p>Every chapter now has worked examples, "check yourself" questions after the theory, and about twenty problems with answers. The Practice Deck adds unlimited drills with instant checking. <a href="practice.html">Open the Practice Deck</a>.</p></div>
-<div><h3>The Field Station</h3><p>Where the math is used: hands-on field cards for every chapter, from parity bits and gear teeth to hash tables and cicadas, each tied back to a theorem. <a href="field.html">Visit the Field Station</a>.</p></div>
-<div><h3>The rooms</h3><p>Seven rooms where the voyage's arithmetic becomes something you can see, hear, say, make, play, watch in the sky or hide in a code: the Studio, the Sound Room, the Poets' Corner, the Workshop, the Game Room, the Observatory and the Cipher Room. <a href="rooms.html">Visit the rooms</a>.</p></div>
-<div><h3>Two schedules</h3><p>The same book runs as a 10-week quarter or a 15-week semester. Section labels show what is core on both. <a href="#schedules">See the schedules</a>.</p></div>
-</div>
+<p class="howintro">Modular Worlds is a voyage in eleven chapters, numbered 0 to 10, and each chapter is one land with one big idea of number theory. Chapters 0 to 5 are ready. You can read a chapter straight through, but it is built to be <i>done</i>: you play, guess and test before the theory arrives, then prove. Around the chapters sit three labs for learning and seven rooms for making and playing, open any week. Here is a map of everything you will meet.</p>
+
+<div class="howgroup g-ch"><h3>Inside every chapter <span class="sub">the land itself, in reading order</span></h3>
+<div class="how"><div><h4>A landing</h4><p>A watercolor of the land and a short scene from the crew's voyage that sets the puzzle.</p></div><div><h4>Explore and prophecies</h4><p>Hands-on questions that lead you to a pattern before any theory. Then seal prophecies, conjectures you mark with how sure you are; each one is opened later. Breaking one, and repairing it, counts as a discovery.</p></div><div><h4>Theory, with help</h4><p>Definitions, theorems and full proofs, with proof toolkit boxes for anyone new to proofs, labeled worked examples, and <b>check yourself</b> questions that tell you right away whether you have it.</p></div><div><h4>The Arena</h4><p>A game to play on the page and in class. It always pits the whole room against El Gran Pesado, never students against each other.</p></div><div><h4>Notes along the way</h4><p><b>Paradox notes</b> (claims that sound wrong but are true), <b>Lab notes</b> on chemistry and nature, puzzles, and the people and cultures behind each idea.</p></div><div><h4>Problems and the logbook</h4><p>About twenty problems in three tiers: Deckhand for everyone, Navigator for harder proofs, Cartographer for open questions. Answers and hints open with a click. Optional Python <b>code quests</b> run in the page, and a logbook sums up the land.</p></div></div></div>
+
+<div class="howgroup g-lab"><h3>Beside the chapters: three labs <span class="sub">learn it, use it, drill it</span></h3>
+<div class="how"><div><h4><a href="lab.html">The Proof Lab</a></h4><p><b>Why it is true.</b> Produce proofs like a chemist: read labels, bond loose atoms, use rules you proved before. Each route ends in a lab report.</p></div><div><h4><a href="field.html">The Field Station</a></h4><p><b>Where it is used.</b> Field cards for every chapter, from parity bits and gear teeth to hash tables and cicadas, each tied to a theorem.</p></div><div><h4><a href="practice.html">The Practice Deck</a></h4><p><b>Until it sticks.</b> Fresh problems for every skill, checked instantly, with worked solutions.</p></div></div></div>
+
+<div class="howgroup g-room"><h3>Below deck: seven rooms <span class="sub">make and play with the math</span></h3>
+<p class="small">Each room is named for what you do there, and each card says which chapters it goes with. The first rooms need nothing beyond Chapter 0.</p>
+<div class="how"><div><h4><a href="studio.html">See</a> and <a href="sound.html">hear</a></h4><p>The Studio paints with arithmetic and hangs your work in the Gallery. The Sound Room turns multiples and remainders into rhythm and melody.</p></div><div><h4><a href="poets.html">Say</a> and <a href="workshop.html">make</a></h4><p>The Poets' Corner builds poems on number patterns. The Workshop weaves bracelets, cloth and khipu, and turns spirograph gears.</p></div><div><h4><a href="games.html">Play</a>, <a href="observatory.html">watch</a> and <a href="cipher.html">hide</a></h4><p>The Game Room has mancala, hot potato and juggling. The Observatory follows the Maya calendars. The Cipher Room makes and breaks secret codes.</p></div></div>
+<p style="margin:12px 0 0"><a class="btn" href="rooms.html">See all the labs and rooms</a></p></div>
+
+<div class="howgroup g-use"><h3>Good to know <span class="sub">for students and instructors</span></h3>
+<div class="how"><div><h4>Two schedules</h4><p>The same book runs as a 10-week quarter or a 15-week semester. Labels on every section say <span class="path core">Core</span>, <span class="path ext">Semester</span> or <span class="path opt">Optional</span>, and each chapter opens with a session plan for both. <a href="#schedules">See the schedules</a>.</p></div><div><h4>Nothing to install</h4><p>Everything runs in your browser, on a laptop or a phone, with no account. The Python cells download about 10 MB the first time you run one.</p></div><div><h4>Your work stays with you</h4><p>Prophecy choices and lab progress are kept only in your own browser. Nothing you type is sent anywhere. Use <b>Make a still</b> or a lab report image to keep your work.</p></div><div><h4>Built for everyone</h4><p>Every picture has a text description, the controls are ordinary buttons and sliders that work with a keyboard, and color never carries meaning on its own.</p></div></div></div>
 </div></section>
 
 <section class="band" id="instructors"><div class="wrap two">
