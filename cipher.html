@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Cipher Workshop</title>
+<title>The Cipher Room</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -16,14 +16,14 @@
 .out{font-family:"Roboto Mono",monospace;font-size:17px;background:var(--code);border-radius:10px;padding:12px;min-height:3em;overflow-wrap:anywhere;white-space:pre-wrap}</style>
 </head>
 <body>
-<nav class="toc" aria-label="Cipher Workshop sections"><div class="wrap">
-<a class="brand" href="index.html">Modular Worlds</a><a href="#affine">Shift and multiply</a><a href="#crack">Cracking station</a><a href="#rsa">Toy RSA</a><a href="#card">Puzzle cards</a><a href="studio.html">All rooms</a>
+<nav class="toc" aria-label="Cipher Room sections"><div class="wrap">
+<a class="brand" href="index.html">Modular Worlds</a><a href="#affine">Shift and multiply</a><a href="#crack">Cracking station</a><a href="#rsa">Toy RSA</a><a href="#card">Puzzle cards</a><a href="rooms.html">All rooms</a>
 </div></nav>
 
 <header class="band hero"><div class="wrap two">
 <div>
 <div class="kicker">Modular Worlds · The Studio rooms · Chapters 6 and 9</div>
-<h1>The Cipher Workshop</h1>
+<h1>The Cipher Room</h1>
 <p class="lede">In Secret Tides, messages travel in bottles, and anyone can fish them out. Ana runs the ship's cipher workshop: number the letters, do arithmetic mod the size of the alphabet, and the message becomes nonsense to everyone but the crew. Build ciphers, crack other crews' ciphers, and make puzzle cards for them to solve.</p>
 </div>
 <aside class="box thm"><h3>Letters are numbers mod m</h3>
@@ -94,8 +94,8 @@
 <div class="still" id="pout"><p class="note">Your card appears here. Save it and swap it with another crew.</p></div>
 </div></section>
 
-<section class="band"><div class="wrap pager"><a href="observatory.html">← The Observatory</a><a href="pixels.html">The Pixel Room →</a></div></section>
-<footer class="band"><div class="wrap">Modular Worlds · The Cipher Workshop · draft · UCI Math CEO</div></footer>
+<section class="band"><div class="wrap pager"><a href="observatory.html">← The Observatory</a><a href="rooms.html">All rooms →</a></div></section>
+<footer class="band"><div class="wrap">Modular Worlds · The Cipher Room · draft · UCI Math CEO</div></footer>
 
 <script src="book.js"></script>
 <script src="rooms.js"></script>
@@ -150,7 +150,7 @@ $('#pmake').onclick=()=>{const cv=document.createElement('canvas'),W=1000,g=cv.g
   let y=pad+30;g.fillStyle='#e0b154';g.font='700 30px "Roboto Flex", Roboto, sans-serif';g.fillText('A sealed message from '+$('#pcrew').value,pad,y);
   y+=50;g.fillStyle='#f6f1e7';g.font='500 30px "Roboto Mono", monospace';ct.forEach(t=>{g.fillText(t,pad,y);y+=44});
   y+=10;g.fillStyle='#9cd3c6';g.font='italic 22px Roboto, sans-serif';hi.forEach(t=>{g.fillText(t,pad,y);y+=32});
-  g.fillStyle='#8a9096';g.font='16px Roboto, sans-serif';g.fillText('Modular Worlds · The Cipher Workshop',pad,H-pad+10);
+  g.fillStyle='#8a9096';g.font='16px Roboto, sans-serif';g.fillText('Modular Worlds · The Cipher Room',pad,H-pad+10);
   $('#pout').innerHTML=`<img alt="Puzzle card from ${$('#pcrew').value.replace(/"/g,'')}: ciphertext ${$('#ptext').value.replace(/"/g,'')}" src="${cv.toDataURL('image/png')}"><p class="note">Right-click or press and hold the card to save it.</p>`};
 key();drawF();new ResizeObserver(drawF).observe($('#cv-f'));
 }

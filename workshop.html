@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Workshop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,700;8..144,900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="book.css">
+<link rel="stylesheet" href="rooms.css">
+<style>
+.piece .wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(18px,3vw,40px);align-items:start}
+@media(max-width:860px){.piece .wrap{grid-template-columns:minmax(0,1fr)}}
+.easel{position:relative;width:100%;aspect-ratio:1;border-radius:14px;overflow:hidden;background:var(--panel)}
+.easel canvas{position:absolute;inset:0;width:100%;height:100%}
+.panel{display:flex;flex-direction:column;gap:14px}
+.field{display:flex;flex-direction:column;gap:4px}
+.field .lbl{display:flex;justify-content:space-between;gap:8px;font-size:15px;color:var(--mute)}
+.field .lbl output{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--sea);height:32px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{min-height:40px}
+.seg button[aria-pressed=true]{background:var(--sea);color:var(--bg);border-color:var(--sea)}
+.swatches{display:flex;flex-wrap:wrap;gap:6px}
+.swatches label{display:flex;flex-direction:column;align-items:center;font-size:12px;color:var(--mute);gap:2px}
+input[type=color]{width:40px;height:40px;border:1px solid var(--line);border-radius:8px;padding:2px;background:var(--bg);cursor:pointer}
+.note{font-size:15px;color:var(--mute)}
+.status{white-space:pre-line;text-align:left;font-family:'Roboto Mono',monospace;font-size:15px;background:var(--code);border-radius:10px;padding:10px 12px;margin:0}
+.still img{display:block;width:100%;max-width:480px;border-radius:10px;border:1px solid var(--line)}
+
+.tabbar{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0}
+.tabbar button{min-height:44px;font-weight:700}
+.tabbar button[aria-selected=true]{background:var(--sea);color:var(--bg);border-color:var(--sea)}
+.panel-hero h2.ph{font-size:clamp(26px,3.4vw,36px);margin-top:0}
+.tabpanel[hidden]{display:none}
+.tabpanel .panel-hero{background:var(--bg);border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+
+<nav class="toc" aria-label="Workshop sections"><div class="wrap">
+<a class="brand" href="index.html">Modular Worlds</a><a href="#weaving">Weaving</a><a href="#gears">Gears</a><a href="rooms.html">All rooms</a>
+</div></nav>
+
+<header class="band hero"><div class="wrap two">
+<div>
+<div class="kicker">Modular Worlds · The rooms</div>
+<h1>The Workshop</h1>
+<p class="lede">Diego's beads and loom share a bench with an old clockmaker's gears. Bracelets, cloth, knotted cords and spirographs all repeat around a cycle, and the math decides when a pattern closes.</p>
+<div class="tabbar" role="tablist" aria-label="The Workshop"><button role="tab" id="tb-weaving" data-key="weaving" aria-controls="tab-weaving" aria-selected="false">Weaving</button><button role="tab" id="tb-gears" data-key="gears" aria-controls="tab-gears" aria-selected="false">Gears</button></div>
+</div>
+<aside class="box thm"><h3>Two benches</h3><p style="margin:0"><b>Weaving</b>: bead bracelets, the loom and satin weaves, and the Andean khipu. <b>Gears</b>: spirographs, where the petals are a gcd and the trip home is an lcm.</p></aside>
+</div></header>
+
+<div class="tabpanel" role="tabpanel" id="tab-weaving" aria-labelledby="tb-weaving">
+<section class="band hero panel-hero"><div class="wrap two">
+<div>
+<div class="kicker">The Workshop · Weaving</div>
+<h2 class="ph">The Loom</h2>
+<p class="lede">Diego's grandmother taught him to bead and to weave, and he packed a small loom for the voyage. Patterns that go around and around are cycles, and cycles are modular arithmetic. Here the math decides whether a bracelet closes cleanly and whether a cloth holds together at all.</p>
+</div>
+<aside class="box thm">
+<h3>How to keep a piece</h3>
+<p style="margin:0">Press <b>Make a still</b>, then right-click the picture (or press and hold on a phone) to save it. Bead traditions from Wixárika (Huichol) work in Mexico to Emberá chaquira in Colombia, and weavers from Oaxaca to the Andes, solve these same puzzles by hand.</p>
+</aside>
+</div></section>
+
+<section class="band piece" id="beads"><div class="wrap">
+<div><div class="easel"><canvas id="cv-beads" role="img"></canvas></div>
+<p class="note">The outer ring is the first time around the bracelet. Each ring inside is one more lap, threading the same pattern on.</p></div>
+<div class="panel">
+<div><div class="kicker">Calendar Isles · lcm and the Chinese Remainder Theorem</div><h2>Bead bracelets</h2>
+<p class="note">A bracelet has <i class="v">n</i> spots. You thread a colour pattern of length <i class="v">p</i> again and again: bead number <i class="v">k</i> gets colour <i class="v">k</i> mod <i class="v">p</i> and lands on spot <i class="v">k</i> mod <i class="v">n</i>. If <i class="v">p</i> does not divide <i class="v">n</i>, the first lap has a seam. Keep going around: when does the pattern close perfectly?</p></div>
+<div class="field"><label class="lbl" for="bn">Spots on the bracelet n <output id="bn-o"></output></label><input type="range" id="bn" min="3" max="30" value="12"></div>
+<div class="field"><label class="lbl" for="bp">Pattern length p <output id="bp-o"></output></label><input type="range" id="bp" min="1" max="8" value="5"></div>
+<div class="field"><span class="lbl">Pattern colours</span><div class="swatches" id="bsw"></div></div>
+<div class="row"><button id="b-rand">Surprise me</button><button class="primary" id="b-still">Make a still</button></div>
+<p class="status" id="b-info" aria-live="polite"></p>
+<div class="still" id="b-out"></div>
+<div class="box tool" style="margin:0"><h3>Ask why</h3>
+<p style="margin:0">With 12 spots and a 5-bead pattern, every spot ends up wearing every colour exactly once. With 12 spots and a 4-bead pattern, each spot only ever sees one colour. Predict, for any <i class="v">n</i> and <i class="v">p</i>, how many colours each spot sees. This is a first glimpse of the Chinese Remainder Theorem.</p></div>
+</div>
+</div></section>
+
+<section class="band alt piece" id="loom"><div class="wrap">
+<div><div class="easel"><canvas id="cv-loom" role="img"></canvas></div>
+<p class="note">Vertical threads are the warp; horizontal threads are the weft. Each square shows whichever thread is on top.</p></div>
+<div class="panel">
+<div><div class="kicker">Clockwork Isles · gcd and units</div><h2>The loom</h2>
+<p class="note">In a <b>satin</b> weave, each weft row lifts one warp thread out of every <i class="v">n</i>, and each new row moves the lift <i class="v">s</i> threads over: row <i class="v">j</i> lifts thread <i class="v">s</i>·<i class="v">j</i> mod <i class="v">n</i>. Satin feels smooth because the lifts are scattered, never touching. Weavers' rule: <i class="v">s</i> must share no factor with <i class="v">n</i>, and must not be 1 or <i class="v">n</i> − 1. Try to see why.</p></div>
+<div class="field"><span class="lbl">Weave</span><div class="seg" id="lw"></div></div>
+<div class="field" id="f-n"><label class="lbl" for="ln">Repeat n <output id="ln-o"></output></label><input type="range" id="ln" min="2" max="12" value="5"></div>
+<div class="field" id="f-s"><label class="lbl" for="ls">Step s <output id="ls-o"></output></label><input type="range" id="ls" min="1" max="11" value="2"></div>
+<div class="field"><label class="lbl" for="lt">Threads per side <output id="lt-o"></output></label><input type="range" id="lt" min="10" max="72" value="30"></div>
+<div class="field"><label class="lbl" for="lsw">Stripe width <output id="lsw-o"></output></label><input type="range" id="lsw" min="1" max="12" value="5"></div>
+<div class="field"><span class="lbl">Warp colours (vertical) · weft colours (horizontal)</span><div class="swatches" id="lsw-c"></div></div>
+<div class="row"><button id="l-rand">Surprise me</button><button class="primary" id="l-still">Make a still</button></div>
+<p class="status" id="l-info" aria-live="polite"></p>
+<div class="still" id="l-out"></div>
+<div class="box tool" style="margin:0"><h3>Ask why</h3>
+<p style="margin:0">There is no true satin with <i class="v">n</i> = 4 or <i class="v">n</i> = 6. Prove it. Then explain what goes wrong when gcd(<i class="v">s</i>, <i class="v">n</i>) &gt; 1: look for warp threads that are never lifted, and imagine pulling on them.</p></div>
+</div>
+</div></section>
+
+<section class="band piece" id="khipu"><div class="wrap">
+<div><div class="easel wide"><canvas id="cv-k" role="img" aria-label="A khipu"></canvas></div>
+<p class="note">Cords hang from a main cord. Lowest position: units. Above it: tens, hundreds, thousands. A cluster of single knots shows a digit; in the units place a long knot with that many turns is used instead, and a figure-eight knot means 1. An empty position means 0.</p></div>
+<div class="panel">
+<div><div class="kicker">Chapters 0 and 1 · place value is the division algorithm</div><h2>The khipu</h2>
+<p class="note">In the Inka Empire, record keepers called <i>khipukamayuq</i> stored numbers in knotted cords. Each digit is a leftover: the units digit of <i class="v">n</i> is <i class="v">n</i> mod 10, the tens digit is (<i class="v">n</i> div 10) mod 10, and so on. Tie your own khipu, then read one.</p></div>
+<div class="field"><label class="lbl" for="kn">Numbers to tie (up to 6, separated by commas)</label><input type="text" id="kn" value="352, 1206, 47, 9" class="mono"></div>
+<div class="row"><button class="primary" id="ktie">Tie the khipu</button><button id="kquiz">Read a mystery khipu</button></div>
+<div id="kq" class="row" style="align-items:end"></div>
+<p class="status" id="kinfo" aria-live="polite"></p>
+<div class="row"><button id="kstill">Make a still</button></div>
+<div class="still" id="kout"></div>
+</div>
+</div></section>
+</div>
+
+<div class="tabpanel" role="tabpanel" id="tab-gears" aria-labelledby="tb-gears">
+<section class="band hero panel-hero"><div class="wrap two">
+<div>
+<div class="kicker">The Workshop · Gears · Chapter 3</div>
+<h2 class="ph">The Gear Shop</h2>
+<p class="lede">In the smiths' quarter of Euclid's Forge, an old clockmaker sells toothed rings and wheels. Put a pen through a hole in a small wheel, roll it around inside a big ring, and a flower appears. How many petals? When does the pen come home? The answers are a gcd and an lcm.</p>
+</div>
+<aside class="box thm"><h3>The gear rule</h3>
+<p style="margin:0">A wheel with <i class="v">r</i> teeth rolling in a ring with <i class="v">R</i> teeth draws a figure with <b><i class="v">R</i> ÷ gcd(<i class="v">R</i>, <i class="v">r</i>)</b> petals, and closes after <b><i class="v">r</i> ÷ gcd(<i class="v">R</i>, <i class="v">r</i>)</b> trips around the ring.</p></aside>
+</div></section>
+
+<section class="band piece" id="bench"><div class="wrap">
+<div><div class="easel"><canvas id="cv" role="img" aria-label="A spirograph drawing"></canvas></div></div>
+<div class="panel">
+<div class="field"><span class="lbl">Clockmaker's favourites</span><div class="seg" id="pre"></div></div>
+<div class="field"><label class="lbl" for="R">Ring teeth R <output id="R-o"></output></label><input type="range" id="R" min="20" max="150" value="96"></div>
+<div class="field"><label class="lbl" for="r">Wheel teeth r <output id="r-o"></output></label><input type="range" id="r" min="5" max="149" value="36"></div>
+<div class="field"><label class="lbl" for="d">Pen hole (how far from the wheel's center) <output id="d-o"></output></label><input type="range" id="d" min="0" max="100" value="80"></div>
+<div class="field"><span class="lbl">The wheel rolls</span><div class="seg" id="side"></div></div>
+<div class="field"><span class="lbl">Colours: first trip, last trip, paper</span><div class="swatches">
+<label>first<input type="color" id="c1" value="#c8401a" aria-label="Colour of the first trip"></label>
+<label>last<input type="color" id="c2" value="#0c5f73" aria-label="Colour of the last trip"></label>
+<label>paper<input type="color" id="c3" value="#fffaf0" aria-label="Paper colour"></label></div></div>
+<div class="field"><label class="lbl" for="w">Pen width <output id="w-o"></output></label><input type="range" id="w" min="0.5" max="4" step="0.5" value="1.5"></div>
+<div class="row"><button class="primary" id="draw">Draw slowly</button><button id="layer" aria-pressed="false">Keep layers</button><button id="clear">Clean the paper</button><button id="still">Make a still</button></div>
+<p class="status" id="info" aria-live="polite"></p>
+<div class="still" id="out"></div>
+</div>
+</div></section>
+
+<section class="band alt" id="why"><div class="wrap two">
+<div>
+<h2>Why it closes: count teeth</h2>
+<p>Each time the wheel rolls one tooth, one tooth of the ring has been used. The pen is back where it started exactly when the wheel has turned a whole number of times <b>and</b> the contact point is back at the start of the ring. So the number of teeth rolled must be a multiple of <i class="v">r</i> and of <i class="v">R</i>: the first time is lcm(<i class="v">R</i>, <i class="v">r</i>) teeth.</p>
+<p>That many teeth is lcm ÷ <i class="v">R</i> trips around the ring, and lcm ÷ <i class="v">r</i> turns of the wheel. Each turn of the wheel draws one petal. Since lcm(<i class="v">R</i>, <i class="v">r</i>) = <i class="v">R</i><i class="v">r</i> ÷ gcd(<i class="v">R</i>, <i class="v">r</i>), you get the gear rule.</p>
+</div>
+<aside class="box tool"><h3>Challenges</h3>
+<ol style="margin:0">
+<li>Find a ring and wheel that make exactly 5 petals. Then find three more pairs that also make 5.</li>
+<li>Which wheel gives the most petals for a ring of 96? Which gives the fewest (other than a full-size wheel)?</li>
+<li>With R = 105 and r = 64, how many trips before the pen comes home? Predict, then press Draw slowly.</li>
+<li>Navigator: prove that the petals for (R, r) and for (R, R − r) are the same number.</li>
+</ol></aside>
+</div></section>
+</div>
+
+<section class="band alt"><div class="wrap pager"><a href="poets.html">← The Poets' Corner</a><a href="games.html">The Game Room →</a></div></section>
+<footer class="band"><div class="wrap">Modular Worlds · The Workshop · draft · UCI Math CEO</div></footer>
+
+<script src="book.js"></script>
+<script src="rooms.js"></script>
+<script>
+{
+const {$,gcd}=MW;const lcm=(a,b)=>a/gcd(a,b)*b;const mod=(a,m)=>((a%m)+m)%m;
+const probe=document.createElement('span');probe.style.display='none';document.body.appendChild(probe);
+const col=v=>{probe.style.color=`var(${v})`;return getComputedStyle(probe).color};
+function ctx(cv){const d=window.devicePixelRatio||1,W=cv.clientWidth||500,H=cv.clientHeight||500;cv.width=Math.round(W*d);cv.height=Math.round(H*d);const g=cv.getContext('2d');g.setTransform(d,0,0,d,0,0);return[g,W,H]}
+function range(id,fn){const el=$('#'+id),o=$('#'+id+'-o');el.addEventListener('input',()=>{o.textContent=el.value;fn()});o.textContent=el.value;return el}
+function setR(id,v){$('#'+id).value=v;$('#'+id+'-o').textContent=v}
+function seg(id,items,init,fn){const box=$('#'+id);box.innerHTML=items.map(([v,l])=>`<button data-v="${v}" aria-pressed="${v===init}">${l}</button>`).join('');
+  box.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;box.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));fn(b.dataset.v)})}
+function still(cv,out,what){$(out).innerHTML=`<img alt="A still of ${what}" src="${$(cv).toDataURL('image/png')}"><p class="note">Right-click or press and hold the picture to save it.</p>`}
+const PALS=[['#c8401a','#f2b134','#0c5f73','#f6f1e7','#7a4f9a','#2f7d4f','#d81159','#151a1d'],['#e63946','#ffbe0b','#3a86ff','#8338ec','#06d6a0','#ff006e','#fb5607','#073b4c'],['#9c2c1c','#e8b04a','#1f4e5f','#e9e1cf','#5b8c5a','#b5651d','#2b2d42','#d4a5a5']];
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+
+/* ---------- beads ---------- */
+const B={cols:PALS[0].slice()};
+const bn=range('bn',drawB),bp=range('bp',()=>{swB();drawB()});
+function swB(){const p=+bp.value;$('#bsw').innerHTML=Array.from({length:p},(_,i)=>`<label>${i}<input type="color" data-i="${i}" value="${B.cols[i]}" aria-label="Colour ${i} of the pattern"></label>`).join('')}
+$('#bsw').addEventListener('input',e=>{B.cols[+e.target.dataset.i]=e.target.value;drawB()});
+$('#b-rand').addEventListener('click',()=>{setR('bn',rnd(5,24));setR('bp',rnd(2,7));B.cols=PALS[rnd(0,2)].slice().sort(()=>Math.random()-0.5);swB();drawB()});
+$('#b-still').addEventListener('click',()=>still('#cv-beads','#b-out','a bead bracelet'));
+function drawB(){const cv=$('#cv-beads'),[g,W,H]=ctx(cv),n=+bn.value,p=+bp.value,L=lcm(n,p),laps=L/n,cx=W/2,cy=H/2,R0=Math.min(W,H)*0.45;g.clearRect(0,0,W,H);
+  const shown=Math.min(laps,8),gap=R0*0.62/Math.max(shown,1),br=Math.min(gap*0.42,R0*Math.PI/n*0.42);
+  for(let lap=0;lap<shown;lap++){const R=R0-lap*gap;g.strokeStyle=col('--line');g.lineWidth=1;g.beginPath();g.arc(cx,cy,R,0,7);g.stroke();
+    for(let s=0;s<n;s++){const k=lap*n+s,a=2*Math.PI*s/n-Math.PI/2,x=cx+R*Math.cos(a),y=cy+R*Math.sin(a);g.beginPath();g.arc(x,y,br,0,7);g.fillStyle=B.cols[k%p];g.fill();g.strokeStyle='rgba(0,0,0,.35)';g.lineWidth=1;g.stroke()}}
+  if(n%p){const a=-Math.PI/2-Math.PI/n;g.strokeStyle=col('--ember');g.lineWidth=3;g.setLineDash([6,5]);g.beginPath();g.moveTo(cx+(R0+br*1.8)*Math.cos(a),cy+(R0+br*1.8)*Math.sin(a));g.lineTo(cx+(R0-br*1.8)*Math.cos(a),cy+(R0-br*1.8)*Math.sin(a));g.stroke();g.setLineDash([])}
+  g.fillStyle=col('--ink');g.font=`700 ${Math.max(14,R0*0.09)}px "Roboto Flex",Roboto,sans-serif`;g.textAlign='center';g.textBaseline='middle';g.fillText(`${laps} lap${laps>1?'s':''}`,cx,cy);
+  const d=gcd(n,p);
+  $('#b-info').textContent=`n = ${n}, p = ${p}, gcd = ${d}.\n${n%p?`First lap: a seam, because ${p} does not divide ${n}.`:`${p} divides ${n}: the pattern closes on the first lap.`}\nThe pattern closes perfectly after lcm(${n}, ${p}) = ${L} beads, ${laps} lap${laps>1?'s':''}.${laps>8?' (The picture shows the first 8.)':''}\nEach spot wears ${p/d} of the ${p} colours.`;
+  cv.setAttribute('aria-label',`Bracelet with ${n} spots and a ${p}-colour pattern, drawn as ${shown} rings. It closes after ${laps} laps; each spot sees ${p/d} colours.`)}
+swB();new ResizeObserver(drawB).observe($('#cv-beads'));
+
+/* ---------- loom ---------- */
+const Lm={w:'satin',warp:['#0c5f73','#f2b134'],weft:['#f6f1e7','#c8401a']};
+seg('lw',[['plain','Plain'],['twill','Twill'],['satin','Satin']],'satin',v=>{Lm.w=v;$('#f-s').style.display=v==='satin'?'':'none';$('#ln').min=v==='plain'?2:v==='twill'?3:2;drawL()});
+const ln=range('ln',()=>{$('#ls').max=Math.max(1,+ln.value-1);if(+$('#ls').value>+$('#ls').max)setR('ls',$('#ls').max);drawL()}),ls=range('ls',drawL),lt=range('lt',drawL),lsw=range('lsw',drawL);
+function swL(){$('#lsw-c').innerHTML=Lm.warp.map((c,i)=>`<label>warp ${i+1}<input type="color" data-k="warp" data-i="${i}" value="${c}" aria-label="Warp colour ${i+1}"></label>`).join('')+Lm.weft.map((c,i)=>`<label>weft ${i+1}<input type="color" data-k="weft" data-i="${i}" value="${c}" aria-label="Weft colour ${i+1}"></label>`).join('')}
+$('#lsw-c').addEventListener('input',e=>{Lm[e.target.dataset.k][+e.target.dataset.i]=e.target.value;drawL()});
+$('#l-rand').addEventListener('click',()=>{const P=PALS[rnd(0,2)].slice().sort(()=>Math.random()-0.5);Lm.warp=[P[0],P[1]];Lm.weft=[P[2],P[3]];setR('lsw',rnd(1,8));if(Lm.w==='satin'){const n=rnd(5,12);setR('ln',n);$('#ls').max=n-1;let s;do{s=rnd(2,n-2)}while(gcd(s,n)!==1&&n>4);setR('ls',s)}else setR('ln',rnd(3,8));swL();drawL()});
+$('#l-still').addEventListener('click',()=>still('#cv-loom','#l-out','a woven cloth'));
+function up(i,j){const n=+ln.value,s=+ls.value;if(Lm.w==='plain')return (i+j)%2===0;if(Lm.w==='twill')return mod(i+j,n)<Math.ceil(n/2);return mod(s*j-i,n)===0}
+function drawL(){const cv=$('#cv-loom'),[g,W]=ctx(cv),T=+lt.value,sw=+lsw.value,c=W/T,n=+ln.value,s=+ls.value;g.clearRect(0,0,W,W);
+  for(let j=0;j<T;j++)for(let i=0;i<T;i++){const u=up(i,j),x=i*c,y=j*c;g.fillStyle=u?Lm.warp[Math.floor(i/sw)%2]:Lm.weft[Math.floor(j/sw)%2];g.fillRect(x,y,c+0.5,c+0.5);
+    if(c>7){g.fillStyle='rgba(0,0,0,.14)';if(u)g.fillRect(x+c-1.5,y,1.5,c);else g.fillRect(x,y+c-1.5,c,1.5)}}
+  let msg;
+  if(Lm.w==='plain')msg='Plain weave: over one, under one. Thread i is up on row j when i + j is even.';
+  else if(Lm.w==='twill')msg=`Twill: thread i is up on row j when (i + j) mod ${n} < ${Math.ceil(n/2)}. Each row shifts by one, so diagonals appear.`;
+  else{const d=gcd(s,n),lifted=new Set();for(let j=0;j<n;j++)for(let i=0;i<n;i++)if(up(i,j))lifted.add(i);
+    msg=`Satin: row j lifts the threads i with i ≡ ${s}·j (mod ${n}).\n`+(d>1?`gcd(${s}, ${n}) = ${d}: only ${lifted.size} of every ${n} warp threads are ever lifted. The others float loose and are never tied into the cloth.`:s===1||s===n-1?`gcd(${s}, ${n}) = 1, so every thread is lifted, but step ${s} puts each lift right next to the last: a twill line, not a satin.`:`gcd(${s}, ${n}) = 1 and ${s} is not 1 or ${n-1}: a true ${n}-thread satin. Every thread is tied, and no two lifts touch.`)}
+  $('#l-info').textContent=msg;cv.setAttribute('aria-label',`Woven cloth, ${T} by ${T} threads, ${Lm.w} weave${Lm.w==='satin'?` with repeat ${n} and step ${s}`:Lm.w==='twill'?` repeating every ${n} threads`:''}, stripes ${sw} threads wide`)}
+swL();new ResizeObserver(drawL).observe($('#cv-loom'));
+MW.onTheme(()=>{drawB();drawL()});
+}
+</script>
+<script>
+{
+const R=MWR,{$}=R;
+const CC=['#9c2c1c','#e0a019','#0c5f73','#2f7d4f','#7a4f9a','#b5651d','#14181b'];
+let K=[352,1206,47,9],quiz=null;
+function parse(t){return t.split(/[,\s]+/).map(x=>parseInt(x,10)).filter(x=>!isNaN(x)&&x>=0&&x<10000).slice(0,6)}
+function drawK(nums,showSum,labels){const cv=$('#cv-k'),[g,W,H]=R.ctx(cv);g.fillStyle=R.col('--panel');g.fillRect(0,0,W,H);
+  const cords=nums.concat(showSum?[nums.reduce((a,b)=>a+b,0)]:[]),n=cords.length,top=H*0.1,levels=[0.3,0.47,0.64,0.83].map(f=>H*f),dx=W/(n+1),kr=Math.max(4,Math.min(7,W/120));
+  g.strokeStyle='#5c3a1e';g.lineWidth=6;g.lineCap='round';g.beginPath();g.moveTo(W*0.04,top);g.lineTo(W*0.96,top);g.stroke();
+  cords.forEach((v,ci)=>{const x=dx*(ci+1),c=showSum&&ci===n-1?'#14181b':CC[ci%CC.length];
+    g.strokeStyle=c;g.lineWidth=4;g.beginPath();g.moveTo(x,top);g.bezierCurveTo(x-6,H*0.4,x+6,H*0.7,x,H*0.95);g.stroke();
+    const d=[Math.floor(v/1000)%10,Math.floor(v/100)%10,Math.floor(v/10)%10,v%10];
+    d.forEach((k,li)=>{const y=levels[li];if(!k)return;g.fillStyle=c;g.strokeStyle=c;
+      if(li<3){const h=(k-1)*kr*1.9;for(let j=0;j<k;j++){g.beginPath();g.arc(x,y-h/2+j*kr*1.9,kr,0,7);g.fill()}}
+      else if(k===1){g.lineWidth=3;g.beginPath();g.arc(x,y-kr,kr,0,7);g.stroke();g.beginPath();g.arc(x,y+kr,kr,0,7);g.stroke()}
+      else{const h=k*kr*1.15;g.beginPath();g.ellipse(x,y,kr*1.2,h/2+kr*0.4,0,0,7);g.fill();g.strokeStyle=R.col('--panel');g.lineWidth=1.5;for(let j=1;j<k;j++){const yy=y-h/2+j*h/k;g.beginPath();g.moveTo(x-kr*1.1,yy);g.lineTo(x+kr*1.1,yy);g.stroke()}}});
+    if(labels){g.fillStyle=R.col('--ink');g.font='700 14px "Roboto Mono", monospace';g.textAlign='center';g.fillText(showSum&&ci===n-1?`sum ${v}`:String(v),x,H*0.99)}});
+  ['thousands','hundreds','tens','units'].forEach((t,i)=>{g.fillStyle=R.col('--mute');g.font='12px Roboto, sans-serif';g.textAlign='left';g.fillText(t,4,levels[i]+4)});
+  cv.setAttribute('aria-label',labels?`Khipu with cords for ${nums.join(', ')}${showSum?' and a sum cord':''}`:`A mystery khipu with ${nums.length} cords`)}
+function tie(){K=parse($('#kn').value);if(!K.length){$('#kinfo').textContent='Enter whole numbers from 0 to 9999.';return}quiz=null;$('#kq').innerHTML='';drawK(K,true,true);
+  $('#kinfo').textContent=K.map(v=>`${v}: `+[1000,100,10,1].map(p=>Math.floor(v/p)%10).join(' | ')).join('\n')+`\nThe black cord on the right records the sum, ${K.reduce((a,b)=>a+b,0)}. Some real khipus record totals like this.`}
+$('#ktie').onclick=tie;
+$('#kquiz').onclick=()=>{quiz=Array.from({length:3},()=>Math.floor(Math.random()*(Math.random()<0.5?999:9999)));drawK(quiz,false,false);
+  $('#kq').innerHTML=quiz.map((_,i)=>`<div class="field"><label class="lbl" for="kq${i}">Cord ${i+1}</label><input type="number" id="kq${i}" style="width:6.5em"></div>`).join('')+'<button class="primary" id="kcheck">Check</button>';
+  $('#kinfo').textContent='Read each cord from the top down: thousands, hundreds, tens, units.';
+  $('#kcheck').onclick=()=>{const ok=quiz.map((v,i)=>+$('#kq'+i).value===v);$('#kinfo').textContent=ok.every(Boolean)?`All three right: ${quiz.join(', ')}. A true khipukamayuq.`:quiz.map((v,i)=>`Cord ${i+1}: ${ok[i]?'right':'not yet'}`).join('\n')+'\nCount the knots at each level again; an empty level is 0.';if(ok.every(Boolean))drawK(quiz,false,true)}};
+$('#kstill').onclick=()=>R.still('#cv-k','#kout','a khipu');
+tie();new ResizeObserver(()=>quiz?drawK(quiz,false,false):drawK(K,true,true)).observe($('#cv-k'));
+}
+</script>
+<script>
+{
+const R=MWR,{$}=R,{gcd}=MW;
+let side='in',keep=false,anim=0,layers=[];
+const Rr=R.range('R',()=>{if(+$('#r').value>=+$('#R').value)R.setR('r',+$('#R').value-1);redraw()}),rr=R.range('r',()=>{if(+$('#r').value>=+$('#R').value&&side==='in')R.setR('r',+$('#R').value-1);redraw()});
+R.range('d',redraw);R.range('w',redraw);['c1','c2','c3'].forEach(id=>$('#'+id).addEventListener('input',redraw));
+R.seg('side',[['in','Inside the ring'],['out','Outside the ring']],'in',v=>{side=v;redraw()});
+const PRE=[[96,36],[105,64],[150,52],[120,100],[84,32],[100,99],[63,24],[144,90]];
+R.seg('pre',PRE.map(([a,b])=>[a+','+b,a+' and '+b]),'96,36',v=>{const[a,b]=v.split(',').map(Number);R.setR('R',a);R.setR('r',b);redraw()});
+$('#layer').onclick=e=>{keep=!keep;e.target.setAttribute('aria-pressed',keep);e.target.textContent=keep?'Layers on':'Keep layers';if(!keep){layers=[];redraw()}};
+$('#clear').onclick=()=>{layers=[];redraw()};
+$('#still').onclick=()=>R.still('#cv','#out','a gear drawing');
+const hex=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+function spec(){const Rv=+$('#R').value,rv=Math.min(+$('#r').value,side==='in'?Rv-1:999),g=gcd(Rv,rv);return {Rv,rv,g,d:+$('#d').value/100,side,petals:Rv/g,trips:rv/g,c1:$('#c1').value,c2:$('#c2').value,w:+$('#w').value}}
+function pts(s,steps){const {Rv,rv,d}=s,a=s.side==='in'?Rv-rv:Rv+rv,k=a/rv,D=d*rv,tmax=2*Math.PI*s.trips,out=[];
+  for(let i=0;i<=steps;i++){const t=tmax*i/steps;out.push(s.side==='in'?[a*Math.cos(t)+D*Math.cos(k*t),a*Math.sin(t)-D*Math.sin(k*t)]:[a*Math.cos(t)-D*Math.cos(k*t),a*Math.sin(t)-D*Math.sin(k*t)])}return out}
+function paint(s,upto,g,W,H){const steps=Math.min(24000,Math.max(1200,s.trips*600)),p=pts(s,steps),ext=s.side==='in'?s.Rv:s.Rv+2*s.rv,sc=(Math.min(W,H)*0.46)/ext,cx=W/2,cy=H/2;
+  const A=hex(s.c1),B=hex(s.c2),n=Math.floor(steps*(upto==null?1:upto));g.lineWidth=s.w;g.lineJoin='round';
+  for(let tr=0;tr<s.trips;tr++){const a=Math.floor(tr*steps/s.trips),b=Math.min(n,Math.floor((tr+1)*steps/s.trips));if(b<=a)break;
+    const f=s.trips>1?tr/(s.trips-1):0;g.strokeStyle=`rgb(${A.map((v,i)=>Math.round(v+(B[i]-v)*f)).join(',')})`;g.beginPath();
+    for(let i=a;i<=b;i++){const[x,y]=p[i];i===a?g.moveTo(cx+x*sc,cy+y*sc):g.lineTo(cx+x*sc,cy+y*sc)}g.stroke()}}
+function base(){const cv=$('#cv'),[g,W,H]=R.ctx(cv);g.fillStyle=$('#c3').value;g.fillRect(0,0,W,H);return[g,W,H]}
+function redraw(){cancelAnimationFrame(anim);const s=spec(),[g,W,H]=base();layers.forEach(L=>paint(L,1,g,W,H));paint(s,1,g,W,H);info(s)}
+function info(s){$('#info').textContent=`R = ${s.Rv}, r = ${s.rv}: gcd = ${s.g}.\nPetals: ${s.Rv} ÷ ${s.g} = ${s.petals}.  Trips around the ring: ${s.rv} ÷ ${s.g} = ${s.trips}.\nlcm(${s.Rv}, ${s.rv}) = ${s.Rv*s.rv/s.g} teeth rolled before the pen comes home.${layers.length?`\nLayers kept: ${layers.length}.`:''}`;
+  $('#cv').setAttribute('aria-label',`Spirograph with ring ${s.Rv} and wheel ${s.rv}: ${s.petals} petals, ${s.trips} trips${layers.length?`, over ${layers.length} earlier layers`:''}`)}
+$('#draw').onclick=()=>{const s=spec();if(keep)layers.push(s);cancelAnimationFrame(anim);
+  if(R.reduce){redraw();return}
+  const t0=performance.now(),dur=Math.min(12000,2500*s.trips);
+  const step=now=>{const u=Math.min(1,(now-t0)/dur),[g,W,H]=base();layers.forEach(L=>{if(L!==s)paint(L,1,g,W,H)});paint(s,u,g,W,H);info(s);if(u<1)anim=requestAnimationFrame(step)};anim=requestAnimationFrame(step)};
+new ResizeObserver(redraw).observe($('#cv'));MW.onTheme(redraw);
+}
+</script>
+<script>
+{
+const tabs=[...document.querySelectorAll('.tabbar [role=tab]')],panels=tabs.map(t=>document.getElementById(t.getAttribute('aria-controls')));
+function show(i,focus){tabs.forEach((t,j)=>{t.setAttribute('aria-selected',j===i);t.tabIndex=j===i?0:-1;panels[j].hidden=j!==i});if(focus)tabs[i].focus();
+  window.dispatchEvent(new Event('resize'))}
+tabs.forEach((t,i)=>{t.addEventListener('click',()=>{show(i);history.replaceState(null,'','#'+t.dataset.key)});
+  t.addEventListener('keydown',e=>{const k=e.key;if(k==='ArrowRight'||k==='ArrowLeft'){e.preventDefault();show((i+(k==='ArrowRight'?1:tabs.length-1))%tabs.length,true)}})});
+function route(){const h=decodeURIComponent(location.hash.slice(1));let i=tabs.findIndex(t=>t.dataset.key===h);let el=null;
+  if(i<0&&h){el=document.getElementById(h);if(el)i=panels.findIndex(p=>p.contains(el))}
+  show(i<0?0:i);if(el)setTimeout(()=>el.scrollIntoView(),60);else if(h&&i>=0)setTimeout(()=>document.querySelector('.tabbar').scrollIntoView(),60)}
+window.addEventListener('hashchange',route);route();
+}
+</script>
+</body>
+</html>
