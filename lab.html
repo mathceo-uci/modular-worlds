@@ -396,11 +396,25 @@ $('#mBez').onclick=()=>{if(!C.bezout)return;
   snap();S={mode:'prod',factors:[[{t:'int',n:'c'}],[{t:'mul',n:'ax',parts:[{t:'self',n:'a'},{t:'int',n:'x'}]},{t:'mul',n:'by',parts:[{t:'int',n:'b'},{t:'int',n:'y'}]}]]};sel=[];
   log('gcd(a, b) = 1, so 1 = ax + by for some integers x and y (Bézout); multiply c by this 1');say('c = c × 1 = c(ax + by). Now expand.');draw()};
 function kind(x){if((x.t==='mult'&&x.of===C.g)||(x.t==='grp'&&typeof C.g==='string'))return 'mg';if(x.t==='odd')return 'odd';if(x.t==='even'||(x.t==='grp'&&C.g===2))return 'even';if(x.t==='one'&&x.v===1&&C.g===2)return '1';return x.t}
+
+/* Is the bench already in the goal's shape? Used to tell a student reaching for a rule that the definition finishes the proof. */
+function atGoal(){if(S.mode!=='sum')return null;const T=S.terms,g=C.g;
+  const grp1=T.length===2&&T.some(x=>x.t==='grp')&&T.some(x=>x.t==='one'&&x.v===1);
+  if(C.goal==='even'){if(T.length===1&&T[0].t==='even')return 'card';if(T.length===1&&T[0].t==='grp')return 'shape'}
+  if(C.goal==='odd'){if(T.length===1&&T[0].t==='odd')return 'card';if(grp1)return 'shape'}
+  if(C.goal==='r1'&&grp1)return 'shape';
+  if((C.goal==='mult3'||C.goal==='multg')&&T.length===1&&T[0].t==='grp')return 'shape';
+  if(C.goal==='multg'&&T.length===1&&T[0].t==='mult'&&T[0].of===g)return 'card';
+  return null}
+function goalHint(k){if(k==='card')return `Kevin: "No rule needed: that flask is already labelled ${goalWord()}. Try Submit for inspection."`;
+  const what={even:'only pairs, with nothing left over, is exactly what even means',odd:'pairs plus one loose atom is exactly what odd means',r1:'trios plus one loose atom is exactly what "leaves 1 in trios" means',mult3:'only trios, with nothing left over, is exactly what a multiple of 3 means',multg:`only crates of ${C.g} is exactly what a multiple of ${C.g} means`}[C.goal];
+  return `Kevin: "No rule needed: ${what}. Try Submit for inspection."`}
 $('#mRule').onclick=()=>{
   if(C.g===3){say('The lab has no rules for trios yet. Use the definitions.','bad');return}
   setAsk(`<span class="q">Which lab rule applies to the flasks you selected?</span>`+LEMMAS.map((L,i)=>(L.fam||'parity')!==famOf(C)?'':`<button data-i="${i}">${esc(L.txt)}${proven(L.from)?'':' (locked)'}</button>`).join(''));
   say('Pick a rule. Rules unlock when you prove their recipe.');
   $('#ask').onclick=ev=>{const b=ev.target.closest('button');if(!b)return;const L=LEMMAS[+b.dataset.i];
+    {const k=atGoal();if(k){say(goalHint(k),'bad');return}}
     if(L.from===C.id){say('That rule is the recipe you are producing. Using it here would be circular reasoning.','bad');return}
     if(!proven(L.from)){say(`That rule is not in your lab yet. Prove "${CLAIMS.find(c=>c.id===L.from).title}" first.`,'bad');return}
     let ids=sel.slice(),out;
