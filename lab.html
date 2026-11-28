@@ -25,8 +25,9 @@
 .term{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 10px;border-radius:10px;min-height:0}
 .term[aria-pressed=true]{outline:3px solid var(--brass);outline-offset:1px}
 .dots{display:flex;align-items:center;gap:3px;min-height:32px}
-.col{display:flex;flex-direction:column;gap:3px}
-.d{width:11px;height:11px;border-radius:50%;background:var(--sea)}
+.col{display:flex;flex-direction:column;gap:5px;position:relative}
+.col::before{content:"";position:absolute;left:50%;top:5px;bottom:5px;width:1px;margin-left:-.5px;background:var(--sea)}
+.d{width:11px;height:11px;border-radius:50%;background:var(--sea);position:relative;z-index:1}
 .d.one{background:var(--ember)}
 .tl{font-size:12px;color:var(--mute);font-family:"Roboto Mono",monospace}
 .fl{font-family:"Roboto Mono",monospace;font-size:16px;font-weight:500;padding:6px 4px}
@@ -276,8 +277,9 @@ function load(id){C=CLAIMS.find(c=>c.id===id);S=JSON.parse(JSON.stringify(C.star
 
 function termHTML(x){
   if(x.t==='one')return `<div class="dots">${'<span class="d one"></span>'.repeat(x.v)}</div><span class="tl">${x.v} loose</span>`;
-  if(x.t==='grp'&&typeof C.g==='string')return `<div class="dots">${'<span class="crate"></span>'.repeat(3)}<span class="tl">…</span></div><span class="tl">${esc(x.w)} ${esc(GN())}</span>`;
-  if(x.t==='grp'){const c=`<div class="col">${'<span class="d"></span>'.repeat(C.g)}</div>`;return `<div class="dots">${c.repeat(3)}<span class="tl">…</span></div><span class="tl">${esc(x.w)} ${C.g===2?'pairs':'trios'}</span>`}
+  if(x.t==='grp'){const num=/^\d+$/.test(x.w)?+x.w:null,shown=num===null?3:Math.min(num,3),more=num===null||num>3;
+    const unit=typeof C.g==='string'?'<span class="crate"></span>':`<div class="col">${'<span class="d"></span>'.repeat(C.g)}</div>`;
+    return `<div class="dots">${unit.repeat(shown)}${more?'<span class="tl">…</span>':''}</div><span class="tl">${esc(x.w)} ${esc(num===1?GN1():GN())}</span>`}
   const lab={odd:'odd',even:'even',int:'integer',r1:'1 extra',r2:'1 short',mul:'product',mult:`multiple of ${x.of}`}[x.t];
   return `<span class="fl">${esc(x.n)}</span><span class="tl">${lab}</span>`}
 function draw(){
