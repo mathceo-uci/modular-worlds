@@ -303,14 +303,14 @@ function why(id){
   switch(id){
   case 'mUnpack':{if(n!==1)return 'Select one flask whose label you want to read.';const x=ts[0];
     if(x.t==='int')return 'Its label only says "integer". There is nothing more to read.';
-    if(x.t==='mul'){const ps=x.parts||[];return ps.some(p=>p.t==='self'||(p.t==='mult'&&p.of===C.g))?null:'No label in this product says anything about '+C.g+'. Try a lab rule.'}
+    if(x.t==='mul'){const ps=x.parts||[];return ps.some(p=>p.t==='self'||(p.t==='mult'&&p.of===C.g)||(C.g===2&&p.t==='even'))?null:'No label in this product says anything about '+C.g+'. Try a lab rule.'}
     return (x.t==='mult'?multDef(x):DEF[x.t])?null:'That flask is already open.'}
   case 'mSplit':if(n!==1)return 'Select one odd flask to split.';return ts[0].t==='odd'?null:'Split off an atom works on an odd flask.';
   case 'mBond':if(n!==2)return 'Select two flasks of loose atoms.';if(!sameBox()||!ts.every(x=>x.t==='one'))return 'Bond loose atoms needs two flasks of loose atoms, side by side in the same sum.';
     return S.mode==='prod'?'Expand the product first: inside one factor there is only one loose flask.':null;
   case 'mPour':if(n!==2)return 'Select two flasks of '+GN()+'.';if(S.mode==='prod')return 'Expand the product first.';
     return ts.every(x=>x.t==='grp')?null:'Pour together needs two flasks of '+GN()+'. A labelled flask can be opened first with Read a label.';
-  case 'mExpand':return S.mode==='prod'?null:'There is no product left to expand.';
+  case 'mExpand':return S.mode==='prod'?null:expandWhy();
   case 'mBez':return (S.mode==='sum'&&S.terms.length===1&&S.terms[0].n==='c')?null:'Bézout is used once, at the start, on c.';
   case 'mRule':return C.g===3?'The lab has no rules for trios yet. Use the definitions.':null;
   case 'mUndo':return hist.length?null:'Nothing to undo yet.';
@@ -342,7 +342,7 @@ GATED.forEach(id=>{const b=document.getElementById(id);
 $('#mUnpack').onclick=()=>{if(!need(1,'Select one flask whose label you want to read.'))return;const id=sel[0],x=get(id);
   if(x.t==='int'){say('Its label only says "integer". There is nothing more to read.','bad');return}
   let T=x,rest=null;
-  if(x.t==='mul'){const ps=x.parts||[],sp=ps.find(p=>p.t==='self'),mp=ps.find(p=>p.t==='mult'&&p.of===C.g);
+  if(x.t==='mul'){const ps=x.parts||[],sp=ps.find(p=>p.t==='self'),mp=ps.find(p=>(p.t==='mult'&&p.of===C.g)||(C.g===2&&p.t==='even'));
     if(sp){const r=ps.filter(p=>p!==sp).map(p=>p.n).reduce((u,v)=>pn(u,v));snap();usedDef=true;replace([id],[{t:'grp',w:r}]);
       log(`${x.n} = ${C.g}·${wrapd(r)}: ${C.g} times an integer`);say(`${x.n} has ${C.g} as a factor, so it is ${wrapd(r)} ${GN()}.`);draw();return}
     if(!mp){say('No label in this product says anything about '+C.g+'. Try a lab rule.','bad');return}
@@ -387,7 +387,10 @@ function mul(u,v){
   if(u.t==='one')return Object.assign({},v);
   if(v.t==='one')return Object.assign({},u);
   return {t:'mul',n:pn(u.n,v.n),ev:u.t==='even'||v.t==='even',od:u.t==='odd'&&v.t==='odd',parts:[...(u.parts||[u]),...(v.parts||[v])]}}
-$('#mExpand').onclick=()=>{if(S.mode!=='prod'){say('There is no product left to expand.','bad');return}
+function expandWhy(){const m=S.mode==='sum'&&S.terms.find(x=>x.t==='mul');if(!m)return 'There is no product left to expand.';
+  const ev=(m.parts||[]).find(p=>p.t==='even'),mg=(m.parts||[]).find(p=>p.t==='self'||(p.t==='mult'&&p.of===C.g));
+  return `${m.n} is one flask inside a sum, so there is nothing to expand: treat it as one number. `+(ev?`Read the label of its even factor ${ev.n}, or use the rule even × integer = even.`:mg?`Read the label of ${mg.n}, or use the rule for a multiple times an integer.`:'Use a lab rule on it.')}
+$('#mExpand').onclick=()=>{if(S.mode!=='prod'){say(expandWhy(),'bad');return}
   const[A,B]=S.factors;const cells=A.map(u=>B.map(v=>mul(u,v)));
   setAsk(`<span class="q">The distributive law, as a grid: every part of one factor meets every part of the other.</span><table class="grid2"><tr><th>×</th>${B.map(v=>`<th>${esc(alg(v))}</th>`).join('')}</tr>${A.map((u,i)=>`<tr><th>${esc(alg(u))}</th>${cells[i].map(c=>`<td>${esc(alg(c))}</td>`).join('')}</tr>`).join('')}</table>`);
   snap();S={mode:'sum',terms:cells.flat()};sel=[];log('Expand the product (distributive law)');say('Expanded. Now combine what you see.');draw()};
