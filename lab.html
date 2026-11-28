@@ -186,6 +186,16 @@ const CLAIMS=[
  {id:'c8',ch:'Chapter 0 · Parity and trios',title:'Three extras',stmt:'If a, b and c each leave 1 when packed in trios, then a + b + c is a multiple of 3.',g:3,goal:'mult3',lhs:'a + b + c',given:'a, b and c each leave 1 in trios',
   start:{mode:'sum',terms:[{t:'r1',n:'a'},{t:'r1',n:'b'},{t:'r1',n:'c'}]},routes:['def'],zero:'a = 1',ex:'4 + 7 + 10 = 21',
   dist:{def:'Each number has one atom beyond its full trios. The three extra atoms form one more full trio, so nothing is left over.'}},
+ {id:'c15',ch:'Chapter 0 · Parity and trios',title:'Three odds',stmt:'If a, b and c are odd, then a + b + c is odd.',g:2,goal:'odd',lhs:'a + b + c',given:'a, b and c are odd',
+  start:{mode:'sum',terms:[{t:'odd',n:'a'},{t:'odd',n:'b'},{t:'odd',n:'c'}]},routes:['def','lem','mix'],zero:'a = 1',ex:'3 + 5 + 7 = 15 and 1 + 1 + 9 = 11',
+  hint:'Three routes exist. The route by earlier results needs the rules from Odd + odd and Even + odd.',
+  dist:{def:'Each odd number is pairs plus one loose atom. Two of the three loose atoms bond into a pair, and the third has no partner, so exactly one is left over.',
+   lem:'Two odd numbers make an even number. Adding the third odd number to that even number gives an odd number.',
+   mix:'Unpack some of the numbers into pairs and loose atoms and handle the rest with known rules: in the end everything is pairs except one loose atom.'}},
+ {id:'c16',ch:'Chapter 0 · Parity and trios',title:'Two short trios',stmt:'If a and b each leave 2 when packed in trios, then a + b leaves 1.',g:3,goal:'r1',lhs:'a + b',given:'a and b each leave 2 in trios',
+  start:{mode:'sum',terms:[{t:'r2',n:'a'},{t:'r2',n:'b'}]},routes:['def'],zero:'a = 2',ex:'5 + 8 = 13 = 3·4 + 1 and 2 + 2 = 4 = 3·1 + 1',
+  hint:'Unpack both labels. Four loose atoms make one full trio with one atom to spare.',
+  dist:{def:'Each number has two atoms beyond its full trios. The four extra atoms make one more full trio, and one atom is left over.'}},
  {id:'c9',ch:'Chapter 1 · Divisibility',title:'Crates add up',stmt:'If d divides a and d divides b, then d divides a + b.',g:'d',goal:'multg',lhs:'a + b',given:'d | a and d | b',
   start:{mode:'sum',terms:[{t:'mult',of:'d',n:'a'},{t:'mult',of:'d',n:'b'}]},routes:['def'],zero:'a = 0',ex:'3 | 6 and 3 | 9, and 3 | 15',
   dist:{def:'Both numbers are made of whole crates of size d. Pour them together and you still have only whole crates, with nothing left over.'}},
@@ -203,6 +213,12 @@ const CLAIMS=[
   dist:{def:'Each of a and b is made of whole crates of size d. Taking them any number of times and adding the results only ever gives whole crates.',
    lem:'Each product is a multiple of d, because a multiple of d stays one when it is multiplied. Two multiples of d add up to a multiple of d.',
    mix:'Some pieces are unpacked into crates of size d and the others follow from known rules: every piece is a multiple of d, so the total is too.'}},
+ {id:'c17',ch:'Chapter 1 · Divisibility',title:'Three crates',stmt:'If d divides a, b and c, then d divides a + b + c.',g:'d',goal:'multg',lhs:'a + b + c',given:'d | a, d | b and d | c',
+  start:{mode:'sum',terms:[{t:'mult',of:'d',n:'a'},{t:'mult',of:'d',n:'b'},{t:'mult',of:'d',n:'c'}]},routes:['def','lem','mix'],zero:'a = 0',ex:'5 | 10, 5 | 15 and 5 | 25, and 5 | 50',
+  hint:'The route by earlier results needs the rule from Crates add up, used twice.',
+  dist:{def:'All three numbers are made of whole crates of size d. Pour them together and you still have only whole crates.',
+   lem:'Two multiples of d add up to a multiple of d. Do it twice: first a + b, then (a + b) + c.',
+   mix:'Unpack some numbers into crates of size d and combine the rest with the rule for adding multiples: the total is all whole crates.'}},
  {id:'c13',ch:'Chapter 3 · Euclid’s Forge',title:'The forge lemma',stmt:'If d divides b and d divides r, then d divides qb + r for every integer q.',g:'d',goal:'multg',lhs:'qb + r',given:'d | b and d | r; q is an integer',
   start:{mode:'sum',terms:[{t:'mul',n:'qb',parts:[{t:'int',n:'q'},{t:'mult',of:'d',n:'b'}]},{t:'mult',of:'d',n:'r'}]},routes:['def','lem','mix'],zero:'r = 0',ex:'7 | 14 and 7 | 21, and 7 divides 3·14 + 21 = 63',
   hint:'This is half of Lemma 3.1: every common divisor of b and r also divides a = qb + r.',
@@ -229,7 +245,7 @@ const famOf=c=>typeof c.g==='string'?'div':'parity';
 const GN=()=>C.g===2?'pairs':C.g===3?'trios':`crates of ${C.g}`;
 const GN1=()=>C.g===2?'pair':C.g===3?'trio':`crate of ${C.g}`;
 const cap=t=>t.charAt(0).toUpperCase()+t.slice(1);
-const goalWord=()=>({even:'even',odd:'odd',mult3:'a multiple of 3',multg:`a multiple of ${C.g}`})[C.goal];
+const goalWord=()=>({even:'even',odd:'odd',r1:'1 more than a multiple of 3',mult3:'a multiple of 3',multg:`a multiple of ${C.g}`})[C.goal];
 const mk=(k,n)=>k==='mg'?{t:'mult',of:C.g,n}:{t:k,n};
 const desc=o=>o.t==='mult'?`a multiple of ${o.of}`:o.t;
 function multDef(x){return {ok:`${x.of}·(an integer)`,bad:[[`(an integer) ÷ ${x.of}`,`That would make ${x.n} a fraction of ${x.of}, not a multiple of it.`],[`${x.of} ÷ (an integer)`,`That says ${x.n} divides ${x.of}: the other way around.`]],res:l=>[{t:'grp',w:l}],form:l=>`${x.of}${l}`,word:`a multiple of ${x.of} (${x.of} | ${x.n})`}}
@@ -413,17 +429,18 @@ $('#mClaim').onclick=()=>{
   if(new Set(letters).size<letters.length){say(`Kevin: "You used the same letter twice. That only covers equal numbers, like 7 and 7. What about 7 and 9?" Undo and choose different letters.`,'bad');return}
   let w=null,shape=null;
   if(C.goal==='even'){if(T.length===1&&T[0].t==='even')shape='card';else if(T.length===1&&T[0].t==='grp'){shape='grp';w=T[0].w}}
+  if(C.goal==='r1'&&T.length===2){const gg=T.find(x=>x.t==='grp'),oo=T.find(x=>x.t==='one'&&x.v===1);if(gg&&oo){shape='grp1';w=gg.w}}
   if(C.goal==='odd'){if(T.length===1&&T[0].t==='odd')shape='card';else if(T.length===2){const gg=T.find(x=>x.t==='grp'),oo=T.find(x=>x.t==='one'&&x.v===1);if(gg&&oo){shape='grp1';w=gg.w}}}
   if((C.goal==='mult3'||C.goal==='multg')&&T.length===1&&T[0].t==='grp'){shape='grp';w=T[0].w}
   if(C.goal==='multg'&&T.length===1&&T[0].t==='mult'&&T[0].of===C.g)shape='card';
-  if(!shape){const want={even:'one flask of pairs, or one flask labelled even',odd:'one flask of pairs plus one loose atom, or one flask labelled odd',mult3:'one flask of trios',multg:`one flask of crates of ${C.g}, or one flask labelled multiple of ${C.g}`}[C.goal];say(`Kevin: "Not ready. I need to see ${want}."`,'bad');return}
+  if(!shape){const want={even:'one flask of pairs, or one flask labelled even',odd:'one flask of pairs plus one loose atom, or one flask labelled odd',mult3:'one flask of trios',r1:'one flask of trios plus one loose atom',multg:`one flask of crates of ${C.g}, or one flask labelled multiple of ${C.g}`}[C.goal];say(`Kevin: "Not ready. I need to see ${want}."`,'bad');return}
   if(shape==='card'){const last=T[0];inspect({s:`${C.lhs} is ${goalWord()}`,r:`${C.lhs} = ${last.n}, which the last step showed is ${goalWord()}`});return}
   const parts=w.split(' + '),drop=parts.length>1?parts.slice(0,-1).join(' + '):(w==='1'?'0':w+' + 1');
   const opts=shuffle([[w,1],[drop,0],[`${g}(${w})`,0]]);const tail=shape==='grp1'?' + 1':'';
   setAsk(`<span class="q">Finish the claim: ${esc(C.lhs)} = ${g} × ___${tail}</span>`+opts.map(([t,c],i)=>`<button data-i="${i}">${esc(t)}</button>`).join(''));
   say('Name exactly what multiplies the '+g+'.');
   $('#ask').onclick=ev=>{const b=ev.target.closest('button');if(!b)return;if(!opts[+b.dataset.i][1]){say('Count again: every group, including any new one.','bad');return}
-    const word=goalWord(),def={even:'definition of even',odd:'definition of odd',mult3:'definition of multiple',multg:'definition of divides'}[C.goal];
+    const word=goalWord(),def={even:'definition of even',odd:'definition of odd',r1:'definition of leaving 1 in trios',mult3:'definition of multiple',multg:'definition of divides'}[C.goal];
     inspect({s:`${C.lhs} is ${word}`,r:`${C.lhs} = ${g}(${w})${tail}, and ${w} is an integer, since sums and products of integers are integers (${def})`})}};
 function inspect(last){
   setAsk(`<span class="q">Kevin: "Your flasks always show three ${GN()}. Does your proof still work when a number has none, like ${esc(C.zero)}?"</span><button data-y="1">Yes: the letter can be 0, so zero ${GN()} is covered</button><button data-y="0">No: the proof needs at least one</button>`);
@@ -434,7 +451,7 @@ function inspect(last){
 function distil(last){const r=route();
   const others=Object.keys(C.dist).filter(k=>k!==r);
   const fake=`We checked examples like ${C.ex}, and it worked every time, so it must always be true.`;
-  const opts=shuffle([[C.dist[r]||C.dist.def,'ok'],[fake,'ex'],...(others.length?[[C.dist[others[0]],'other']]:[[C.goal==='mult3'?'Numbers that look alike behave alike, so the total must be a multiple of 3.':C.goal==='multg'?'Divisors always pass from smaller numbers to bigger ones, so it has to work.':'Odd numbers end in 1, 3, 5, 7 or 9, and the last digits always work out.','surface']])]);
+  const opts=shuffle([[C.dist[r]||C.dist.def,'ok'],[fake,'ex'],...(others.length?[[C.dist[others[0]],'other']]:[[C.goal==='r1'?'Two leaves 2 and two leaves 2 make leaves 4, and 4 is close enough to 1.':C.goal==='mult3'?'Numbers that look alike behave alike, so the total must be a multiple of 3.':C.goal==='multg'?'Divisors always pass from smaller numbers to bigger ones, so it has to work.':'Odd numbers end in 1, 3, 5, 7 or 9, and the last digits always work out.','surface']])]);
   setAsk(`<span class="q">Choose the Distillate: the sentence that captures the essence of <b>your</b> proof.</span>`+opts.map(([t],i)=>`<button data-i="${i}">${esc(t)}</button>`).join(''));
   say('Kevin passed your inspection. Now distill it.','good');
   $('#ask').onclick=ev=>{const b=ev.target.closest('button');if(!b)return;const [t,k]=opts[+b.dataset.i];
