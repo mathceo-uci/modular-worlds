@@ -298,8 +298,21 @@ function why(id){
   case 'mUndo':return hist.length?null:'Nothing to undo yet.';
   }return null}
 const GATED=['mUnpack','mSplit','mBond','mPour','mExpand','mBez','mRule','mUndo'];
+const short=t=>t.length>18?t.slice(0,17)+'…':t;
+function liveLabel(id){const ts=sel.map(get);
+  switch(id){
+  case 'mUnpack':return ts.length===1?['Read the label of ',ts[0].n]:null;
+  case 'mSplit':return ts.length===1?['Split an atom off ',ts[0].n]:null;
+  case 'mBond':return ts.length===2?['Bond ',`${ts[0].v} + ${ts[1].v}`,' loose atoms']:null;
+  case 'mPour':return ts.length===2?['Pour ',`${ts[0].w} and ${ts[1].w}`,` ${GN()} together`]:null;
+  case 'mExpand':return S.mode==='prod'?['Expand ',S.factors.map(f=>f.length>1?`(${f.map(alg).join(' + ')})`:wrapd(alg(f[0]))).join(' × ')]:null;
+  }return null}
 function gate(){if(!C)return;GATED.forEach(id=>{const b=document.getElementById(id),w=why(id);b.classList.toggle('off',!!w);
-  if(w){b.setAttribute('aria-disabled','true');b.dataset.why=w}else{b.removeAttribute('aria-disabled');delete b.dataset.why}})}
+  if(b.dataset.orig===undefined)b.dataset.orig=b.innerHTML;
+  if(w){b.setAttribute('aria-disabled','true');b.dataset.why=w}else{b.removeAttribute('aria-disabled');delete b.dataset.why}
+  const L=w?null:liveLabel(id);
+  if(L){const [pre,name,post='']=L;b.innerHTML=`${esc(pre)}<b>${esc(short(name))}</b>${esc(post)}`;b.setAttribute('aria-label',pre+name+post)}
+  else{b.innerHTML=b.dataset.orig;b.removeAttribute('aria-label')}})}
 let sayBefore=null;
 GATED.forEach(id=>{const b=document.getElementById(id);
   const show=()=>{if(!b.dataset.why)return;const e=$('#say');if(sayBefore===null)sayBefore={t:e.textContent,c:e.className};say(b.dataset.why,'bad')};
