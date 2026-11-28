@@ -187,3 +187,21 @@ details.sched li{margin:4px 0}
 .tiers.full .tier ol{columns:2 360px;column-gap:36px}
 .tiers.full .tier li{break-inside:avoid}
 .tiers.full .tier li details{margin-top:2px}
+/* picture proof: pair the dots */
+.pg-wrap{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.pg-board{position:relative;padding:6px;background:var(--panel);border-radius:12px;border:1px solid var(--line)}
+.pg-grid{position:relative;display:grid;gap:0;z-index:1}
+.pg-grid button{width:var(--cell,40px);height:var(--cell,40px);padding:0;border:0;background:transparent;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;min-height:0}
+.pg-grid button::before{content:"";width:18px;height:18px;border-radius:50%;background:var(--panel);border:2.5px solid var(--sea);box-sizing:border-box}
+.pg-grid button.on::before{background:var(--sea)}
+.pg-grid button.sel::before{background:var(--brass);border-color:var(--brass);width:22px;height:22px}
+.pg-grid button.left::before{background:var(--ember);border-color:var(--ember);width:22px;height:22px}
+.pg-grid button:focus-visible{outline:3px solid var(--ink);outline-offset:-3px}
+.pg-svg{position:absolute;left:6px;top:6px;z-index:0;pointer-events:none}
+.pg-side{flex:1 1 260px;min-width:240px}
+.pg-size{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:0 0 10px}
+.pg-size .step{display:inline-flex;align-items:center;gap:6px}
+.pg-size .step b{min-width:1.5em;text-align:center;font-family:"Roboto Mono",monospace;font-size:18px}
+.pg-size .step button{width:38px;min-height:38px;padding:0;font-size:20px}
+.pg-count{font-family:"Roboto Mono",monospace;font-size:16px;margin:8px 0}
+.pg-msg{white-space:pre-line;min-height:3em}

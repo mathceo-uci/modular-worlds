@@ -271,7 +271,7 @@ function drawClaims(){let last='';$('#claims').innerHTML=CLAIMS.map(c=>{const r=
 $('#claims').addEventListener('click',e=>{const b=e.target.closest('.claimbtn');if(!b)return;load(b.dataset.c);$('#bench').scrollIntoView({behavior:'smooth',block:'start'})});
 
 function load(id){C=CLAIMS.find(c=>c.id===id);S=JSON.parse(JSON.stringify(C.start));hist=[];sel=[];letters=[];usedLem=false;usedDef=false;LOG=[{s:C.given,r:'Given'}];
-  $('#goal').innerHTML=`<b>Recipe: ${esc(C.title)}.</b> ${esc(C.stmt)}`;$('#hint').textContent=C.hint||'Select one or two flasks, then choose a move.';
+  $('#goal').innerHTML=`<b>Recipe: ${esc(C.title)}.</b> ${esc(C.stmt)}`;$('#hint').textContent=C.hint||'Select one or two flasks, then choose a move.';if(C.id==='c6')$('#hint').insertAdjacentHTML('beforeend',' <a href="ch0.html#picture">See it as a picture</a>.');
   $('#mBez').style.display=C.bezout?'':'none';$('#mBond').style.display=famOf(C)==='div'?'none':'';$('#mSplit').style.display=C.g===2?'':'none';
   $('#rep').innerHTML='';setAsk('');say('Select a flask to begin.');draw();drawClaims()}
 

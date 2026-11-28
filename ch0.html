@@ -102,7 +102,7 @@
 <div class="box thm"><h3>Theorem 0.1 (the plaza rules)</h3>
 <p style="margin:0">even + even = even, odd + odd = even, even + odd = odd; odd × odd = odd, and even × anything = even.</p></div>
 <div class="pf"><p><b>Proof of odd + odd.</b> Write the two odd numbers as 2<i class="v">j</i> + 1 and 2<i class="v">k</i> + 1, using <b>different letters</b> (they need not be equal). Their sum is 2<i class="v">j</i> + 2<i class="v">k</i> + 2 = 2(<i class="v">j</i> + <i class="v">k</i> + 1), which is even: the two leftover dancers pair with each other.</p></div>
-<div class="pf"><p><b>Proof of odd × odd.</b> (2<i class="v">j</i> + 1)(2<i class="v">k</i> + 1) = 4<i class="v">jk</i> + 2<i class="v">j</i> + 2<i class="v">k</i> + 1 = 2(2<i class="v">jk</i> + <i class="v">j</i> + <i class="v">k</i>) + 1.</p></div>
+<div class="pf"><p><b>Proof of odd × odd.</b> (2<i class="v">j</i> + 1)(2<i class="v">k</i> + 1) = 4<i class="v">jk</i> + 2<i class="v">j</i> + 2<i class="v">k</i> + 1 = 2(2<i class="v">jk</i> + <i class="v">j</i> + <i class="v">k</i>) + 1.</p></div><p class="small" style="margin-top:6px">Prefer pictures? <a href="#picture">Pair the dots of an odd × odd grid</a> and watch one dot stay behind.</p>
 </div>
 <aside>
 <div class="box tool"><h3>Proof toolkit: a direct proof</h3>
@@ -123,6 +123,28 @@
 <aside class="box lab"><h3>Lab note: real chemistry</h3>
 <p style="margin:0">Real atoms bond by sharing electrons in pairs. A molecule with an odd number of electrons cannot pair them all: one electron is left alone. Chemists call such molecules <b>radicals</b>, and they are restless and reactive. Nitric oxide, NO, has 7 + 8 = 15 electrons, and it is a radical. It forms in car engines and lightning, and helps make smog.</p></aside>
 </div></section>
+<section class="band alt" id="picture"><div class="wrap">
+<h2>Picture proof: odd × odd, one dot left</h2>
+<p style="max-width:72ch">Lay out a × b as a grid of dots, a across and b down. Bond neighbouring dots into pairs and try to leave as few as possible. When both sides are odd, something always stays behind. Find out what, and why.</p>
+<div class="pg-wrap" id="pairgrid">
+<div class="pg-board" role="group" aria-label="Grid of dots. Use the arrow keys to move between dots and Enter to pick one."><svg class="pg-svg" aria-hidden="true"></svg><div class="pg-grid"></div></div>
+<div class="pg-side">
+<div class="pg-size">
+<span class="step">Width <button id="pgWm" aria-label="Narrower">−</button><b id="pgW" aria-live="polite">5</b><button id="pgWp" aria-label="Wider">+</button></span>
+<span class="step">Height <button id="pgHm" aria-label="Shorter">−</button><b id="pgH" aria-live="polite">3</b><button id="pgHp" aria-label="Taller">+</button></span>
+</div>
+<div class="ctrl" style="margin:0;flex-wrap:wrap"><button class="primary" id="pgAuto">Show me a way</button><button id="pgUndo">Undo</button><button id="pgClear">Clear</button></div>
+<p class="pg-count" aria-live="polite"></p>
+<p class="pg-msg" aria-live="polite"></p>
+</div>
+</div>
+<div class="two" style="margin-top:14px">
+<div class="box tool"><h3>Try these</h3><ol style="margin:0"><li>Pair the 5 × 3 grid yourself. How many dots are left?</li><li>Change only the width to 4. What happens? Now try 4 × 4, 3 × 7, 1 × 5.</li><li>When is a dot always left over? Make a prediction before you test it.</li></ol></div>
+<div class="box thm"><h3>Could a cleverer pairing leave none?</h3><p style="margin:0">"Show me a way" pairs every column except the last across the rows, then the last column from the top, and leaves one dot: (2<i class="v">k</i> + 1)(2<i class="v">m</i> + 1) = 2<i class="v">k</i>(2<i class="v">m</i> + 1) + 2<i class="v">m</i> + 1.</p>
+<details style="margin-top:8px"><summary>Why no pairing can ever leave zero</summary><p style="margin:6px 0 0">If some pairing left no dot, the number of dots would be even. But the pairing above shows that the same number is pairs plus one, which is odd. No number is both even and odd, so every pairing leaves at least one dot.</p></details></div>
+</div>
+</div></section>
+
 <section class="band"><div class="wrap"><h2>Worked examples and check yourself: even and odd</h2><div class="exgrid"><div class="ex"><h3>Example 0.1: two neighbours</h3><p><b>Claim.</b> The product of two consecutive integers is even.</p><p><b>Solution.</b> Call them <i class="v">n</i> and <i class="v">n</i> + 1. If <i class="v">n</i> is even, then even × anything is even. If <i class="v">n</i> is odd, then <i class="v">n</i> + 1 is even, and again the product is even. Either way, <i class="v">n</i>(<i class="v">n</i> + 1) is even.</p></div><div class="ex"><h3>Example 0.2: decide without computing</h3><p><b>Question.</b> Is 3 · 17 + 8 · 5 even or odd?</p><p><b>Solution.</b> odd × odd = odd, even × odd = even, and odd + even = odd. So the total is odd. (Check: 51 + 40 = 91.)</p></div></div><div class="box cy"><h3>Check yourself</h3><p class="small" style="margin:0 0 4px">Type an answer and press Check. A hint appears if it is not right yet.</p><div class="cyq" data-kind="word" data-a="odd" data-hint="Decide each product first: odd × odd, then even × odd." data-show="odd (91 + 36 = 127)"><label for="cy1">Is 7 · 13 + 4 · 9 even or odd?</label><div class="row2"><input id="cy1" autocomplete="off"><button class="ck">Check</button></div><div class="fb" aria-live="polite"></div></div><div class="cyq" data-kind="word" data-a="odd" data-hint="Example 0.1 says n² + n = n(n + 1) is always even." data-show="odd: n² + n is even, plus 1"><label for="cy2">Say <i class="v">n</i> is odd. Is <i class="v">n</i>² + <i class="v">n</i> + 1 even or odd?</label><div class="row2"><input id="cy2" autocomplete="off"><button class="ck">Check</button></div><div class="fb" aria-live="polite"></div></div><div class="cyq" data-kind="word" data-a="no" data-hint="Count hand-ends: 7 × 3. Each handshake uses two hands." data-show="no: 7 × 3 = 21 is odd, but the hand count must be twice the number of handshakes"><label for="cy3">Seven people each shake hands with exactly 3 others. Is that possible? (yes or no)</label><div class="row2"><input id="cy3" autocomplete="off"><button class="ck">Check</button></div><div class="fb" aria-live="polite"></div></div></div></div></section>
 
 <section class="band"><div class="wrap"><aside class="box note" aria-labelledby="n-sq8"><span class="nk">Paradox note</span><h3 id="n-sq8">The number 1 has four square roots</h3><p>Everyone knows 1 has two square roots, 1 and −1. On a clock with 8 hours, it has four.</p><div class="guess" data-for="rv-sq8" data-right="a"><span class="q">Do 3 × 3, 5 × 5 and 7 × 7 all land on 1 on an 8-hour clock?</span><button data-g="a" aria-pressed="false">I think so</button><button data-g="b" aria-pressed="false">No way</button></div><div class="reveal" id="rv-sq8" hidden><p class="verdict" data-msg="9, 25 and 49 are each 1 more than a multiple of 8, so all four odd hours square to 1."></p><div class="ctrl"><div><label for="sq8n">Try any number</label><input id="sq8n" type="number" value="13" min="1" max="99999"></div><button id="sq8go">Square it</button></div><div class="nout" id="sq8out" aria-live="polite"></div><p style="margin-top:10px"><b>Why.</b> An odd number is 2<i class="v">k</i> + 1, and (2<i class="v">k</i> + 1)² = 4<i class="v">k</i>(<i class="v">k</i> + 1) + 1. One of the neighbours <i class="v">k</i> and <i class="v">k</i> + 1 is even, so 4<i class="v">k</i>(<i class="v">k</i> + 1) is a multiple of 8. Every odd square is 1 more than a multiple of 8. Clock arithmetic gets its full treatment in Chapter 6.</p></div></aside></div></section>
@@ -529,5 +551,6 @@ print("losing piles:", lose)`}],{status:$('#pystat')});
 </script>
 <script src="notes.js"></script>
 <script src="practice.js"></script>
+<script src="pairgrid.js"></script>
 </body>
 </html>
