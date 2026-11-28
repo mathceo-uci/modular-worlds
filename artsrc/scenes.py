@@ -666,6 +666,110 @@ def ch5():
     p.border(16)
     return p.save(OUT + 'ch5.jpg')
 
+
+# ---------------- Chapter 6: Clockwork Isles ----------------
+def gear(cx, cy, r, teeth, depth=0.18, rot=0.0):
+    """Gear outline polygon with square-ish teeth."""
+    pts = []
+    for k in range(teeth):
+        a0 = rot + 2 * math.pi * k / teeth; da = 2 * math.pi / teeth
+        for f, rr in ((0.0, r), (0.12, r * (1 + depth)), (0.45, r * (1 + depth)), (0.57, r)):
+            a = a0 + f * da; pts.append((cx + rr * math.cos(a), cy + rr * math.sin(a)))
+    return pts
+
+
+def clockface(p, x, y, R, marks, hand=0.0, seed=0):
+    face = p.ellipse_mask(x, y, R, R)
+    p.lift(face, 1.0)
+    p.wash(face, '#f6ecd0', 0.55, wobble=1.2, edge=0.9)
+    p.ink([(x + R * math.cos(t), y + R * math.sin(t)) for t in np.linspace(0, 6.3, 40)], 2.0, '#3a2a1a', 0.85)
+    for k in range(marks):
+        a = -math.pi / 2 + 2 * math.pi * k / marks
+        p.ink([(x + R * 0.72 * math.cos(a), y + R * 0.72 * math.sin(a)), (x + R * 0.92 * math.cos(a), y + R * 0.92 * math.sin(a))], 2.0 if k else 3.2, '#1d2433', 0.9, 0.2)
+    a = -math.pi / 2 + hand
+    p.ink([(x, y), (x + R * 0.6 * math.cos(a), y + R * 0.6 * math.sin(a))], 2.4, '#c8401a', 0.95, 0.2)
+
+
+def ch6():
+    p = Painting(W, H, seed=66)
+    SEA = 455
+    gate_m = p.poly_mask([(1110, 800), (1110, 420), (1150, 360), (1260, 320), (1370, 360), (1410, 420), (1410, 800)])
+    signm = p.rect_mask(90, 560, 560, 720)
+    sky_bands(p, 0, SEA, ['#f2b98a', '#e9a6a0', '#c9a3c8', '#f5d2a0', '#b8aad6'], reserve=np.clip(gate_m + signm, 0, 1), n=9, gap=10, strength=0.55, seed=61)
+    sun = p.ellipse_mask(820, SEA - 8, 70, 70) * (np.mgrid[0:H, 0:W][0] < SEA)
+    p.wash(sun, '#f6b14a', 0.55, wobble=2, edge=0.8)
+    # sea
+    sea = p.rect_mask(0, SEA, W, H)
+    fill_strokes(p, sea, ['#0c5f73', '#1d7f8f', '#2f8f9a', '#145a6e'], SEA, H, thick=26, strength=0.6, seed=62, angle=0.0, reserve=np.clip(gate_m + signm, 0, 1), amp=3)
+    rnd = random.Random(7)
+    for _ in range(55):
+        x, y = rnd.uniform(20, 1080), rnd.uniform(SEA + 20, 790)
+        p.ink([(x, y), (x + 10, y - 4), (x + 20, y), (x + 30, y - 4)], 1.1, '#e8f4fb', 0.6, 0.3)
+    # six islands with clock towers: 4, 7, 9, 10, 11, 12 marks
+    ISL = [(110, 4, 40), (290, 7, 52), (470, 9, 46), (640, 10, 58), (850, 11, 50), (1010, 12, 62)]
+    for i, (x, marks, R) in enumerate(ISL):
+        top = SEA - 6 - (i % 2) * 14
+        isl = blob(x, top + 18, R * 1.9, seed=60 + i, sq=0.32)
+        m = p.poly_mask(isl) * (np.mgrid[0:H, 0:W][0] < SEA + 30)
+        p.wash(m, ['#6f8f3a', '#8aa848', '#7a9a3a'][i % 3], 0.8, wobble=3, edge=0.8, mix='#c9a46a')
+        th = R * 2.6; tw = R * 0.9
+        body = [(x - tw / 2, top + 6), (x + tw / 2, top + 6), (x + tw * 0.42, top - th), (x - tw * 0.42, top - th)]
+        quad(p, body, ['#d8b48a', '#c99a7a', '#d6c2a0'][i % 3], 0.8, lw=1.4)
+        roof = [(x - tw * 0.55, top - th), (x + tw * 0.55, top - th), (x, top - th - R * 0.9)]
+        quad(p, roof, ['#c8401a', '#2b6fb8', '#8338ec'][i % 3], 0.85, lw=1.2)
+        clockface(p, x, top - th * 0.62, R * 0.42 + 4, marks, hand=2 * math.pi * (i + 1) / marks, seed=i)
+        p.light(p.ellipse_mask(x, top - th * 0.18, 5, 7), '#ffcf6a', 0.8)
+        for k in range(3):
+            p.ink([(x - R * 1.4 + k * 8, top + 30 + k * 6), (x + R * 1.4 - k * 8, top + 30 + k * 6)], 1.0, '#e8f4fb', 0.5, 0.6)
+    # gears half-sunk in the shallows
+    for (gx, gy, gr, n, col) in ((690, 600, 72, 12, '#b8862a'), (840, 655, 46, 9, '#9a6b12'), (985, 575, 54, 10, '#c89a3a')):
+        g = p.poly_mask(gear(gx, gy, gr, n, rot=0.2)) * (np.mgrid[0:H, 0:W][0] < gy + 8)
+        hole = p.ellipse_mask(gx, gy, gr * 0.28, gr * 0.28)
+        p.lift(np.clip(g - hole, 0, 1), 0.9)
+        p.wash(np.clip(g - hole, 0, 1), col, 0.85, wobble=1.5, edge=0.9, gran=0.4)
+        p.ink([(gx - gr * 1.3, gy + 8), (gx + gr * 1.3, gy + 8)], 1.6, '#e8f4fb', 0.75, 1.0)
+        for k in range(4):
+            a = 0.2 + k * math.pi / 4
+            p.ink([(gx - gr * 0.25 * math.cos(a), gy - gr * 0.25 * math.sin(a)), (gx - gr * 0.85 * math.cos(a), gy - gr * 0.85 * math.sin(a))], 2.2, '#5a3a14', 0.6, 0.3)
+    # the stone gate with a dial lock
+    p.lift(gate_m, 1.0)
+    p.wash(gate_m, '#a8a092', 0.6, wobble=2, edge=0.9, gran=0.5, mix='#8a8478')
+    fill_strokes(p, gate_m, ['#9a9284', '#b0a898', '#8c8476'], 330, 800, thick=36, strength=0.3, seed=63)
+    for y in range(430, 800, 52):
+        p.ink([(1112, y), (1408, y)], 1.2, '#5a5448', 0.45, 0.8)
+    p.ink([(1110, 800), (1110, 420), (1150, 360), (1260, 320), (1370, 360), (1410, 420), (1410, 800)], 2.2, '#3a352c', 0.8)
+    dx, dy, dr = 1260, 500, 92
+    dial = p.ellipse_mask(dx, dy, dr, dr)
+    p.wash(dial, '#c89a3a', 0.75, wobble=1.5, edge=0.9, gran=0.4)
+    p.lift(p.ellipse_mask(dx, dy, dr * 0.78, dr * 0.78), 0.9)
+    p.wash(p.ellipse_mask(dx, dy, dr * 0.78, dr * 0.78), '#f2e4c0', 0.5, wobble=1, edge=0.9)
+    for k in range(7):
+        a = -math.pi / 2 + 2 * math.pi * k / 7
+        px, py = dx + dr * 0.6 * math.cos(a), dy + dr * 0.6 * math.sin(a)
+        p.text((px, py), str(k), 22, RB, '#1d2433', 0.92)
+    p.ink([(dx, dy), (dx + dr * 0.38 * math.cos(-math.pi / 2 + 2 * math.pi * 6 / 7), dy + dr * 0.38 * math.sin(-math.pi / 2 + 2 * math.pi * 6 / 7))], 3.2, '#c8401a', 0.95, 0.2)
+    p.ink([(dx + dr * math.cos(t), dy + dr * math.sin(t)) for t in np.linspace(0, 6.3, 50)], 2.4, '#3a2a1a', 0.85)
+    # carved congruence: 3x  ≡  4 (mod 7), the three bars drawn by hand
+    ty = 660
+    p.lift(p.rect_mask(1136, ty - 34, 1404, ty + 34), 0.55)
+    p.text((1188, ty), '3x', 40, RB, '#2a2620', 0.92)
+    for k in (-9, 0, 9):
+        p.ink([(1222, ty + k), (1250, ty + k)], 3.0, '#2a2620', 0.92, 0.2)
+    p.text((1264, ty + 2), '4 (mod 7)', 30, RB, '#2a2620', 0.92, anchor='lm')
+    # jetty and sign
+    jet = [(0, 735), (600, 705), (600, 735), (0, 770)]
+    quad(p, jet, '#7a5232', 0.85, lw=1.6)
+    for x in (60, 200, 340, 480):
+        p.wash(p.stroke_mask([(x, 740), (x, 800)], 14), '#5a3a24', 0.9, wobble=1)
+    for x in (130, 520):
+        p.lift(p.stroke_mask([(x, 700), (x, 740)], 16), 1.0); p.wash(p.stroke_mask([(x, 700), (x, 740)], 14), '#5a3a24', 0.9, wobble=1)
+    p.lift(signm, 1.0)
+    quad(p, [(94, 564), (556, 564), (556, 706), (94, 706)], '#f4ead2', 0.5)
+    p.text((325, 610), 'CLOCKWORK ISLES', 44, MARKER, '#1d2433', 0.92)
+    p.text((325, 668), 'every number comes back around', 22, ROBOTO + 'Roboto-Italic.ttf', '#5a3a24', 0.9)
+    p.border(16)
+    return p.save(OUT + 'ch6.jpg')
+
 if __name__ == '__main__':
     which = sys.argv[1:] or ['ch3']
     for w in which:

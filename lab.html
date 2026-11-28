@@ -74,7 +74,7 @@
 
 <header class="band hero"><div class="wrap two">
 <div>
-<div class="kicker">Modular Worlds · companion to Chapters 0–4</div>
+<div class="kicker">Modular Worlds · companion to Chapters 0–6</div>
 <h1>The Proof Lab</h1>
 <p class="lede">Behind the harbor in Mojadito, Lucía found an old laboratory. Every flask holds a number, and the shelves are labelled with recipes: <i>produce an even from two odds</i>, <i>produce a full trio from one extra and one short</i>, and later in the voyage, <i>pack crates of d into crates of d</i>. The rules of the lab are the rules of arithmetic. Follow them, and you produce a proof.</p>
 <p>Each recipe can be produced in more than one way. Find a route, pass Kevin's safety inspection, and the lab writes up your report.</p>
@@ -232,7 +232,18 @@ const CLAIMS=[
   mulHook:(u,v)=>u.n==='c'&&v.n==='ax'?{t:'mul',n:'acx',parts:[{t:'self',n:'a'},{t:'int',n:'cx'}]}:u.n==='c'&&v.n==='by'?{t:'mul',n:'bcy',parts:[{t:'mult',of:'a',n:'bc'},{t:'int',n:'y'}]}:null,
   dist:{def:'Because a and b share no factor, Bézout writes 1 as a mix of a and b. Multiply c by that 1: one part is a times something, and the other contains bc, which a divides. Both parts are whole crates of size a, so c is too.',
    lem:'Write c as c times a Bézout mix of a and b. Both products are multiples of a: one contains a, the other contains bc. Multiples of a add up to a multiple of a.',
-   mix:'Write c as c times a Bézout mix of a and b, then show that each part is made of crates of size a, by unpacking or by known rules.'}}];
+   mix:'Write c as c times a Bézout mix of a and b, then show that each part is made of crates of size a, by unpacking or by known rules.'}},
+ {id:'c15',ch:'Chapter 6 · Clockwork Isles',title:'Clocks add',stmt:'If m divides a − b and m divides c − d, then m divides (a + c) − (b + d). In clock language: a ≡ b and c ≡ d give a + c ≡ b + d (mod m).',g:'m',goal:'multg',lhs:'(a + c) − (b + d)',given:'a ≡ b and c ≡ d (mod m), so m | a − b and m | c − d; regroup: (a + c) − (b + d) = (a − b) + (c − d)',
+  start:{mode:'sum',terms:[{t:'mult',of:'m',n:'a − b'},{t:'mult',of:'m',n:'c − d'}]},routes:['def','lem'],zero:'a = b',ex:'12 ≡ 2 and 9 ≡ 4 (mod 5), and 21 ≡ 6',
+  hint:'The flasks already show the regrouped difference (a − b) + (c − d). The route by earlier results needs the rule from Crates add up (Chapter 1).',
+  dist:{def:'Each difference is made of whole crates of size m. Put the two differences together and you still have only whole crates, so the two sums land on the same mark of the clock.',
+   lem:'Both differences are multiples of m, and multiples of m add up to a multiple of m. That difference is exactly the difference of the two sums.'}},
+ {id:'c16',ch:'Chapter 6 · Clockwork Isles',title:'Clocks multiply',stmt:'If m divides a − b and m divides c − d, then m divides ac − bd. In clock language: a ≡ b and c ≡ d give ac ≡ bd (mod m).',g:'m',goal:'multg',lhs:'ac − bd',given:'a ≡ b and c ≡ d (mod m), so m | a − b and m | c − d; add and subtract ad: ac − bd = a(c − d) + d(a − b)',
+  start:{mode:'sum',terms:[{t:'mul',n:'a(c − d)',parts:[{t:'int',n:'a'},{t:'mult',of:'m',n:'c − d'}]},{t:'mul',n:'d(a − b)',parts:[{t:'int',n:'d'},{t:'mult',of:'m',n:'a − b'}]}]},routes:['def','lem','mix'],zero:'c = d',ex:'7 ≡ 2 and 9 ≡ 4 (mod 5), and 63 ≡ 8',
+  hint:'This is Theorem 6.2 for products. The trick ac − bd = a(c − d) + d(a − b) is already on the bench. The route by earlier results needs the rules from Crates add up and Crates scale.',
+  dist:{def:'Adding and subtracting ad splits the difference into two products, and each one contains a difference made of whole crates of size m. Whole crates, taken any number of times and added, are still whole crates.',
+   lem:'Each product contains a multiple of m, so each is a multiple of m, and two multiples of m add up to a multiple of m. So ac and bd land on the same mark.',
+   mix:'Split ac − bd into a(c − d) + d(a − b), then show that each part is made of crates of size m, by unpacking or by known rules.'}}];
 const LEMMAS=[
  {id:'L1',txt:'odd + 1 = even',from:'c1',pat:['1','odd'],out:'even'},
  {id:'L2',txt:'even + even = even',from:'c2',pat:['even','even'],out:'even'},
